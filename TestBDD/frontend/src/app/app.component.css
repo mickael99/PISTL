@@ -1,0 +1,24 @@
+.form {
+  width: 25rem;
+  font-size: 1rem;
+}
+
+.container--2 {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(to bottom, white, rgb(76, 76, 141));
+}
+
+.btn--center {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.text {
+  font-size: 1.6rem;
+}

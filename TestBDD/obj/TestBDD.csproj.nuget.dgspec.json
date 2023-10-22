@@ -1,0 +1,75 @@
+{
+  "format": 1,
+  "restore": {
+    "/home/s-daniiel/Desktop/TestBDD/TestBDD.csproj": {}
+  },
+  "projects": {
+    "/home/s-daniiel/Desktop/TestBDD/TestBDD.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/home/s-daniiel/Desktop/TestBDD/TestBDD.csproj",
+        "projectName": "TestBDD",
+        "projectPath": "/home/s-daniiel/Desktop/TestBDD/TestBDD.csproj",
+        "packagesPath": "/home/s-daniiel/.nuget/packages/",
+        "outputPath": "/home/s-daniiel/Desktop/TestBDD/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/s-daniiel/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net7.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net7.0": {
+            "targetAlias": "net7.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net7.0": {
+          "targetAlias": "net7.0",
+          "dependencies": {
+            "Microsoft.AspNetCore.Razor.Design": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[2.2.0, )"
+            },
+            "MySql.Data": {
+              "target": "Package",
+              "version": "[8.1.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/7.0.111/RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
