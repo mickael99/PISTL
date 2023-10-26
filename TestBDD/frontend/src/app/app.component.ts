@@ -33,4 +33,13 @@ export class AppComponent {
         }
       );
   }
+
+  deconnexion() {
+    this.showForm = true;
+  }
+
+  /** To test how Jasmine & Karma works */
+  login(username: string, password: string): boolean {
+    return username === 'test' && password == 'password';
+  }
 }

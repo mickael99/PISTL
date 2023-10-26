@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "QF5nrE8+XRv9qzNG8shySCijOtEECv/zg7uuHzp4ZKdbNntTqCC27hO/4lhe9hB6rhIoG97FLbuS1E6BL97O2g==",
+  "dgSpecHash": "5SGKf77/BT98gIduVSpELfmX7WppV5j+2OhgrKPexdEUtQro/R5laE9t6ibtf7O1Lio4L+WwfJMvTx1IaOoZBw==",
   "success": true,
-  "projectFilePath": "/home/s-daniiel/Desktop/TestBDD/TestBDD.csproj",
+  "projectFilePath": "/home/s-daniiel/Desktop/PISTL/TestBDD/TestBDD.csproj",
   "expectedPackageFiles": [
     "/home/s-daniiel/.nuget/packages/google.protobuf/3.21.9/google.protobuf.3.21.9.nupkg.sha512",
     "/home/s-daniiel/.nuget/packages/k4os.compression.lz4/1.3.5/k4os.compression.lz4.1.3.5.nupkg.sha512",

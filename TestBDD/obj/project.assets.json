@@ -1818,11 +1818,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/s-daniiel/Desktop/TestBDD/TestBDD.csproj",
+      "projectUniqueName": "/home/s-daniiel/Desktop/PISTL/TestBDD/TestBDD.csproj",
       "projectName": "TestBDD",
-      "projectPath": "/home/s-daniiel/Desktop/TestBDD/TestBDD.csproj",
+      "projectPath": "/home/s-daniiel/Desktop/PISTL/TestBDD/TestBDD.csproj",
       "packagesPath": "/home/s-daniiel/.nuget/packages/",
-      "outputPath": "/home/s-daniiel/Desktop/TestBDD/obj/",
+      "outputPath": "/home/s-daniiel/Desktop/PISTL/TestBDD/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/home/s-daniiel/.nuget/NuGet/NuGet.Config"
