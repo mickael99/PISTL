@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34221.43
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DAT_project.API", "DAT_project.API\DAT_project.API.csproj", "{240EA0B9-74F0-41C4-9EFD-6B4DC84AB6AA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{240EA0B9-74F0-41C4-9EFD-6B4DC84AB6AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{240EA0B9-74F0-41C4-9EFD-6B4DC84AB6AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{240EA0B9-74F0-41C4-9EFD-6B4DC84AB6AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{240EA0B9-74F0-41C4-9EFD-6B4DC84AB6AA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CD004837-13F5-4393-A5AF-979EB40F2C67}
+	EndGlobalSection
+EndGlobal
