@@ -3,9 +3,11 @@ using DAT_project.API.Repositories.Implementation;
 using DAT_project.API.Repositories.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace DAT_project.API.Controllers
 {
+    //https://localhost:xxxx/api/login
     [Route("api/[controller]")]
     [ApiController]
     public class LoginController : ControllerBase
@@ -17,7 +19,7 @@ namespace DAT_project.API.Controllers
             this.loginRepository = loginRepository;
         }
 
-
+        //ajouter authent de token (JWT)
         [HttpPost]
         public async Task<IActionResult> CreateLogin(CreateLoginRequestDTO request)
         {

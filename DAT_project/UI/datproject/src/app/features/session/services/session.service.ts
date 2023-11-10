@@ -11,6 +11,6 @@ export class SessionService {
   constructor(private http: HttpClient) { }
 
   addSession(model: AddSessionRequest): Observable<void> {
-    return this.http.post<void>('https://localhost:7186/api/session', model);
+    return this.http.post<void>('https://localhost:7186/api/Login', model);
   }
 }

@@ -16,7 +16,7 @@ namespace DAT_project.API.Controllers
             this.sessionRepository = sessionRepository;
         }
 
-
+        //ajouter authent de token (JWT)
         [HttpPost]
         public async Task<IActionResult> CreateSession(CreateSessionRequestDTO request)
         {
