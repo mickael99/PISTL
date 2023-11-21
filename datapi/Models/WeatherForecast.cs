@@ -1,4 +1,4 @@
-namespace datapi;
+namespace DAT_project.API.Models;
 
 public class WeatherForecast
 {

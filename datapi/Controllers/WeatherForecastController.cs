@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DAT_project.API.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace datapi.Controllers;
 

@@ -1,5 +1,5 @@
 ﻿using DAT_project.API.Models.DTO;
-using DAT_project.API.Repositories.Implementation;
+using DAT_project.API.Repositories.Imprementation;
 using DAT_project.API.Repositories.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
