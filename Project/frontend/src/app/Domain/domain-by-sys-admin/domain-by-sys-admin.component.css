@@ -1,0 +1,14 @@
+.centertest {
+  padding: 10px;
+  border-radius: 10px;
+  background-color: green;
+  font-weight: 900;
+  font-size: 2rem;
+}
+
+.centre {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}

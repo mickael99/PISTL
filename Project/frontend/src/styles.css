@@ -1,0 +1,21 @@
+* {
+  padding: 0;
+  margin: 0;
+  /* largeur et hauteur de l'élément incluent le contenu, la bordure et le padding */
+  box-sizing: border-box;
+}
+
+html {
+  /* Percentage of user's browser font-size setting (10px / 16px = 0.625) */
+  font-size: 62.5%;
+  overflow-x: hidden; /* cacher tous les elements qui debordent sur x*/
+  /* scroll-behavior: smooth; fonctionne que sur chrome et firefox (pas sur safari et edge) */
+}
+
+body {
+  font-family: "Roboto", sans-serif;
+  line-height: 1;
+  font-weight: 400;
+  color: #555;
+  overflow-x: hidden; /* cacher tous les elements qui debordent sur x*/
+}

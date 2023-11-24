@@ -1,0 +1,87 @@
+<div class="container">
+  <ng-container *ngIf="showForm; else formHidden">
+    <app-login
+      [showForm]="showForm"
+      (hideForm)="hideLoginForm()"
+      (loginData)="onLoginData($event)"
+    ></app-login>
+  </ng-container>
+  <ng-template #formHidden>
+    <header>
+      <a href="#">
+        <picture>
+          <img src="../assets/logo.png" class="logo" alt="Logo DAT UpClear" />
+        </picture>
+      </a>
+      <nav class="main-nav">
+        <ul class="main-nav-list">
+          <li class="list">
+            <div ngbDropdown class="d-inline-block dropdown">
+              <a class="btn--1" id="dropdownBasic1" ngbDropdownToggle>
+                Domain
+              </a>
+              <div
+                ngbDropdownMenu
+                aria-labelledby="dropdownBasic1"
+                class="dropdown-menu"
+              >
+                <a
+                  routerLink="/domain-administration"
+                  ngbDropdownItem
+                  class="btn--2"
+                  >Domain Administration</a
+                >
+                <a
+                  routerLink="sys-admin-by-domain"
+                  ngbDropdownItem
+                  class="btn--2"
+                  >SysAdmin by Domain</a
+                >
+                <a
+                  routerLink="domain-by-sys-admin"
+                  ngbDropdownItem
+                  class="btn--2"
+                  >Domain by SysAdmin</a
+                >
+              </div>
+            </div>
+          </li>
+          <li>
+            <div ngbDropdown class="d-inline-block dropdown">
+              <a class="btn--1" id="dropdownBasic1" ngbDropdownToggle>
+                Infrastructure
+              </a>
+              <div
+                ngbDropdownMenu
+                aria-labelledby="dropdownBasic1"
+                class="dropdown-menu"
+              >
+                <a ngbDropdownItem class="btn--2">Database</a>
+                <a ngbDropdownItem class="btn--2">Server</a>
+                <a ngbDropdownItem class="btn--2">Server Parameter</a>
+              </div>
+            </div>
+          </li>
+          <li>
+            <a class="btn--1" href="#">Users</a>
+          </li>
+          <li>
+            <a class="btn--1" href="#">Reports</a>
+          </li>
+          <li>
+            <p class="text nav-end">
+              Hello <strong>{{ email }}</strong
+              >!
+            </p>
+          </li>
+          <li>
+            <a href="#" class="btn--log-off nav-end--2" (click)="deconnexion()"
+              >Log off</a
+            >
+          </li>
+        </ul>
+      </nav>
+    </header>
+    <router-outlet></router-outlet>
+  </ng-template>
+</div>
