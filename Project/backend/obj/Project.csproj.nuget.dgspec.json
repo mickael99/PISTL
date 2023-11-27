@@ -1,25 +1,32 @@
 {
   "format": 1,
   "restore": {
-    "/home/s-daniiel/Desktop/Test/PISTL/Project/backend/Project.csproj": {}
+    "C:\\Users\\walte\\Desktop\\MASTER\\PISTL\\PISTL\\Project\\backend\\Project.csproj": {}
   },
   "projects": {
-    "/home/s-daniiel/Desktop/Test/PISTL/Project/backend/Project.csproj": {
+    "C:\\Users\\walte\\Desktop\\MASTER\\PISTL\\PISTL\\Project\\backend\\Project.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/s-daniiel/Desktop/Test/PISTL/Project/backend/Project.csproj",
+        "projectUniqueName": "C:\\Users\\walte\\Desktop\\MASTER\\PISTL\\PISTL\\Project\\backend\\Project.csproj",
         "projectName": "Project",
-        "projectPath": "/home/s-daniiel/Desktop/Test/PISTL/Project/backend/Project.csproj",
-        "packagesPath": "/home/s-daniiel/.nuget/packages/",
-        "outputPath": "/home/s-daniiel/Desktop/Test/PISTL/Project/backend/obj/",
+        "projectPath": "C:\\Users\\walte\\Desktop\\MASTER\\PISTL\\PISTL\\Project\\backend\\Project.csproj",
+        "packagesPath": "C:\\Users\\walte\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\walte\\Desktop\\MASTER\\PISTL\\PISTL\\Project\\backend\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "/home/s-daniiel/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\walte\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -65,12 +72,6 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "downloadDependencies": [
-            {
-              "name": "Microsoft.AspNetCore.App.Ref",
-              "version": "[8.0.0, 8.0.0]"
-            }
-          ],
           "frameworkReferences": {
             "Microsoft.AspNetCore.App": {
               "privateAssets": "none"
@@ -79,7 +80,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/8.0.100/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

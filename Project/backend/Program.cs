@@ -33,7 +33,7 @@ namespace DataBaseFirstDemo
         Email = email,
         Name = name,
         Password = Encoding.UTF8.GetBytes("123456"),
-        PasswordSalt = "123456",
+        PasswordSalt = Encoding.UTF8.GetBytes("123456"),
         PasswordModifiedDate = DateTime.Now,
         PasswordExpirationDate = DateTime.Now.AddDays(30),
         InvalidAttemptCount = 3,
