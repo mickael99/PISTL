@@ -13,7 +13,6 @@ public partial class Login
 
     public byte[] Password { get; set; } = null!;
 
-    // from 'string?' to byte[]
     public byte[] PasswordSalt { get; set; } = null!;
 
     public DateTime? PasswordModifiedDate { get; set; }

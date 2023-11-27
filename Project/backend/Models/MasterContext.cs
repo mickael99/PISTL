@@ -65,7 +65,7 @@ public partial class MasterContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=localhost;Database=master;User Id=sa;Password=Daniel123;TrustServerCertificate=true;");
+        => optionsBuilder.UseSqlServer("Server=localhost;Database=master;TrustServerCertificate=true;Trusted_Connection=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -380,10 +380,6 @@ public partial class MasterContext : DbContext
             entity.Property(e => e.Name).HasMaxLength(50);
             entity.Property(e => e.PasswordExpirationDate).HasColumnType("datetime");
             entity.Property(e => e.PasswordModifiedDate).HasColumnType("datetime");
-            entity.Property(e => e.PasswordSalt)
-                .HasMaxLength(32)
-                .IsUnicode(false)
-                .IsFixedLength();
             entity.Property(e => e.Phone)
                 .HasMaxLength(50)
                 .IsUnicode(false);
@@ -572,7 +568,7 @@ public partial class MasterContext : DbContext
 
         modelBuilder.Entity<SingleSignOnMethod>(entity =>
         {
-            entity.HasKey(e => e.SingleSignOnId).HasName("PK__SingleSi__CB1BECB818477C74");
+            entity.HasKey(e => e.SingleSignOnId).HasName("PK__SingleSi__CB1BECB8D44C7C8C");
 
             entity.ToTable("SingleSignOnMethod");
 
@@ -603,7 +599,7 @@ public partial class MasterContext : DbContext
 
         modelBuilder.Entity<SingleSignOnSaml2ContactPerson>(entity =>
         {
-            entity.HasKey(e => e.ContactPersonId).HasName("PK__SingleSi__97C702DE11BBFD06");
+            entity.HasKey(e => e.ContactPersonId).HasName("PK__SingleSi__97C702DEED9366FD");
 
             entity.ToTable("SingleSignOnSaml2ContactPerson");
 

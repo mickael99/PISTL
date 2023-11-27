@@ -63,8 +63,8 @@ public class DomainAdministrationController : ControllerBase
 
     public class DomainModel
     {
-        public string DomainName { get; set; }
-        public string CreatedBy { get; set; }
-        public string Edition { get; set; }
+        public required string DomainName { get; set; }
+        public required string CreatedBy { get; set; }
+        public required string Edition { get; set; }
     }
 }
