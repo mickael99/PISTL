@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "DgjgDvSc8w2jIIANjAX0FQ+EoqYfD0HRYn54J1BmF3iqT82+85Jsx0SM5K/HpO9BUeOWUQaImteGlba4B0KuyQ==",
+  "dgSpecHash": "vwZbxZK/enROv47EGQsemjjHwtfuLYy46jpKVYL+OUcg8SyBm1+NvlV9ugWKYOBB72IL/lAek8lRF2mo5lFnEQ==",
   "success": true,
-  "projectFilePath": "/home/s-daniiel/Desktop/Test/PISTL/Project/backend/Project.csproj",
+  "projectFilePath": "/home/s-daniiel/Desktop/Test/BON/PISTL/Project/backend/Project.csproj",
   "expectedPackageFiles": [
     "/home/s-daniiel/.nuget/packages/azure.core/1.25.0/azure.core.1.25.0.nupkg.sha512",
     "/home/s-daniiel/.nuget/packages/azure.identity/1.7.0/azure.identity.1.7.0.nupkg.sha512",

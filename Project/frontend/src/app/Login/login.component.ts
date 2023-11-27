@@ -1,29 +1,46 @@
 import { HttpClient } from '@angular/common/http';
-import {
-  Component,
-  EventEmitter,
-  Input,
-  Output,
-  Renderer2,
-} from '@angular/core';
+import { Component, EventEmitter, Output, Renderer2 } from '@angular/core';
 
+/***************************************************************************************/
+/***************************************************************************************/
+/***************************************************************************************/
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css', './../app.component.css'],
 })
+/***************************************************************************************/
 export class LoginComponent {
+  /** Event emitter for hiding the login form.              */
   @Output() hideForm = new EventEmitter<void>();
+
+  /** Indicates whether to show an error message or not.    */
   showError: boolean = false;
+
+  /** The email entered by the user.                        */
   email: string = '';
+
+  /** The password entered by the user.                     */
   motDePasse: string = '';
+
+  /** Event emitter for passing the login data.             */
   @Output() loginData = new EventEmitter<{
     email: string;
     motDePasse: string;
   }>();
 
+  /***************************************************************************************/
+  /**
+   * Creates an instance of LoginComponent.
+   * @param renderer - The renderer used to create the login form.
+   * @param http - The http client used to connect to the database.
+   */
   constructor(private renderer: Renderer2, private http: HttpClient) {}
 
+  /***************************************************************************************/
+  /**
+   * Connects to the database using the provided email and password.
+   */
   connectDB() {
     const email = this.email;
     const password = this.motDePasse;
@@ -32,7 +49,11 @@ export class LoginComponent {
       .post('http://localhost:5050/api/auth', { email, password })
       .subscribe(
         (data: any) => {
-          if (data.message === 'Successful connection') {
+          if (data.token) {
+            // storage the jwt token in the local storage
+            localStorage.setItem('token', data.token);
+            localStorage.setItem('email', this.email); // TODO voir si bonne methode
+
             this.hideLoginForm();
             this.loginData.emit({
               email: this.email,
@@ -43,17 +64,30 @@ export class LoginComponent {
           }
         },
         (error) => {
-          alert('Connection error: ' + error.message);
+          this.showError = true;
         }
       );
   }
 
+  /***************************************************************************************/
+  /**
+   * Hides the login form.
+   */
   hideLoginForm() {
     this.hideForm.emit();
   }
 
-  /** To test how Jasmine & Karma works */
+  /***************************************************************************************/
+  /**
+   * Login function used for testing Jasmine & Karma.
+   * @param username - The username to be tested.
+   * @param password - The password to be tested.
+   * @returns True if the username and password match, false otherwise.
+   */
   login(username: string, password: string): boolean {
     return username === 'test' && password == 'password';
   }
 }
+/***************************************************************************************/
+/***************************************************************************************/
+/***************************************************************************************/
