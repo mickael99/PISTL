@@ -1,3 +1,45 @@
 <div class="centre">
-  <p class="centertest">sys-admin-by-domain works!</p>
+  <div class="dropdown-container">
+    <label for="domainDropdown">Sélectionner un domaine :</label>
+    <select id="domainDropdown" [(ngModel)]="selectedDomain" (change)="onSelect(selectedDomain)">
+      <option *ngFor="let domain of domains" [ngValue]="domain">
+        {{ domain.domainId }} - {{ domain.name }}
+      </option>
+    </select>
+  </div>
+
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>User Email</th>
+          <th>Dev</th>
+          <th>Preprod</th>
+          <th>Prod</th>
+          <th>Test</th>
+          <th>ProdCopy</th>
+          <th>Staging</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngIf="selectedDomain">
+          <tr *ngFor="let user of users">
+            <ng-container *ngIf="user.domainId === selectedDomain.domainId">
+              <ng-container *ngFor="let login of logins">
+                <td *ngIf="login.loginId === user.loginId">
+                  {{ login.email }}
+                </td>
+              </ng-container>
+            </ng-container>
+            <td><input type="checkbox" [checked]="user.sysAdmin" (change)="onCheckboxChange(user)"/></td>
+            <td><input type="checkbox" [checked]="user.sysAdmin" (change)="onCheckboxChange(user)"/></td>
+            <td><input type="checkbox" [checked]="user.sysAdmin" (change)="onCheckboxChange(user)"/></td>
+            <td><input type="checkbox" [checked]="user.sysAdmin" (change)="onCheckboxChange(user)"/></td>
+            <td><input type="checkbox" [checked]="user.sysAdmin" (change)="onCheckboxChange(user)"/></td>
+            <td><input type="checkbox" [checked]="user.sysAdmin" (change)="onCheckboxChange(user)"/></td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+  </div>
 </div>
