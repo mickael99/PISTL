@@ -4013,24 +4013,48 @@
     ]
   },
   "packageFolders": {
+<<<<<<< HEAD
     "/home/walter/.nuget/packages/": {}
+=======
+    "C:\\Users\\walte\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+>>>>>>> login
   },
   "project": {
     "version": "1.0.0",
     "restore": {
+<<<<<<< HEAD
       "projectUniqueName": "/home/walter/Desktop/MASTER/PISTL/PISTL/Project/backend/Project.csproj",
       "projectName": "Project",
       "projectPath": "/home/walter/Desktop/MASTER/PISTL/PISTL/Project/backend/Project.csproj",
       "packagesPath": "/home/walter/.nuget/packages/",
       "outputPath": "/home/walter/Desktop/MASTER/PISTL/PISTL/Project/backend/obj/",
+=======
+      "projectUniqueName": "C:\\Users\\walte\\Desktop\\MASTER\\PISTL\\PISTL\\Project\\backend\\Project.csproj",
+      "projectName": "Project",
+      "projectPath": "C:\\Users\\walte\\Desktop\\MASTER\\PISTL\\PISTL\\Project\\backend\\Project.csproj",
+      "packagesPath": "C:\\Users\\walte\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\walte\\Desktop\\MASTER\\PISTL\\PISTL\\Project\\backend\\obj\\",
+>>>>>>> login
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
+<<<<<<< HEAD
         "/home/walter/.nuget/NuGet/NuGet.Config"
+=======
+        "C:\\Users\\walte\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+>>>>>>> login
       ],
       "originalTargetFrameworks": [
         "net8.0"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -4084,7 +4108,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/8.0.100/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
