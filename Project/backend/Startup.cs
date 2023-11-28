@@ -1,6 +1,7 @@
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
@@ -24,7 +25,10 @@ public class Startup {
             });
         });
 
-        
+        services.AddDbContext<DbContext>(options => 
+        {
+            options.UseSqlServer("Server=WalterJunior;Database=master;TrustServerCertificate=true;Trusted_Connection=True;");
+        });
     }
 
 

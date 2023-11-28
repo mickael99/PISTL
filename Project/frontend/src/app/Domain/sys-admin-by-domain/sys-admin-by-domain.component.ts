@@ -30,9 +30,6 @@ export class SysAdminByDomainComponent implements OnInit {
         for (const login of data.logins) {
           this.logins.push(login);
         }
-        console.log(this.domains[4].domainId);
-        console.log(this.users[0].loginId);
-        console.log(this.logins[0].email);
       },
       (error) => {
         alert('Connection error: ' + error.message);
