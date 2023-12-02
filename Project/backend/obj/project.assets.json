@@ -4013,19 +4013,19 @@
     ]
   },
   "packageFolders": {
-    "/home/s-daniiel/.nuget/packages/": {}
+    "C:\\Users\\micka\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/s-daniiel/Desktop/Test/BON/PISTL/Project/backend/Project.csproj",
+      "projectUniqueName": "C:\\Users\\micka\\Desktop\\master\\sorbonne\\m2\\PISTL\\Projet\\PISLT_vrai\\PISTL\\Project\\backend\\Project.csproj",
       "projectName": "Project",
-      "projectPath": "/home/s-daniiel/Desktop/Test/BON/PISTL/Project/backend/Project.csproj",
-      "packagesPath": "/home/s-daniiel/.nuget/packages/",
-      "outputPath": "/home/s-daniiel/Desktop/Test/BON/PISTL/Project/backend/obj/",
+      "projectPath": "C:\\Users\\micka\\Desktop\\master\\sorbonne\\m2\\PISTL\\Projet\\PISLT_vrai\\PISTL\\Project\\backend\\Project.csproj",
+      "packagesPath": "C:\\Users\\micka\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\micka\\Desktop\\master\\sorbonne\\m2\\PISTL\\Projet\\PISLT_vrai\\PISTL\\Project\\backend\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/home/s-daniiel/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\micka\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
@@ -4076,12 +4076,6 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
-        "downloadDependencies": [
-          {
-            "name": "Microsoft.AspNetCore.App.Ref",
-            "version": "[8.0.0, 8.0.0]"
-          }
-        ],
         "frameworkReferences": {
           "Microsoft.AspNetCore.App": {
             "privateAssets": "none"
@@ -4090,7 +4084,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/8.0.100/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
