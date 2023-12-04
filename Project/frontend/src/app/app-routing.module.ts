@@ -4,7 +4,6 @@ import { DomainAdministrationComponent } from './Domain/domain-administration/do
 import { AppComponent } from './app.component';
 import { DomainBySysAdminComponent } from './Domain/domain-by-sys-admin/domain-by-sys-admin.component';
 import { SysAdminByDomainComponent } from './Domain/sys-admin-by-domain/sys-admin-by-domain.component';
-import { SysAdminByDomainDialog } from './Domain/sys-admin-by-domain/sys-admin-by-domain-dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
 
 const routes: Routes = [
