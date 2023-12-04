@@ -11,6 +11,7 @@ export class DomainAdministrationComponent {
   domainName: string = '';
   createdBy: string = '';
   edition: string = '';
+  selectedDomain: any;
 
   constructor(private renderer: Renderer2, private http: HttpClient) {
     this.http.get('http://localhost:5050/api/domain').subscribe(
@@ -38,5 +39,9 @@ export class DomainAdministrationComponent {
           alert('Connection error: ' + error.message);
         },
       });
+  }
+
+  onSelect(selectedDomain: any) {
+    this.selectedDomain = selectedDomain;
   }
 }

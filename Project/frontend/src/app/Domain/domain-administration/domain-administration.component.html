@@ -1,58 +1,107 @@
-<div class="centre">
-  <p class="centertest">domain-administration works!</p>
-  <table class="table">
-    <thead>
-      <tr>
-        <th>Domain ID</th>
-        <th>Name</th>
-        <th>Logo</th>
-        <th>Edition</th>
-        <th>Is SSO Enabled</th>
-        <th>Comment</th>
-        <th>Parent Company</th>
-        <th>Created Date</th>
-        <th>Created By</th>
-        <th>Modified Date</th>
-        <th>Modified By</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let domain of domains">
-        <td>{{ domain.domainId }}</td>
-        <td>{{ domain.name }}</td>
-        <td><img src="" alt="Logo" /></td>
-        <td>{{ domain.edition }}</td>
-        <td>{{ domain.isSsoEnabled }}</td>
-        <td>{{ domain.comment }}</td>
-        <td>{{ domain.parentCompany }}</td>
-        <td>{{ domain.createdDate | date }}</td>
-        <td>{{ domain.createdBy }}</td>
-        <td>{{ domain.modifiedDate | date }}</td>
-        <td>{{ domain.modifiedBy }}</td>
-      </tr>
-    </tbody>
-  </table>
-  <div class="add-domain">
-    <h2>Ajouter un domaine</h2>
+<h1>Domain Administration</h1>
+
+<body>
+  <div class="list">
+    <select id="domainDropdown" [(ngModel)]="selectedDomain" (change)="onSelect(selectedDomain)">
+      <!--Liste déroulante vide pour le moment-->
+      <option *ngFor="let domain of domains | keyvalue" [ngValue]="domain.value">
+        {{ domain.value.domainId }} - {{ domain.value.name }}
+      </option>
+    </select>
+
+    <button class="button">New</button>
+    <button class="button">Edit</button>
+    <button class="button">Copy</button>
+  </div>
+
+  <div class="containerTexte">
+      <!-- Logo -->
+    <div class="domainLogo">
+      <img src="" alt="logo">
+    </div>
+
+    <!-- SSO -->
+    <div class="ssoCheck">
+      <label for="ssoToggle"><strong>SSO</strong>
+        <input type="checkbox" id="ssoToggle" class="toggle-button" checked disabled>
+        <label for="ssoToggle" class="toggle-label"></label>
+      </label>
+    </div>  
+
+    <!-- Conteneurs de texte avec saisie utilisateur -->
     <div>
-      <label for="domainName">Nom du domaine:</label>
-      <input type="text" id="domainName" [(ngModel)]="domainName" />
+      <label for="domainName"><strong>Name</strong> </label>
+      <input type="text" id="inputDomainName" disabled>
     </div>
 
     <div>
-      <label for="createdBy">Créé par:</label>
-      <input type="text" id="createdBy" [(ngModel)]="createdBy" />
+        <label for="edition"><strong>Edition</strong></label>
+        <input type="text" id="inputEdition" disabled>
     </div>
 
     <div>
-      <label for="edition">Édition:</label>
-      <input type="text" id="edition" [(ngModel)]="edition" />
+        <label for="parentCompany"><strong>Company</strong></label>
+        <input type="text" id="inputParentCompany" disabled>
     </div>
 
-    <div class="btn--center">
-      <button class="btn btn-primary btn-lg" (click)="addDomain()">
-        Valider l'ajout
-      </button>
+    <div>
+        <label for="comment"><strong>Comment</strong></label>
+        <input type="text" id="inputComment" disabled>
     </div>
   </div>
-</div>
+
+  <div class="ongletName">
+    <input type="radio" id="dev" class="ongletDev" checked>
+    <label>Dev</label>
+
+    <input type="radio" id="preprod" class="ongletPreprod">
+    <label>Preprod</label>
+
+    <input type="radio" id="prod">
+    <label>Prod</label>
+
+    <input type="radio" id="test">
+    <label>Test</label>
+
+    <input type="radio" id="prodcopy">
+    <label>Prodcopy</label>
+
+    <input type="radio" id="staging">
+    <label class="stagingColor">Staging</label>
+  </div>
+
+  <div class="ongletContent">
+    <div class="bp5Check">
+      <label for="bp5Toggle"><strong>BP5</strong>
+        <input type="checkbox" id="bp5Toggle" class="bp5Check" checked disabled>
+        <label for="bp5Toggle" class="bp5Check"></label>
+      </label>
+    </div>  
+
+    <div class="section">
+      <label for="database"><strong>Database</strong></label>
+      <input type="text" id="database" disabled>
+    </div>
+  
+    <div class="section">
+      <label for="webServer"><strong>Web Server</strong></label>
+      <input type="text" id="webServer" disabled>
+    </div>
+  
+    <div class="section">
+      <label for="eaiFtp"><strong>EAI FTP</strong></label>
+      <input type="text" id="eaiFtp" disabled>
+    </div>
+  
+    <div class="section">
+      <label for="tableauServer"><strong>Tableau Server</strong></label>
+      <input type="text" id="tableauServer" disabled>
+    </div>
+  
+    <div class="section">
+      <label for="ssrsServer"><strong>SSRS Server</strong></label>
+      <input type="text" id="ssrsServer" disabled>
+    </div>
+  </div>
+
+</body>
