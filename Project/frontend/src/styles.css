@@ -19,3 +19,6 @@ body {
   color: #555;
   overflow-x: hidden; /* cacher tous les elements qui debordent sur x*/
 }
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

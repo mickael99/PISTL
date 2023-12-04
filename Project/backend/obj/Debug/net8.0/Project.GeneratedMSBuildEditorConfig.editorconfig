@@ -8,10 +8,6 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = Project
-<<<<<<< HEAD
-build_property.ProjectDir = /home/walter/Desktop/MASTER/PISTL/PISTL/Project/backend/
-=======
 build_property.ProjectDir = C:\Users\walte\Desktop\MASTER\PISTL\PISTL\Project\backend\
->>>>>>> login
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 

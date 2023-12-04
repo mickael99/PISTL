@@ -1,5 +1,9 @@
 {
   "dataworkspace.excludedProjects": [
     "Project/DatabaseProjectDatabaseFirstDemo/DatabaseProjectDatabaseFirstDemo.sqlproj"
+  ],
+  "nunitTestRunner.projectsPatterns": [
+    "**/bin/*.Tests.dll",
+    "**/frontend/src/app/Domain/sys-admin-by-domain"
   ]
 }

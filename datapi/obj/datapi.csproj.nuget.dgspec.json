@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\walte\\Desktop\\MASTER\\PISTL\\PISTL\\Project\\backend\\Project.csproj": {}
+    "C:\\Users\\walte\\Desktop\\MASTER\\PISTL\\PISTL\\datapi\\datapi.csproj": {}
   },
   "projects": {
-    "C:\\Users\\walte\\Desktop\\MASTER\\PISTL\\PISTL\\Project\\backend\\Project.csproj": {
+    "C:\\Users\\walte\\Desktop\\MASTER\\PISTL\\PISTL\\datapi\\datapi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\walte\\Desktop\\MASTER\\PISTL\\PISTL\\Project\\backend\\Project.csproj",
-        "projectName": "Project",
-        "projectPath": "C:\\Users\\walte\\Desktop\\MASTER\\PISTL\\PISTL\\Project\\backend\\Project.csproj",
+        "projectUniqueName": "C:\\Users\\walte\\Desktop\\MASTER\\PISTL\\PISTL\\datapi\\datapi.csproj",
+        "projectName": "datapi",
+        "projectPath": "C:\\Users\\walte\\Desktop\\MASTER\\PISTL\\PISTL\\datapi\\datapi.csproj",
         "packagesPath": "C:\\Users\\walte\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\walte\\Desktop\\MASTER\\PISTL\\PISTL\\Project\\backend\\obj\\",
+        "outputPath": "C:\\Users\\walte\\Desktop\\MASTER\\PISTL\\PISTL\\datapi\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -45,22 +45,11 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
-            "Microsoft.AspNetCore.Cors": {
-              "target": "Package",
-              "version": "[2.2.0, )"
-            },
-            "Microsoft.AspNetCore.Razor.Design": {
-              "suppressParent": "All",
-              "target": "Package",
-              "version": "[2.2.0, )"
-            },
-            "Microsoft.EntityFrameworkCore.Design": {
-              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
-              "suppressParent": "All",
+            "Microsoft.AspNetCore.SpaProxy": {
               "target": "Package",
               "version": "[8.0.0, )"
             },
-            "Microsoft.EntityFrameworkCore.SqlServer": {
+            "Microsoft.EntityFrameworkCore": {
               "target": "Package",
               "version": "[8.0.0, )"
             }

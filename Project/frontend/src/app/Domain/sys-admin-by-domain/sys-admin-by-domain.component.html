@@ -2,12 +2,11 @@
   <div class="dropdown-container">
     <label for="domainDropdown">Sélectionner un domaine :</label>
     <select id="domainDropdown" [(ngModel)]="selectedDomain" (change)="onSelect(selectedDomain)">
-      <option *ngFor="let domain of domains" [ngValue]="domain">
-        {{ domain.domainId }} - {{ domain.name }}
+      <option *ngFor="let domain of domains | keyvalue" [ngValue]="domain.value">
+        {{ domain.value.domainId }} - {{ domain.value.name }}
       </option>
     </select>
   </div>
-
   <div class="table-container">
     <table>
       <thead>
@@ -23,20 +22,18 @@
       </thead>
       <tbody>
         <ng-container *ngIf="selectedDomain">
-          <tr *ngFor="let user of users">
-            <ng-container *ngIf="user.domainId === selectedDomain.domainId">
-              <ng-container *ngFor="let login of logins">
-                <td *ngIf="login.loginId === user.loginId">
-                  {{ login.email }}
-                </td>
+          <tr *ngFor="let login of logins | keyvalue">
+            <ng-container *ngFor="let user of users | keyvalue">
+              <ng-container *ngIf="user.value.domainId === selectedDomain.domainId && user.value.loginId === login.value.loginId">
+                <td>{{login.value.email}}</td>
+                <ng-container *ngFor="let env of [1,2,3,4,5,6]">
+                  <td>
+                      <p>{{user.value.loginId}} | {{user.value.environment}} | {{user.value.sysAdmin}}</p>
+                      <input type="checkbox" [(ngModel)]="user.value.environment === env && user.value.sysAdmin" (change)="onAddedToEnv(user.value, env)">
+                  </td>
+                </ng-container>
               </ng-container>
             </ng-container>
-            <td><input type="checkbox" [checked]="user.sysAdmin" (change)="onCheckboxChange(user)"/></td>
-            <td><input type="checkbox" [checked]="user.sysAdmin" (change)="onCheckboxChange(user)"/></td>
-            <td><input type="checkbox" [checked]="user.sysAdmin" (change)="onCheckboxChange(user)"/></td>
-            <td><input type="checkbox" [checked]="user.sysAdmin" (change)="onCheckboxChange(user)"/></td>
-            <td><input type="checkbox" [checked]="user.sysAdmin" (change)="onCheckboxChange(user)"/></td>
-            <td><input type="checkbox" [checked]="user.sysAdmin" (change)="onCheckboxChange(user)"/></td>
           </tr>
         </ng-container>
       </tbody>
