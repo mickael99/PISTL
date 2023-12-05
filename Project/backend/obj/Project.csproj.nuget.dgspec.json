@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\M2\\PISTL\\PISTL\\Project\\backend\\Project.csproj": {}
+    "D:\\M2\\PISTL\\Project\\backend\\Project.csproj": {}
   },
   "projects": {
-    "D:\\M2\\PISTL\\PISTL\\Project\\backend\\Project.csproj": {
+    "D:\\M2\\PISTL\\Project\\backend\\Project.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\M2\\PISTL\\PISTL\\Project\\backend\\Project.csproj",
+        "projectUniqueName": "D:\\M2\\PISTL\\Project\\backend\\Project.csproj",
         "projectName": "Project",
-        "projectPath": "D:\\M2\\PISTL\\PISTL\\Project\\backend\\Project.csproj",
+        "projectPath": "D:\\M2\\PISTL\\Project\\backend\\Project.csproj",
         "packagesPath": "C:\\Users\\Yukhoi\\.nuget\\packages\\",
-        "outputPath": "D:\\M2\\PISTL\\PISTL\\Project\\backend\\obj\\",
+        "outputPath": "D:\\M2\\PISTL\\Project\\backend\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Yukhoi\\AppData\\Roaming\\NuGet\\NuGet.Config",
