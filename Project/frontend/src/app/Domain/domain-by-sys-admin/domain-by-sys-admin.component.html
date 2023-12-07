@@ -1,3 +1,39 @@
 <div class="centre">
-  <p class="centertest">domain-by-sys-admin works!</p>
+  <div class="dropdown-container">
+    <label for="userDropdown">Sélectionner un administrateur :</label>
+    <select id="userDropdown" [(ngModel)]="selectedUser" (change)="onSelect(selectedUser)">
+      <option *ngFor="let user of users | keyvalue" [ngValue]="user.value">
+        {{ user.value.userId }} - {{ user.value.name }}
+      </option>
+    </select>
+  </div>
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>Domain Name</th>
+          <th>Dev</th>
+          <th>Preprod</th>
+          <th>Prod</th>
+          <th>Test</th>
+          <th>ProdCopy</th>
+          <th>Staging</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngIf="selectedUser">
+          <tr *ngFor="let domain of domains | keyvalue">
+            <ng-container *ngIf="domain.value.domainId === selectedUser.domainId">
+              <td>{{ domain.value.name }}</td>
+              <ng-container *ngFor="let env of [1,2,3,4,5,6] | keyvalue">
+                <td>
+                  <input type="checkbox" [checked]="selectedUser.environment === env && selectedUser.sysAdmin" (change)="onAddedToEnv(selectedUser)">
+                </td>
+              </ng-container>
+            </ng-container>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+  </div>
 </div>

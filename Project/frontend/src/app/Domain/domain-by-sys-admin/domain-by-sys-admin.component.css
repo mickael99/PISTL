@@ -1,14 +1,50 @@
-.centertest {
-  padding: 10px;
+@import '~@angular/material/prebuilt-themes/indigo-pink.css';
+
+.centre {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 50%;
+}
+
+
+.dropdown-container {
+  position: relative;
+  left: 0;
+  border: 1px solid #000000;
+  background-color: rgb(255, 255, 255);
+  font-weight: 700;
+  font-size: 2rem;
+  padding: 8px;
+}
+
+.dropdown-container select {
+  margin-left: 10px;
+  margin-right: 10px;
+  background-color: rgb(255, 255, 255);
+  font-weight: 700;
+  font-size: 2rem;
+}
+
+.table-container {
+  width: 100%;
+}
+
+.table-container table {
+  border-collapse: collapse;
+  width: 100%;
   border-radius: 10px;
-  background-color: green;
+  background-color: rgb(255, 255, 255);
   font-weight: 900;
   font-size: 2rem;
 }
 
-.centre {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
+.tr-container {
+  width : 100%;
+}
+
+.table-container table td, .table-container table th{
+  border: 1px solid #000000;
+  padding: 8px;
+  width : 100%;
 }
