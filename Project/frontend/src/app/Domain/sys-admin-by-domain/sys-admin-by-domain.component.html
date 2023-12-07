@@ -1,11 +1,16 @@
 <div class="centre">
   <div class="dropdown-container">
-    <label for="domainDropdown">Sélectionner un domaine :</label>
-    <select id="domainDropdown" [(ngModel)]="selectedDomain" (change)="onSelect(selectedDomain)">
-      <option *ngFor="let domain of domains | keyvalue" [ngValue]="domain.value">
-        {{ domain.value.domainId }} - {{ domain.value.name }}
-      </option>
-    </select>
+    
+    <div style="margin: 0%;">
+      <mat-form-field appearance="fill">
+        <mat-label>Select domain</mat-label>
+        <mat-select [(value)]="selectedDomain" (selectionChange)="onChange($event)">
+          <mat-option *ngFor="let domain of domains | keyvalue" [value]="domain.value">
+            {{ domain.value.domainId }} - {{ domain.value.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
   </div>
   <div class="table-container">
     <table>
@@ -22,15 +27,17 @@
       </thead>
       <tbody>
         <ng-container *ngIf="selectedDomain">
-          <tr *ngFor="let login of logins | keyvalue">
-            <ng-container *ngFor="let user of users | keyvalue">
-              <ng-container *ngIf="user.value.domainId === selectedDomain.domainId && user.value.loginId === login.value.loginId">
-                <td>{{login.value.email}}</td>
-                <ng-container *ngFor="let env of [1,2,3,4,5,6]">
-                  <td>
-                      <p>{{user.value.loginId}} | {{user.value.environment}} | {{user.value.sysAdmin}}</p>
-                      <input type="checkbox" [(ngModel)]="user.value.environment === env && user.value.sysAdmin" (change)="onAddedToEnv(user.value, env)">
-                  </td>
+          <tr *ngFor="let login of logins_email | keyvalue">
+            <ng-container *ngFor="let user of login_users | keyvalue">
+              <ng-container *ngIf="user.value[0] === login.value">
+                <ng-container *ngIf="user.value[2][0].domainId === selectedDomain.domainId">
+                  <td>{{user.value[0]}}</td>
+                  <ng-container *ngFor="let env of [1,2,3,4,5,6]">
+                    <td>
+                      <p>{{env}} - {{user.value[1][env]}}</p>
+                      <input type="checkbox" [checked]="user.value[1][env]" (change)="onAddedToEnv(user.value[2][env-1], env)">
+                    </td>
+                  </ng-container>
                 </ng-container>
               </ng-container>
             </ng-container>

@@ -13,6 +13,10 @@ import { SysAdminByDomainDialog } from './Domain/sys-admin-by-domain/sys-admin-b
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule} from '@angular/material/select';
+import {MatTableModule} from '@angular/material/table'; 
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
 
 @NgModule({
   declarations: [
@@ -32,7 +36,11 @@ import { MatInputModule } from '@angular/material/input';
     MatDialogModule,
     MatFormFieldModule,
     ReactiveFormsModule,
-    MatInputModule],
+    MatInputModule,
+    MatSelectModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule],
   providers: [],
   bootstrap: [AppComponent]
 })

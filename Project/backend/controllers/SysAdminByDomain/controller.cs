@@ -12,7 +12,6 @@ public class SysAdminByDomainController : ControllerBase
     {
         try
         {
-            
             // Retrieve the list of all domains from your data source
             var context = new MasterContext();
             var domains = context.Domains.Select(d => new DomainDTO
@@ -55,66 +54,58 @@ public class SysAdminByDomainController : ControllerBase
     }
 
     [HttpPost]
-    public IActionResult PostSysAdmin([FromBody] LoginDomainUserDTO loginDomainUserDTO)
+    public IActionResult PostSysAdmin([FromBody] LoginDomainUserDTO userDTO)
     {
         try
         {
-            Console.WriteLine("DTO: "+loginDomainUserDTO.LoginId+" "+loginDomainUserDTO.Environment+" "+loginDomainUserDTO.DomainId+" "+loginDomainUserDTO.UserId+"  |"+ loginDomainUserDTO.SysAdmin);
-            // Remove previous LoginDomainUser object and add the new one
+            Console.WriteLine("Posting new user...");
+            Console.WriteLine("DTO: "+userDTO.LoginId+" "+userDTO.Environment+" "+userDTO.DomainId+" "+userDTO.UserId+" | "+ userDTO.SysAdmin);
+            
             var context = new MasterContext();
-            var allLoginDomainUsers = context.LoginDomainUsers.ToList();
             Console.WriteLine("Before");
-            foreach (var user in allLoginDomainUsers)
+            foreach (var user in context.LoginDomainUsers.ToList())
             {
-                Console.WriteLine(user.LoginId +" "+ user.SysAdmin);
+                Console.WriteLine(user.LoginId +" "+ user.Environment+" "+ user.SysAdmin);
             }
-
-            Boolean found = false;
-            foreach (var user in allLoginDomainUsers)
+            try
             {
-                if(user.LoginId == loginDomainUserDTO.LoginId && user.DomainId == loginDomainUserDTO.DomainId
-                     && user.Environment == loginDomainUserDTO.Environment && user.UserId == loginDomainUserDTO.UserId)
+                context.LoginDomainUsers.Add(new LoginDomainUser
                 {
-                    Console.WriteLine("Found, now modifying...");
-                    modifyUser(user, loginDomainUserDTO);
-                    context.LoginDomainUsers.Remove(user);
-                    try
-                    {
-                        context.SaveChanges();
-                        Console.WriteLine("Removed previous");
-                        context.LoginDomainUsers.Add(user);
-                        context.SaveChanges();
-                        Console.WriteLine("Added new one");
-                        found = true;
-                        break;
-                    }
-                    catch (Exception ex)
-                    {
-                        return BadRequest(ex.Message);
-                    }
-                } 
-                
+                    LoginId = userDTO.LoginId,
+                    DomainId = userDTO.DomainId,
+                    UserId = userDTO.UserId,
+                    Environment = userDTO.Environment,
+                    SysAdmin = userDTO.SysAdmin,
+                    SysAdminStartDate = userDTO.SysAdminStartDate,
+                    SysAdminEndDate = userDTO.SysAdminEndDate,
+                    Comment = userDTO.Comment,
+                    UserName = userDTO.UserName,
+                    ModifiedBy = userDTO.ModifiedBy,
+                    UserActive = false,
+                    LoginEnabled = true,
+                    LoginTypeId = null,
+                    AnalyticsEnabled = null,
+                    IsLight = null,
+                    DomainLastLoginDate = null,
+                    CreatedBy = "admin", // TODO: Change this to the current user
+                    CreatedDate = DateTime.Now,
+                    ModifiedDate = DateTime.Now,
+                    Domain = context.Domains.Find(userDTO.DomainId),
+                    Login = context.Logins.Find(userDTO.LoginId)
+                });
+                context.SaveChanges();
+                Console.WriteLine("Added new one");
             }
-            if(!found)
+            catch (Exception ex)
             {
-                context.LoginDomainUsers.Add(createUser(loginDomainUserDTO, context));
-                try
-                {
-                    context.SaveChanges();
-                    Console.WriteLine("Added new one");
-                }
-                catch (Exception ex)
-                {
-                    return BadRequest(ex.Message);
-                }
+                return BadRequest(ex.Message);
             }
             Console.WriteLine("After");
-            allLoginDomainUsers = context.LoginDomainUsers.ToList();
-            foreach (var user in allLoginDomainUsers)
+            foreach (var user in context.LoginDomainUsers.ToList())
             {
-                Console.WriteLine(user.LoginId +" "+ user.SysAdmin);
+                Console.WriteLine(user.LoginId +" "+ user.Environment+" "+ user.SysAdmin);
             }
-            return Ok(loginDomainUserDTO);
+            return Ok(userDTO);
         }
         catch (Exception ex)
         {
@@ -122,45 +113,55 @@ public class SysAdminByDomainController : ControllerBase
         }
     }
 
-    private void modifyUser(LoginDomainUser user, LoginDomainUserDTO newUser)
+    [HttpPut]
+    public IActionResult UpdateUser([FromBody] LoginDomainUserDTO userDTO)
     {
-        user.LoginId = newUser.LoginId;
-        user.DomainId = newUser.DomainId;
-        user.UserId = newUser.UserId;
-        user.Environment = newUser.Environment;
-        user.SysAdmin = newUser.SysAdmin;
-        user.SysAdminStartDate = newUser.SysAdminStartDate;
-        user.SysAdminEndDate = newUser.SysAdminEndDate;
-        user.Comment = newUser.Comment;
-        user.ModifiedBy = newUser.ModifiedBy;
-    }
-
-    private LoginDomainUser createUser(LoginDomainUserDTO userDTO, MasterContext context)
-    {
-        var user = new LoginDomainUser
+        try
         {
-            LoginId = userDTO.LoginId,
-            DomainId = userDTO.DomainId,
-            UserId = userDTO.UserId,
-            Environment = userDTO.Environment,
-            SysAdmin = userDTO.SysAdmin,
-            SysAdminStartDate = userDTO.SysAdminStartDate,
-            SysAdminEndDate = userDTO.SysAdminEndDate,
-            Comment = userDTO.Comment,
-            UserName = userDTO.UserName,
-            ModifiedBy = userDTO.ModifiedBy,
-            UserActive = false,
-            LoginEnabled = true,
-            LoginTypeId = null,
-            AnalyticsEnabled = null,
-            IsLight = null,
-            DomainLastLoginDate = null,
-            CreatedBy = "admin", // TODO: Change this to the current user
-            CreatedDate = DateTime.Now,
-            ModifiedDate = DateTime.Now,
-            Domain = context.Domains.Find(userDTO.DomainId),
-            Login = context.Logins.Find(userDTO.LoginId)
-        };
-        return user;
+            var context = new MasterContext();
+
+            Console.WriteLine("Updating user "+userDTO.UserId+"...");
+            Console.WriteLine("Before");
+            foreach (var u in context.LoginDomainUsers.ToList())
+            {
+                Console.WriteLine(u.LoginId +" "+ u.SysAdmin);
+            }
+            LoginDomainUser user = context.LoginDomainUsers.Where(u => u.LoginId == userDTO.LoginId && u.DomainId == userDTO.DomainId
+                     && u.Environment == userDTO.Environment && u.UserId == userDTO.UserId).Single<LoginDomainUser>();
+            if(user == null)
+            {
+                Console.WriteLine("Not found");
+                return NotFound();
+            }
+            else
+            { 
+                Console.WriteLine("Found user "+user.UserId+ ": "+user.DomainId+" | "+user.Environment+" | "+user.SysAdmin);
+                user.LoginId = userDTO.LoginId;
+                user.DomainId = userDTO.DomainId;
+                user.UserId = userDTO.UserId;
+                user.Environment = userDTO.Environment;
+                user.SysAdmin = userDTO.SysAdmin;
+                user.SysAdminStartDate = userDTO.SysAdminStartDate;
+                user.SysAdminEndDate = userDTO.SysAdminEndDate;
+                user.Comment = userDTO.Comment;
+                user.ModifiedBy = userDTO.ModifiedBy;
+                
+                context.Entry(user).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                Console.WriteLine("Modified user "+user.UserId);
+                context.SaveChanges();
+
+                Console.WriteLine("After");
+                foreach (var u in context.LoginDomainUsers.ToList())
+                {
+                    Console.WriteLine(u.LoginId +" "+ u.SysAdmin);
+                }
+                
+                return Ok(user);
+            }
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 }
