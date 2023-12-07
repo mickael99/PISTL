@@ -17,7 +17,10 @@
       <thead>
         <tr>
           <th>User Email</th>
-          <th>Dev</th>
+          <th>
+            <!-- <input type="checkbox" [checked]="allChecked(1)" (change)="checkAll(1)"> -->  
+            Dev
+          </th>
           <th>Preprod</th>
           <th>Prod</th>
           <th>Test</th>
@@ -29,16 +32,12 @@
         <ng-container *ngIf="selectedDomain">
           <tr *ngFor="let login of logins_email | keyvalue">
             <ng-container *ngFor="let user of login_users | keyvalue">
-              <ng-container *ngIf="user.value[0] === login.value">
-                <ng-container *ngIf="user.value[2][0].domainId === selectedDomain.domainId">
-                  <td>{{user.value[0]}}</td>
-                  <ng-container *ngFor="let env of [1,2,3,4,5,6]">
-                    <td>
-                      <p>{{env}} - {{user.value[1][env]}}</p>
-                      <input type="checkbox" [checked]="user.value[1][env]" (change)="onAddedToEnv(user.value[2][env-1], env)">
-                    </td>
-                  </ng-container>
-                </ng-container>
+              <ng-container *ngIf="user.value[0] === login.value && user.value[2][0].domainId === selectedDomain.domainId">
+                <td>{{user.value[0]}}</td>
+                <td *ngFor="let env of [1,2,3,4,5,6]">
+                  <p>{{env}} - {{user.value[1][env]}}</p>
+                  <input type="checkbox" [checked]="user.value[1][env]" (change)="onAddedToEnv(user.value[2][env-1], env)">
+                </td>
               </ng-container>
             </ng-container>
           </tr>

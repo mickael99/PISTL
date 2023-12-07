@@ -2,9 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { SysAdminByDomainDialog } from './sys-admin-by-domain-dialog.component'; // Replace with the actual path
-import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
 
 @Component({
   selector: 'app-sys-admin-by-domain',
@@ -16,12 +13,7 @@ export class SysAdminByDomainComponent implements OnInit {
   logins_email: { [loginId: number]: string } = {};
   login_users: { [loginId: number]: any } = {};
   selectedDomain: any;
-  displayedColumns: string[] = ['email', 'dev', 'preprod', 'prod', 'test', 'prodcopy', 'staging'];
 
-  dataSource = new MatTableDataSource<any>(); // Remplacez 'any' par le type approprié
-
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
   constructor(private renderer: Renderer2, private http: HttpClient, private dialog: MatDialog) {}
 
   ngOnInit(): void {
@@ -63,11 +55,6 @@ export class SysAdminByDomainComponent implements OnInit {
         }
         console.log(this.logins_email);
         console.log(this.login_users);
-        console.log(this.login_users[26996])
-
-        this.dataSource.data = Object.values(this.login_users);
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
 
       },
       (error) => {
@@ -126,5 +113,49 @@ export class SysAdminByDomainComponent implements OnInit {
   addSysAdmin(): void {
     console.log('Add sys admin');
 
+  }
+
+  //TODO: returns true if at least one user is sysadmin in the given environment
+  oneChecked(env: any): boolean {
+    for (const login of Object.keys(this.login_users)) {
+      console.log(this.login_users[login][1][env]);
+      if(this.login_users[login][1][env]){
+        return true;
+      }
+    }
+    return false;
+
+  }
+
+  //TODO: make sysadmin true for all users in the given environment
+  checkAll(env: any): void {
+    for (const login of Object.keys(this.login_users)) {
+      if(this.login_users[login][1][env]){
+        this.login_users[login][1][env] = false;
+      } else {
+        this.login_users[login][1][env] = true;
+      }
+    }
+  }
+
+
+  getEnvironmentLabel(env: number): string {
+    // Personnalisez les libellés des environnements selon vos besoins
+    switch (env) {
+      case 1:
+        return 'Dev';
+      case 2:
+        return 'Preprod';
+      case 3:
+        return 'Prod';
+      case 4:
+        return 'Test';
+      case 5:
+        return 'ProdCopy';
+      case 6:
+        return 'Staging';
+      default:
+        return '';
+    }
   }
 }
