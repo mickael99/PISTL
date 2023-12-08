@@ -24,7 +24,7 @@ public class UsersController : ControllerBase
     {
         try
         {
-            var context = new MasterContext();
+            var context = new DatContext();
             var logins = context.Logins;
             foreach (var login in logins)
             {
@@ -34,6 +34,9 @@ public class UsersController : ControllerBase
                     using (var hmac = new System.Security.Cryptography.HMACSHA512(login.PasswordSalt))
                     {
                         var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(user.Password));
+                        Console.WriteLine("Computed hash: " + BitConverter.ToString(computedHash));
+                        Console.WriteLine("Login hash: " + BitConverter.ToString(login.Password));
+
                         if (computedHash.SequenceEqual(login.Password))
                         {
                             string token = _create_token(user);

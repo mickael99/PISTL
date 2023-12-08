@@ -4018,11 +4018,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/s-daniiel/Desktop/Test/BON/PISTL/Project/backend/Project.csproj",
+      "projectUniqueName": "/home/s-daniiel/Desktop/Test/PISTL/Project/backend/Project.csproj",
       "projectName": "Project",
-      "projectPath": "/home/s-daniiel/Desktop/Test/BON/PISTL/Project/backend/Project.csproj",
+      "projectPath": "/home/s-daniiel/Desktop/Test/PISTL/Project/backend/Project.csproj",
       "packagesPath": "/home/s-daniiel/.nuget/packages/",
-      "outputPath": "/home/s-daniiel/Desktop/Test/BON/PISTL/Project/backend/obj/",
+      "outputPath": "/home/s-daniiel/Desktop/Test/PISTL/Project/backend/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/home/s-daniiel/.nuget/NuGet/NuGet.Config"

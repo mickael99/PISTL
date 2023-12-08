@@ -13,7 +13,7 @@ namespace DataBaseFirstDemo
     /***************************************************************************************/
     static void Main(string[] args)
     {
-      // addLogin("simadaniel@hotmail.com", "STL");
+      addLogin("simadaniel@hotmail.com", "STL");
       // addDomain("STL");
 
       CreateHostBuilder(args).Build().Run();
@@ -84,7 +84,7 @@ namespace DataBaseFirstDemo
         ModifiedDate = DateTime.Now,
         ModifiedBy = "Daniel"
       };
-      var context = new MasterContext();
+      var context = new DatContext();
       context.Logins.Add(newLogin);
       context.SaveChanges();
     }
@@ -109,7 +109,7 @@ namespace DataBaseFirstDemo
         ModifiedDate = DateTime.Now,
         ModifiedBy = "Daniel"
       };
-      var context = new MasterContext();
+      var context = new DatContext();
       context.Domains.Add(newDomain);
       context.SaveChanges();
     }
@@ -118,4 +118,3 @@ namespace DataBaseFirstDemo
 /***************************************************************************************/
 /***************************************************************************************/
 /***************************************************************************************/
-
