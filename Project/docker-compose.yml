@@ -1,0 +1,27 @@
+version: '3.4'
+
+services:
+  project:
+    image: ${DOCKER_REGISTRY-}project
+    build:
+      context: .
+      dockerfile: Project/Dockerfile
+  WalterJunior:
+      container_name: SqlServerContainer
+      image: mcr.microsoft.com/mssql/server:2017-latest
+      ports:
+        - "8002:1433"
+      environment:
+        - ACCEPT_EULA=Y
+        - SA_PASSWORD=Password123
+
+  WebApi:
+      container_name: WebApiContainer
+      image: ${DOCKER_REGISTRY-}project
+      ports:
+        - "8001:80"
+      build:
+        context: .
+        dockerfile: project/Dockerfile
+      depends_on:
+        - SqlServerDb
