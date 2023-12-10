@@ -13,11 +13,10 @@ namespace DataBaseFirstDemo
     /***************************************************************************************/
     static void Main(string[] args)
     {
-      addLogin("simadaniel@hotmail.com", "STL");
+      // addLogin("simadaniel@hotmail.com", "STL");
       // addDomain("STL");
 
       CreateHostBuilder(args).Build().Run();
-
     }
 
     /***************************************************************************************/
@@ -71,7 +70,7 @@ namespace DataBaseFirstDemo
         PasswordExpirationDate = DateTime.Now.AddDays(30),
         InvalidAttemptCount = 3,
         ResetPasswordEndDate = DateTime.Now.AddDays(1),
-        ResetPasswordKey = "654321",
+        ResetPasswordKey = null,
         ResetPasswordSentCount = 1,
         ResetPasswordInvalidAttemptCount = 1,
         LastLoginDate = DateTime.Now,

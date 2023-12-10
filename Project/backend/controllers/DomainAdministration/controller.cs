@@ -26,7 +26,6 @@ public class DomainAdministrationController : ControllerBase
     [HttpPost]
     public IActionResult PostDomain([FromBody] DomainModel model)
     {
-        Console.WriteLine("===============> POST /api/domain");
         try
         {
             var context = new MasterContext();

@@ -1,14 +1,20 @@
 <div class="container">
-  <ng-container *ngIf="showForm; else formHidden">
+  <ng-container *ngIf="showForm && !show2FA">
     <app-login
       [showForm]="showForm"
       (hideForm)="hideLoginForm()"
       (loginData)="onLoginData($event)"
+      (allow2FA)="allow2FA()"
     ></app-login>
   </ng-container>
-  <ng-template #formHidden>
+
+  <ng-container *ngIf="show2FA && !showForm">
+    <app-two-fa (hide2FA)="hide2FA()"></app-two-fa>
+  </ng-container>
+
+  <ng-container *ngIf="!show2FA && !showForm">
     <header>
-      <a href="#">
+      <a routerLink="/account">
         <picture>
           <img src="../assets/logo.png" class="logo" alt="Logo DAT UpClear" />
         </picture>
@@ -83,5 +89,5 @@
       </nav>
     </header>
     <router-outlet></router-outlet>
-  </ng-template>
+  </ng-container>
 </div>

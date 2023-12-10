@@ -39,8 +39,17 @@ public class UsersController : ControllerBase
 
                         if (computedHash.SequenceEqual(login.Password))
                         {
-                            string token = _create_token(user);
-                            return Ok(new { token });
+                            if (login.ResetPasswordKey != null)
+                            {
+                                Console.WriteLine("==> reset password key exists ");
+                                return Ok(new { exist = true });
+                            }
+                            else
+                            {
+                                string token = create_token(user.Email);
+                                Console.WriteLine("==> reset password NOT key exists ");
+                                return Ok(new { token, exist = false });
+                            }
                         }
                     }
                 }
@@ -59,11 +68,11 @@ public class UsersController : ControllerBase
     /// </summary>
     /// <param name="user">The user for whom the token is being created.</param>
     /// <returns>The generated JWT token.</returns>
-    private string _create_token(User user)
+    public static string create_token(string email)
     {
         List<Claim> claims = new List<Claim>
         {
-            new Claim(ClaimTypes.Name, user.Email)
+            new Claim(ClaimTypes.Name, email)
         };
 
         // key used to signe the token

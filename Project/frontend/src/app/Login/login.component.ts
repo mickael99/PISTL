@@ -11,9 +11,6 @@ import { Component, EventEmitter, Output, Renderer2 } from '@angular/core';
 })
 /***************************************************************************************/
 export class LoginComponent {
-  /** Event emitter for hiding the login form.              */
-  @Output() hideForm = new EventEmitter<void>();
-
   /** Indicates whether to show an error message or not.    */
   showError: boolean = false;
 
@@ -28,6 +25,12 @@ export class LoginComponent {
     email: string;
     motDePasse: string;
   }>();
+
+  /** Event emitter for hiding the login form.              */
+  @Output() hideForm = new EventEmitter<void>();
+
+  /** Event emitter to show the 2FA form.                */
+  @Output() allow2FA = new EventEmitter<void>();
 
   /***************************************************************************************/
   /**
@@ -49,32 +52,26 @@ export class LoginComponent {
       .post('http://localhost:5050/api/auth', { email, password })
       .subscribe(
         (data: any) => {
-          if (data.token) {
+          if (data.exist) {
+            console.log('data.exist === true');
+            this.allow2FA.emit();
+            localStorage.setItem('2FA', 'exists');
+            localStorage.setItem('email', this.email); // TODO voir si bonne methode
+          } else {
             // storage the jwt token in the local storage
             localStorage.setItem('token', data.token);
             localStorage.setItem('email', this.email); // TODO voir si bonne methode
-
-            this.hideLoginForm();
+            this.hideForm.emit();
             this.loginData.emit({
               email: this.email,
               motDePasse: this.motDePasse,
             });
-          } else {
-            this.showError = true;
           }
         },
         (error) => {
           this.showError = true;
         }
       );
-  }
-
-  /***************************************************************************************/
-  /**
-   * Hides the login form.
-   */
-  hideLoginForm() {
-    this.hideForm.emit();
   }
 
   /***************************************************************************************/
