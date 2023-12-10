@@ -1,10 +1,10 @@
-using System;
 using Project.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Text;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Cryptography;
 
 /***************************************************************************************/
 /***************************************************************************************/
@@ -28,39 +28,40 @@ public class UsersController : ControllerBase
             var logins = context.Logins;
             foreach (var login in logins)
             {
+                Console.WriteLine("==> Connect");
                 if (login.Email == user.Email)
                 {
 
-                    using (var hmac = new System.Security.Cryptography.HMACSHA512(login.PasswordSalt))
-                    {
-                        var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(user.Password));
-                        Console.WriteLine("Computed hash: " + BitConverter.ToString(computedHash));
-                        Console.WriteLine("Login hash: " + BitConverter.ToString(login.Password));
+                    var bytes = Encoding.UTF8.GetBytes(user.Password + login.PasswordSalt);
+                    var computedHash = SHA512.HashData(bytes);
+                    Console.WriteLine("Computed hash: " + BitConverter.ToString(computedHash));
+                    Console.WriteLine("Login hash: " + BitConverter.ToString(login.Password));
 
-                        if (computedHash.SequenceEqual(login.Password))
+                    if (computedHash.SequenceEqual(login.Password))
+                    {
+                        if (login.ResetPasswordKey != null)
                         {
-                            if (login.ResetPasswordKey != null)
-                            {
-                                Console.WriteLine("==> reset password key exists ");
-                                return Ok(new { exist = true });
-                            }
-                            else
-                            {
-                                string token = create_token(user.Email);
-                                Console.WriteLine("==> reset password NOT key exists ");
-                                return Ok(new { token, exist = false });
-                            }
+                            Console.WriteLine("==> reset password key exists ");
+                            return Ok(new { exist = true });
+                        }
+                        else
+                        {
+                            string token = create_token(user.Email);
+                            Console.WriteLine("==> reset password NOT key exists ");
+                            return Ok(new { token, exist = false });
                         }
                     }
                 }
             }
-            return BadRequest("Incorrect email or password");
         }
         catch (Exception ex)
         {
             return BadRequest(ex.Message);
         }
+
+        return BadRequest(new { message = "User not found." });
     }
+
 
     /***************************************************************************************/
     /// <summary>

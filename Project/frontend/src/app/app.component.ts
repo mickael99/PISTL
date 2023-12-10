@@ -20,9 +20,6 @@ export class AppComponent {
   /** The email entered in the login form.                              */
   email: string = '';
 
-  /** The password entered in the login form.                           */
-  motDePasse: string = '';
-
   /***************************************************************************************/
   /**
    * Initializes the component.
@@ -75,7 +72,6 @@ export class AppComponent {
    */
   onLoginData(loginData: { email: string; motDePasse: string }) {
     this.email = loginData.email;
-    this.motDePasse = loginData.motDePasse;
   }
 
   /***************************************************************************************/

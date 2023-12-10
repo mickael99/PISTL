@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Security.Cryptography;
+using System.Text;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Project.Models;
@@ -41,14 +42,14 @@ namespace DataBaseFirstDemo
     /// <param name="passwordHash">The resulting password hash.</param>
     /// <param name="passwordSalt">The resulting password salt.</param>
     /// 
-    private static void _create_password_hash(string password, out byte[] passwordHash, out byte[] passwordSalt)
-    {
-      using (var hmac = new System.Security.Cryptography.HMACSHA512())
-      {
-        passwordSalt = hmac.Key;
-        passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
-      }
-    }
+    // private static void _create_password_hash(string password, out byte[] passwordHash, out string passwordSalt)
+    // {
+    //   using (var hmac = new System.Security.Cryptography.HMACSHA512())
+    //   {
+    //     passwordSalt = hmac.Key;
+    //     passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+    //   }
+    // }
 
     /***************************************************************************************/
     /// <summary>
@@ -58,8 +59,9 @@ namespace DataBaseFirstDemo
     /// <param name="password">The password of the login.</param>
     static void addLogin(string email, string password)
     {
-      byte[] passwordHash, passwordSalt;
-      _create_password_hash(password, out passwordHash, out passwordSalt);
+      string passwordSalt = GetSalt(24);
+      byte[] passwordHash = EncryptPassword(password, passwordSalt);
+      // _create_password_hash(password, out passwordHash, out passwordSalt);
       var newLogin = new Login
       {
         Email = email,
@@ -112,6 +114,33 @@ namespace DataBaseFirstDemo
       context.Domains.Add(newDomain);
       context.SaveChanges();
     }
+
+    /***************************************************************************************/
+    /// <summary>
+    /// Generates a random salt.
+    /// </summary>
+    /// <param name="size">The size of the salt.</param>
+    /// <returns>The generated salt.</returns>
+    public static string GetSalt(int size)
+    {
+      return Convert.ToBase64String(RandomNumberGenerator.GetBytes(size));
+    }
+
+    /***************************************************************************************/
+    /// <summary>
+    /// Encrypts the password using SHA512 algorithm. // TODO change to PBKDF2
+    /// </summary>
+    /// <param name="password">The password to be encrypted.</param>
+    /// <param name="salt">The salt to be used.</param>
+    /// <returns>The encrypted password.</returns>
+    public static byte[] EncryptPassword(string password, string salt)
+    {
+      // if (!string.IsNullOrWhiteSpace(salt)) salt += SECRET; // TODO pourquoi utiliser la variable SECRET?
+      var bytes = Encoding.UTF8.GetBytes(password + salt);
+      var encryptedBytes = SHA512.HashData(bytes);
+      return encryptedBytes;
+    }
+
   }
 }
 /***************************************************************************************/

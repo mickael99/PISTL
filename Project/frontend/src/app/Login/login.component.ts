@@ -23,7 +23,6 @@ export class LoginComponent {
   /** Event emitter for passing the login data.             */
   @Output() loginData = new EventEmitter<{
     email: string;
-    motDePasse: string;
   }>();
 
   /** Event emitter for hiding the login form.              */
@@ -64,7 +63,6 @@ export class LoginComponent {
             this.hideForm.emit();
             this.loginData.emit({
               email: this.email,
-              motDePasse: this.motDePasse,
             });
           }
         },

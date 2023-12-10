@@ -20,6 +20,11 @@ export class TwoFAComponent {
   /** Event emitter for hiding the 2FA form.                */
   @Output() hide2FA = new EventEmitter<void>();
 
+  /** Event emitter for passing the login data.             */
+  @Output() loginData = new EventEmitter<{
+    email: string;
+  }>();
+
   /***************************************************************************************/
   /**
    * Creates an instance of TwoFAComponent.
@@ -42,6 +47,10 @@ export class TwoFAComponent {
             this.hide2FA.emit();
             // storage the jwt token in the local storage
             localStorage.setItem('token', data.token);
+            localStorage.removeItem('2FA');
+            this.loginData.emit({
+              email: localStorage.getItem('email'), // AV si mieux a faire
+            });
           } else {
             this.showError = true;
             console.log(data.message);

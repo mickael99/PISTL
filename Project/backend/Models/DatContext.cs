@@ -237,6 +237,10 @@ public partial class DatContext : DbContext
             entity.Property(e => e.Name).HasMaxLength(50);
             entity.Property(e => e.PasswordExpirationDate).HasColumnType("datetime");
             entity.Property(e => e.PasswordModifiedDate).HasColumnType("datetime");
+            entity.Property(e => e.PasswordSalt)
+                .HasMaxLength(32)
+                .IsUnicode(false)
+                .IsFixedLength();
             entity.Property(e => e.Phone)
                 .HasMaxLength(50)
                 .IsUnicode(false);
@@ -380,6 +384,10 @@ public partial class DatContext : DbContext
             entity.Property(e => e.Name).HasMaxLength(50);
             entity.Property(e => e.PasswordExpirationDate).HasColumnType("datetime");
             entity.Property(e => e.PasswordModifiedDate).HasColumnType("datetime");
+            entity.Property(e => e.PasswordSalt)
+                .HasMaxLength(32)
+                .IsUnicode(false)
+                .IsFixedLength();
             entity.Property(e => e.Phone)
                 .HasMaxLength(50)
                 .IsUnicode(false);
@@ -568,7 +576,7 @@ public partial class DatContext : DbContext
 
         modelBuilder.Entity<SingleSignOnMethod>(entity =>
         {
-            entity.HasKey(e => e.SingleSignOnId).HasName("PK__SingleSi__CB1BECB8A753491C");
+            entity.HasKey(e => e.SingleSignOnId).HasName("PK__SingleSi__CB1BECB8D19D0446");
 
             entity.ToTable("SingleSignOnMethod");
 
@@ -599,7 +607,7 @@ public partial class DatContext : DbContext
 
         modelBuilder.Entity<SingleSignOnSaml2ContactPerson>(entity =>
         {
-            entity.HasKey(e => e.ContactPersonId).HasName("PK__SingleSi__97C702DE2A42014E");
+            entity.HasKey(e => e.ContactPersonId).HasName("PK__SingleSi__97C702DE854896F8");
 
             entity.ToTable("SingleSignOnSaml2ContactPerson");
 

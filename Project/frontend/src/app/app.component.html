@@ -9,7 +9,10 @@
   </ng-container>
 
   <ng-container *ngIf="show2FA && !showForm">
-    <app-two-fa (hide2FA)="hide2FA()"></app-two-fa>
+    <app-two-fa
+      (hide2FA)="hide2FA()"
+      (loginData)="onLoginData($event)"
+    ></app-two-fa>
   </ng-container>
 
   <ng-container *ngIf="!show2FA && !showForm">

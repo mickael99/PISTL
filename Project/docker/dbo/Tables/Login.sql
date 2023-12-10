@@ -3,7 +3,7 @@
     [Email]                            NVARCHAR (200)  null,
     [Name]                             NVARCHAR (50)   not null,
     [Password]                         VARBINARY (MAX) not null,
-    [PasswordSalt]                     VARBINARY (MAX) null,
+    [PasswordSalt]                     CHAR(32) 	   null,
     [PasswordModifiedDate]             DATETIME        null,
     [PasswordExpirationDate]           DATETIME        null,
     [InvalidAttemptCount]              INT             null,
