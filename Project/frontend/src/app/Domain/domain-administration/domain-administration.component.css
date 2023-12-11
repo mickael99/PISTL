@@ -37,6 +37,21 @@ body {
   transform: scale(1.1); 
 }
 
+.buttonCancel {
+  margin-right: 10px;
+  padding: 10px 20px;
+  background-color: blue;
+  color: white;
+  border: 1px solid blue;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.buttonCancel:hover {
+  transform: scale(1.1); 
+}
+
 .domainLogo img {
   max-width: 100%;
 }
@@ -165,6 +180,13 @@ input[type="radio"]:checked + label + div {
 }
 
 
+/** Ajouter un domaine */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
 
 
 

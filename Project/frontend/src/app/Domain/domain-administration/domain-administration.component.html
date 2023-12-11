@@ -1,106 +1,159 @@
 <h1>Domain Administration</h1>
 
 <body>
-  <div class="list">
-    <select id="domainDropdown" [(ngModel)]="selectedDomain" (change)="onSelect(selectedDomain)">
-      <!--Liste déroulante vide pour le moment-->
-      <option *ngFor="let domain of domains | keyvalue" [ngValue]="domain.value">
-        {{ domain.value.domainId }} - {{ domain.value.name }}
-      </option>
-    </select>
-
-    <button class="button">New</button>
-    <button class="button">Edit</button>
-    <button class="button">Copy</button>
-  </div>
-
-  <div class="containerTexte">
+  <!-- Ajout d'un nouveau domaine -->
+  <div *ngIf="isNewDomainMode">
+    <div class="header">
+      <h2>New Domain</h2>
+    <!-- Boutons -->
+    <div class="buttonsAddNewDomain">
+      <button class="button" type="submit" (click)="addDomain()">Save</button>
+      <button class="buttonCancel" type="button" (click)="endNewDomainMode()">Cancel</button>
+    </div>
+  </div>  
+    <div class="containerTexte">
       <!-- Logo -->
-    <div class="domainLogo">
-      <img src="" alt="logo">
-    </div>
+      <div>
+        <label for="logo"><strong>Logo:</strong></label>
+        <input type="file" id="logo" (change)="onLogoChange($event)" [(ngModel)]="logo">
+      </div>
+      <!-- SSO -->
+      <div class="ssoCheck">
+        <label for="ssoToggle"><strong>SSO</strong>
+          <input type="checkbox" id="ssoToggle" class="toggle-button" [(ngModel)]="isSsoEnabled">
+          <label for="ssoToggle" class="toggle-label"></label>
+        </label>
+      </div>  
 
-    <!-- SSO -->
-    <div class="ssoCheck">
-      <label for="ssoToggle"><strong>SSO</strong>
-        <input type="checkbox" id="ssoToggle" class="toggle-button" checked disabled>
-        <label for="ssoToggle" class="toggle-label"></label>
-      </label>
-    </div>  
+      <!-- Conteneurs de texte avec saisie utilisateur -->
+      <div>
+        <label for="domainName"><strong>Name</strong> </label>
+        <input type="text" id="inputDomainName" [(ngModel)]="name">
+      </div>
 
-    <!-- Conteneurs de texte avec saisie utilisateur -->
-    <div>
-      <label for="domainName"><strong>Name</strong> </label>
-      <input type="text" id="inputDomainName" disabled>
-    </div>
+      <div>
+          <label for="edition"><strong>Edition</strong></label>
+          <input type="text" id="inputEdition" [(ngModel)]="edition">
+      </div>
 
-    <div>
-        <label for="edition"><strong>Edition</strong></label>
-        <input type="text" id="inputEdition" disabled>
-    </div>
+      <div>
+          <label for="parentCompany"><strong>Company</strong></label>
+          <input type="text" id="inputParentCompany" [(ngModel)]="parentCompany">
+      </div>
 
-    <div>
-        <label for="parentCompany"><strong>Company</strong></label>
-        <input type="text" id="inputParentCompany" disabled>
-    </div>
-
-    <div>
-        <label for="comment"><strong>Comment</strong></label>
-        <input type="text" id="inputComment" disabled>
+      <div>
+          <label for="comment"><strong>Comment</strong></label>
+          <input type="text" id="inputComment" [(ngModel)]="comment">
+      </div>
     </div>
   </div>
 
-  <div class="ongletName">
-    <input type="radio" id="dev" class="ongletDev" checked>
-    <label>Dev</label>
 
-    <input type="radio" id="preprod" class="ongletPreprod">
-    <label>Preprod</label>
 
-    <input type="radio" id="prod">
-    <label>Prod</label>
 
-    <input type="radio" id="test">
-    <label>Test</label>
+  <div *ngIf="!isNewDomainMode">
+    <!-- page de base -->>
+    <div class="list">
+      <select id="domainDropdown" [(ngModel)]="selectedDomain" (change)="onSelect(selectedDomain)">
+        <!--Liste déroulante vide pour le moment-->
+        <option *ngFor="let domain of domains | keyvalue" [ngValue]="domain.value">
+          {{ domain.value.domainId }} - {{ domain.value.name }}
+        </option>
+      </select>
 
-    <input type="radio" id="prodcopy">
-    <label>Prodcopy</label>
-
-    <input type="radio" id="staging">
-    <label class="stagingColor">Staging</label>
-  </div>
-
-  <div class="ongletContent">
-    <div class="bp5Check">
-      <label for="bp5Toggle"><strong>BP5</strong>
-        <input type="checkbox" id="bp5Toggle" class="bp5Check" checked disabled>
-        <label for="bp5Toggle" class="bp5Check"></label>
-      </label>
-    </div>  
-
-    <div class="section">
-      <label for="database"><strong>Database</strong></label>
-      <input type="text" id="database" disabled>
+      <button class="button" (click)="startNewDomainMode()">New</button>
+      <button class="button">Edit</button>
+      <button class="button">Copy</button>
     </div>
-  
-    <div class="section">
-      <label for="webServer"><strong>Web Server</strong></label>
-      <input type="text" id="webServer" disabled>
+
+    <div class="containerTexte">
+        <!-- Logo -->
+      <div class="domainLogo">
+        <img src="" alt="logo">
+      </div>
+
+      <!-- SSO -->
+      <div class="ssoCheck">
+        <label for="ssoToggle"><strong>SSO</strong>
+          <input type="checkbox" id="ssoToggle" class="toggle-button" [checked]="selectedDomain?.isSsoEnabled" disabled>
+          <label for="ssoToggle" class="toggle-label"></label>
+        </label>
+      </div>  
+
+      <!-- Conteneurs de texte avec saisie utilisateur -->
+      <div>
+        <label for="domainName"><strong>Name</strong> </label>
+        <input type="text" id="inputDomainName" [value]="selectedDomain?.name" disabled>
+      </div>
+
+      <div>
+          <label for="edition"><strong>Edition</strong></label>
+          <input type="text" id="inputEdition" [value]="selectedDomain?.edition" disabled>
+      </div>
+
+      <div>
+          <label for="parentCompany"><strong>Company</strong></label>
+          <input type="text" id="inputParentCompany" [value]="selectedDomain?.parentCompany" disabled>
+      </div>
+
+      <div>
+          <label for="comment"><strong>Comment</strong></label>
+          <input type="text" id="inputComment" [value]="selectedDomain?.comment" disabled>
+      </div>
     </div>
-  
-    <div class="section">
-      <label for="eaiFtp"><strong>EAI FTP</strong></label>
-      <input type="text" id="eaiFtp" disabled>
+
+    <div class="ongletName">
+      <input type="radio" id="dev" class="ongletDev" checked>
+      <label>Dev</label>
+
+      <input type="radio" id="preprod" class="ongletPreprod">
+      <label>Preprod</label>
+
+      <input type="radio" id="prod">
+      <label>Prod</label>
+
+      <input type="radio" id="test">
+      <label>Test</label>
+
+      <input type="radio" id="prodcopy">
+      <label>Prodcopy</label>
+
+      <input type="radio" id="staging">
+      <label class="stagingColor">Staging</label>
     </div>
-  
-    <div class="section">
-      <label for="tableauServer"><strong>Tableau Server</strong></label>
-      <input type="text" id="tableauServer" disabled>
-    </div>
-  
-    <div class="section">
-      <label for="ssrsServer"><strong>SSRS Server</strong></label>
-      <input type="text" id="ssrsServer" disabled>
+
+    <div class="ongletContent">
+      <div class="bp5Check">
+        <label for="bp5Toggle"><strong>BP5</strong>
+          <input type="checkbox" id="bp5Toggle" class="bp5Check" checked disabled>
+          <label for="bp5Toggle" class="bp5Check"></label>
+        </label>
+      </div>  
+
+      <div class="section">
+        <label for="database"><strong>Database</strong></label>
+        <input type="text" id="database" disabled>
+      </div>
+    
+      <div class="section">
+        <label for="webServer"><strong>Web Server</strong></label>
+        <input type="text" id="webServer" disabled>
+      </div>
+    
+      <div class="section">
+        <label for="eaiFtp"><strong>EAI FTP</strong></label>
+        <input type="text" id="eaiFtp" disabled>
+      </div>
+    
+      <div class="section">
+        <label for="tableauServer"><strong>Tableau Server</strong></label>
+        <input type="text" id="tableauServer" disabled>
+      </div>
+    
+      <div class="section">
+        <label for="ssrsServer"><strong>SSRS Server</strong></label>
+        <input type="text" id="ssrsServer" disabled>
+      </div>
     </div>
   </div>
 
