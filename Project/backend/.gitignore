@@ -1,4 +1,4 @@
 # Compilation
-backend/bin/
-backend/obj/
+bin/
+obj/
 

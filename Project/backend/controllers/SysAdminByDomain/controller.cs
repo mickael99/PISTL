@@ -37,15 +37,8 @@ public class SysAdminByDomainController : ControllerBase
                 LoginId = l.LoginId,
                 Email = l.Email
             }).ToList();
-            var envs = context.DomainEnvironments.Select(e => new DomainEnvironmentDTO
-            {
-                // Map properties from Environment to EnvironmentDTO
-                DomainEnvironmentId = e.DomainEnvironmentId,
-                DomainId = e.DomainId,
-                Environment = e.Environment
-            }).ToList();
-
-            return Ok(new{domains, users, logins, envs});
+            
+            return Ok(new{domains, users, logins});
         }
         catch (Exception ex)
         {
