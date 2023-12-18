@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Project.Models;
 
@@ -25,8 +26,9 @@ public partial class Database
 
     public string? ModifiedBy { get; set; }
 
+    [NotMapped]
     public virtual ICollection<DomainEnvironment> DomainEnvironmentBpdatabases { get; set; } = new List<DomainEnvironment>();
-
+    [NotMapped]
     public virtual ICollection<DomainEnvironment> DomainEnvironmentEaidatabases { get; set; } = new List<DomainEnvironment>();
 
     public virtual Server Server { get; set; } = null!;

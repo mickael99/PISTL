@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Project.Models;
+using System.ComponentModel.DataAnnotations.Schema;
+
 
 namespace Project.Data
 {
@@ -16,6 +18,12 @@ namespace Project.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+             modelBuilder.Entity<Database>()
+            .Ignore(d => d.DomainEnvironmentBpdatabases);
+
+             modelBuilder.Entity<Database>()
+            .Ignore(d => d.DomainEnvironmentEaidatabases);
+
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Database>(entity =>

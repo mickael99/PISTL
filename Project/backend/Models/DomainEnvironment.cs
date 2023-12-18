@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+
 
 namespace Project.Models;
 
@@ -32,7 +34,7 @@ public partial class DomainEnvironment
     public DateTime? ModifiedDate { get; set; }
 
     public string? ModifiedBy { get; set; }
-
+    
     public virtual Database? Bpdatabase { get; set; }
 
     public virtual Server BpwebServer { get; set; } = null!;
