@@ -181,29 +181,9 @@ input[type="radio"]:checked + label + div {
 
 
 /** Ajouter un domaine */
-.header {
+.headerAddDomain {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 10px;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

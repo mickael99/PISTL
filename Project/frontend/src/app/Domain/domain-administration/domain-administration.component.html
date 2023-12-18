@@ -3,19 +3,21 @@
 <body>
   <!-- Ajout d'un nouveau domaine -->
   <div *ngIf="isNewDomainMode">
-    <div class="header">
+    <div class="headerAddDomain">
       <h2>New Domain</h2>
     <!-- Boutons -->
-    <div class="buttonsAddNewDomain">
-      <button class="button" type="submit" (click)="addDomain()">Save</button>
-      <button class="buttonCancel" type="button" (click)="endNewDomainMode()">Cancel</button>
-    </div>
-  </div>  
+      <div class="buttonsAddNewDomain">
+        <button class="button" type="submit" (click)="confirmSave()">Save</button>
+        <button class="buttonCancel" type="button" (click)="endNewDomainMode()">Cancel</button>
+      </div>
+    </div>  
     <div class="containerTexte">
       <!-- Logo -->
       <div>
+        <!-- Autres champs du formulaire -->
         <label for="logo"><strong>Logo:</strong></label>
         <input type="file" id="logo" (change)="onLogoChange($event)" [(ngModel)]="logo">
+        <div id="imagePreview"></div>
       </div>
       <!-- SSO -->
       <div class="ssoCheck">
@@ -68,9 +70,7 @@
 
     <div class="containerTexte">
         <!-- Logo -->
-      <div class="domainLogo">
-        <img src="" alt="logo">
-      </div>
+      <div id="logo" class="domainLogo"></div>
 
       <!-- SSO -->
       <div class="ssoCheck">

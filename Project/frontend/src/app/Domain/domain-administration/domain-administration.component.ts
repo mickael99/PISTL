@@ -30,11 +30,20 @@ export class DomainAdministrationComponent {
     );
   }
 
-  onSelect(selectedDomain: any) {
-    this.selectedDomain = selectedDomain;
+  displayLogo(EncodinglogoPath: string) {
+    const imagePreview = document.getElementById('logo');
+    const logoPath = atob(EncodinglogoPath);
+    imagePreview.innerHTML = `<img src="${logoPath}" alt="Logo" style="max-width: 10%; max-height: 10%;">`;
   }
 
-  startNewDomainMode() {
+  onSelect(selectedDomain: any) : void {
+    console.log("chemin du fichier => ", selectedDomain.logo)
+    this.selectedDomain = selectedDomain;
+    if(selectedDomain && selectedDomain.logo)
+      this.displayLogo(selectedDomain.logo);
+  }
+
+  startNewDomainMode() : void {
     console.log("je rentre dans startnewdomain");
     this.isNewDomainMode = true;
 
@@ -46,29 +55,62 @@ export class DomainAdministrationComponent {
     this.parentCompany = '';
   }
 
-  endNewDomainMode() {
+  endNewDomainMode() : void {
     this.isNewDomainMode = false;
   }
 
-  addDomain() {
-    if(this.isNewDomainMode) {
-      this.http
-        .post('http://localhost:5050/api/domain', {
-          name: this.name,
-          logo: this.logo,
-          edition: this.edition,
-          isSsoEnabled: this.isSsoEnabled,
-          comment: this.comment,
-          parentCompany: this.parentCompany
-        })
-        .subscribe({
-          next: (data: any) => {
-            this.domains = data;
-          },
-          error: (error: any) => {
-            alert('Connection error: ' + error.message);
-          },
-        });
-      }
+  addDomain() : void {
+    if(!this.isNewDomainMode)
+      throw new Error("problem while domain adding");
+
+    this.http
+      .post('http://localhost:5050/api/domain', {
+        name: this.name,
+        logo: this.logo,
+        edition: this.edition,
+        isSsoEnabled: this.isSsoEnabled,
+        comment: this.comment,
+        parentCompany: this.parentCompany
+      })
+      .subscribe({
+        next: (data: any) => {
+          this.domains = data;
+        },
+        error: (error: any) => {
+          alert('Connection error: ' + error.message);
+        },
+      });
+
+      this.endNewDomainMode();
   } 
+
+  confirmSave() : void {
+    if(!this.isNewDomainMode)
+      throw new Error("problem while domain adding");
+
+    const isConfirmed = window.confirm("Are you sure to add the domain ?");
+    if(isConfirmed)
+      this.addDomain();
+  }
+
+  onLogoChange(event : any) : void {
+    if(this.isFileFormatConformed(this.logo)) {
+      const input = event.target;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const imagePreview = document.getElementById('imagePreview');
+        imagePreview.innerHTML = `<img src="${e.target.result}" alt="Preview" style="max-width: 10%; max-height: 10%;">`;
+      };
+      reader.readAsDataURL(input.files[0]);
+    }
+    else {
+      alert("The format file is not correct, only jpeg jpg and png extention are allowed");
+      this.logo = '';
+    }
+  }
+
+  isFileFormatConformed(file : string) : boolean {
+    const regex = /\.(jpeg|jpg|png)$/i;
+    return regex.test(file);
+  }
 }
