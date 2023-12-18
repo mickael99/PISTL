@@ -169,9 +169,33 @@ export class SysAdminByDomainComponent {
    */
   unCheckAll(env: any): void {
     console.log('unCheckAll');
-    for (const id of Object.keys(this.login_users)) {
-      if(this.login_users[id].length > 0){
-        this.login_users[id][1][env] = false;
+    for (const id of Object.keys(this.dataDomainTable)) {
+      if(this.dataDomainTable[id].length > 0){
+        this.dataDomainTable[id][env+2] = false;
+        let loginId = this.dataDomainTable[id][0];
+        let user = this.login_users[loginId][2][env-1];
+        console.log(user);
+        
+        /*
+        this.http.put('http://localhost:5050/api/sysadminbydomain', {
+            loginId: user.loginId,
+            domainId: user.domainId,
+            userId: user.userId,
+            environment: user.environment,
+            sysAdmin: user.sysAdmin,
+            sysAdminStartDate: Date.now(),
+            sysAdminEndDate: Date.now(),
+            comment: "",
+            modifiedBy: 'admin', // TODO: Replace with the actual login
+          }).subscribe(
+            (data: any) => {
+              console.log('Dialog result:', data);
+            },
+            (error) => {  
+              alert('Connection error: ' + error.message);
+            }
+          );
+          */
       }
     }
   }

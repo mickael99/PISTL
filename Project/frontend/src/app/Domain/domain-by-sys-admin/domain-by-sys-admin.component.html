@@ -1,39 +1,107 @@
-<div class="centre">
+<mat-card class="table-container">
   <div class="dropdown-container">
-    <label for="userDropdown">Sélectionner un administrateur :</label>
-    <select id="userDropdown" [(ngModel)]="selectedUser" (change)="onSelect(selectedUser)">
-      <option *ngFor="let user of users | keyvalue" [ngValue]="user.value">
-        {{ user.value.userId }} - {{ user.value.name }}
-      </option>
-    </select>
+    <mat-form-field appearance="fill">
+      <mat-label>Select user</mat-label>
+      <mat-select [(value)]="selectedLogin" (selectionChange)="onSelect($event)">
+        <mat-option *ngFor="let login of logins | keyvalue" [value]="login.value">
+          {{ login.value.email }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
   </div>
-  <div class="table-container">
-    <table>
-      <thead>
-        <tr>
-          <th>Domain Name</th>
-          <th>Dev</th>
-          <th>Preprod</th>
-          <th>Prod</th>
-          <th>Test</th>
-          <th>ProdCopy</th>
-          <th>Staging</th>
-        </tr>
-      </thead>
-      <tbody>
-        <ng-container *ngIf="selectedUser">
-          <tr *ngFor="let domain of domains | keyvalue">
-            <ng-container *ngIf="domain.value.domainId === selectedUser.domainId">
-              <td>{{ domain.value.name }}</td>
-              <ng-container *ngFor="let env of [1,2,3,4,5,6] | keyvalue">
-                <td>
-                  <input type="checkbox" [checked]="selectedUser.environment === env && selectedUser.sysAdmin" (change)="onAddedToEnv(selectedUser)">
-                </td>
-              </ng-container>
-            </ng-container>
-          </tr>
+  
+  <div style="margin: 0%;">
+    <mat-card-content >
+      <table matSort mat-table [dataSource]="dataSource">
+
+        <ng-container matColumnDef="domain">
+          <th mat-header-cell *matHeaderCellDef>
+            <button mat-raised-button color="primary" (click)="addSysAdmin(element)" style="margin: 8px 8px 8px 0;">Add</button>
+          </th>
+          <td mat-cell *matCellDef="let element"> {{element[0]}} </td>
         </ng-container>
-      </tbody>
-    </table>
+
+        <ng-container matColumnDef="dev">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <div style="margin: 5px;">Dev</div>
+            <input type="checkbox" [checked]="oneChecked(1)" (change)="unCheckAll(1)">
+          </th>
+          <td mat-cell *matCellDef="let element" style="text-align: center;"> 
+            <ng-container *ngIf="element[1][1] !== null; else elseBlock">
+              <p>{{element[1][0]}}</p>
+              <input type="checkbox" [checked]="element[1][0]" (change)="onAddedToEnv(element[1][1],1)">
+            </ng-container>
+            <ng-template #elseBlock>
+              <p>{{element[1][0]}}</p>
+              <input type="checkbox" [checked]="element[1][0]" (change)="onAddedToEnv(element[1][1],1)">
+            </ng-template>     
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="preprod">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> 
+            <div style="margin: 5px;">Preprod</div>
+            <input type="checkbox" [checked]="oneChecked(2)" (change)="unCheckAll(2)">
+          </th>
+          <td mat-cell *matCellDef="let element" style="text-align: center;"> 
+            <p>{{element[2][0]}}</p>
+            <input type="checkbox" [checked]="element[2][0]" (change)="onAddedToEnv(element[2][1],2)">   
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="prod">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <div style="margin: 5px;">Prod</div>
+            <input type="checkbox" [checked]="oneChecked(3)" (change)="unCheckAll(3)">
+          </th>
+          <td mat-cell *matCellDef="let element" style="text-align: center;"> 
+            <p>{{element[3][0]}}</p>
+            <input type="checkbox" [checked]="element[3][0]" (change)="onAddedToEnv(element[3][1],3)">        
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="test">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <div style="margin: 5px;">Test</div>
+            <input type="checkbox" [checked]="oneChecked(4)" (change)="unCheckAll(4)">
+          </th>
+          <td mat-cell *matCellDef="let element" style="text-align: center;"> 
+            <p>{{element[4][0]}}</p>
+            <input type="checkbox" [checked]="element[4][0]" (change)="onAddedToEnv(element[4][1],4)">   
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="prodCopy">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <div style="margin: 5px;">ProdCopy</div>
+            <input type="checkbox" [checked]="oneChecked(5)" (change)="unCheckAll(5)">
+          </th>
+          <td mat-cell *matCellDef="let element" style="text-align: center;"> 
+            <p>{{element[5][0]}}</p>
+            <input type="checkbox" [checked]=" element[5][0]" (change)="onAddedToEnv(element[5][1],5)">        
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="staging">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <div style="margin: 5px;">Staging</div>
+            <input type="checkbox" [checked]="oneChecked(6)" (change)="unCheckAll(6)">
+          </th>
+          <td mat-cell *matCellDef="let element" style="text-align: center;"> 
+            <p>{{element[6][0]}}</p>
+            <input type="checkbox" [checked]="element[6][0]" (change)="onAddedToEnv(element[6][1],6)">     
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+      </table>
+
+    </mat-card-content>
+    <br>
+    <mat-card-footer>
+        <mat-paginator [pageSizeOptions]="[10,20]" showFirstLastButtons></mat-paginator>
+    </mat-card-footer>
   </div>
-</div>
+</mat-card>

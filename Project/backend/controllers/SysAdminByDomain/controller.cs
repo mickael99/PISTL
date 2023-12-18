@@ -3,7 +3,7 @@ using Project.Models;
 using Microsoft.AspNetCore.Mvc;
 using Project.Models.DTO;
 
-[Route("api/sysadminbydomain")]
+[Route("api/sysadminbydomain")] 
 [ApiController]
 public class SysAdminByDomainController : ControllerBase
 {
