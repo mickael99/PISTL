@@ -33,10 +33,9 @@ public class Startup
         });
 
         services.AddDbContext<DatabaseContext>(options =>
-            options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            options.UseSqlServer("Server=LAPTOP-C49R77JJ/SQLEXPRESS;Database=master;TrustServerCertificate=true;Trusted_Connection=True;"));
+            
         services.AddScoped<IDatabaseRepository, DatabaseRepository>();
-
-        // ... any other services you need to register
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env) 
