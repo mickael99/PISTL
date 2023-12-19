@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "EYy7WbMe3YZQ1AMqx/z2rOpF9V03CXdG9TmyzpNwgA7UTUiVeQLcsZ+DcOiV2DwSeNWOV0grxHLZPsSjv883kw==",
+  "dgSpecHash": "5jkuQRNjnc9Qh92RwshGTQEMBtj3B+31Y1NPJr2vvPGpQgu6uN2wKR4vDCSRB6YoSjv71w6MykCmFJX+nDouhw==",
   "success": true,
-  "projectFilePath": "/home/s-daniiel/Desktop/M2 STL 2023-2024/Semestre 1/PITSL - Projet d'ingénierie STL /PISTL/Project/backend/backend.csproj",
+  "projectFilePath": "/home/s-daniiel/Desktop/M2 STL 2023-2024/Semestre 1/PITSL - Projet d'ingénierie STL /PISTL/Project/Project.csproj",
   "expectedPackageFiles": [
     "/home/s-daniiel/.nuget/packages/coverlet.collector/6.0.0/coverlet.collector.6.0.0.nupkg.sha512",
     "/home/s-daniiel/.nuget/packages/microsoft.codecoverage/17.6.0/microsoft.codecoverage.17.6.0.nupkg.sha512",

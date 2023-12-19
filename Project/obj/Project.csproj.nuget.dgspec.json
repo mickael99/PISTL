@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/home/s-daniiel/Desktop/M2 STL 2023-2024/Semestre 1/PITSL - Projet d'ingénierie STL /PISTL/Project/backend/src/Project.csproj": {}
+    "/home/s-daniiel/Desktop/M2 STL 2023-2024/Semestre 1/PITSL - Projet d'ingénierie STL /PISTL/Project/Project.csproj": {}
   },
   "projects": {
-    "/home/s-daniiel/Desktop/M2 STL 2023-2024/Semestre 1/PITSL - Projet d'ingénierie STL /PISTL/Project/backend/src/Project.csproj": {
+    "/home/s-daniiel/Desktop/M2 STL 2023-2024/Semestre 1/PITSL - Projet d'ingénierie STL /PISTL/Project/Project.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/s-daniiel/Desktop/M2 STL 2023-2024/Semestre 1/PITSL - Projet d'ingénierie STL /PISTL/Project/backend/src/Project.csproj",
+        "projectUniqueName": "/home/s-daniiel/Desktop/M2 STL 2023-2024/Semestre 1/PITSL - Projet d'ingénierie STL /PISTL/Project/Project.csproj",
         "projectName": "Project",
-        "projectPath": "/home/s-daniiel/Desktop/M2 STL 2023-2024/Semestre 1/PITSL - Projet d'ingénierie STL /PISTL/Project/backend/src/Project.csproj",
+        "projectPath": "/home/s-daniiel/Desktop/M2 STL 2023-2024/Semestre 1/PITSL - Projet d'ingénierie STL /PISTL/Project/Project.csproj",
         "packagesPath": "/home/s-daniiel/.nuget/packages/",
-        "outputPath": "/home/s-daniiel/Desktop/M2 STL 2023-2024/Semestre 1/PITSL - Projet d'ingénierie STL /PISTL/Project/backend/src/obj/",
+        "outputPath": "/home/s-daniiel/Desktop/M2 STL 2023-2024/Semestre 1/PITSL - Projet d'ingénierie STL /PISTL/Project/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/s-daniiel/.nuget/NuGet/NuGet.Config"
@@ -38,36 +38,25 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
-            "GoogleAuthenticator": {
+            "Microsoft.NET.Test.Sdk": {
               "target": "Package",
-              "version": "[3.1.1, )"
-            },
-            "Microsoft.AspNetCore.Razor.Design": {
-              "suppressParent": "All",
-              "target": "Package",
-              "version": "[2.2.0, )"
-            },
-            "Microsoft.EntityFrameworkCore.Design": {
-              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
-              "suppressParent": "All",
-              "target": "Package",
-              "version": "[8.0.0, )"
-            },
-            "Microsoft.EntityFrameworkCore.SqlServer": {
-              "target": "Package",
-              "version": "[8.0.0, )"
-            },
-            "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
-              "target": "Package",
-              "version": "[8.0.0, )"
+              "version": "[17.6.0, )"
             },
             "NUnit": {
               "target": "Package",
-              "version": "[4.0.1, )"
+              "version": "[3.13.3, )"
+            },
+            "NUnit.Analyzers": {
+              "target": "Package",
+              "version": "[3.6.1, )"
             },
             "NUnit3TestAdapter": {
               "target": "Package",
-              "version": "[4.5.0, )"
+              "version": "[4.2.1, )"
+            },
+            "coverlet.collector": {
+              "target": "Package",
+              "version": "[6.0.0, )"
             }
           },
           "imports": [
@@ -88,9 +77,6 @@
             }
           ],
           "frameworkReferences": {
-            "Microsoft.AspNetCore.App": {
-              "privateAssets": "none"
-            },
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
             }

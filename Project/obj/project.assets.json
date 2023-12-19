@@ -991,11 +991,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/s-daniiel/Desktop/M2 STL 2023-2024/Semestre 1/PITSL - Projet d'ingénierie STL /PISTL/Project/backend/backend.csproj",
-      "projectName": "backend",
-      "projectPath": "/home/s-daniiel/Desktop/M2 STL 2023-2024/Semestre 1/PITSL - Projet d'ingénierie STL /PISTL/Project/backend/backend.csproj",
+      "projectUniqueName": "/home/s-daniiel/Desktop/M2 STL 2023-2024/Semestre 1/PITSL - Projet d'ingénierie STL /PISTL/Project/Project.csproj",
+      "projectName": "Project",
+      "projectPath": "/home/s-daniiel/Desktop/M2 STL 2023-2024/Semestre 1/PITSL - Projet d'ingénierie STL /PISTL/Project/Project.csproj",
       "packagesPath": "/home/s-daniiel/.nuget/packages/",
-      "outputPath": "/home/s-daniiel/Desktop/M2 STL 2023-2024/Semestre 1/PITSL - Projet d'ingénierie STL /PISTL/Project/backend/obj/",
+      "outputPath": "/home/s-daniiel/Desktop/M2 STL 2023-2024/Semestre 1/PITSL - Projet d'ingénierie STL /PISTL/Project/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/home/s-daniiel/.nuget/NuGet/NuGet.Config"
