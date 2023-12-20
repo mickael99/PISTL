@@ -28,10 +28,8 @@ jobs:
 
         - name: Run Docker image
           run: |
-            docker run -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=Daniel123' -p 1434:1433 --name sql_container sql_dat
-            sleep 30
+            docker run -d -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=Daniel123' -p 1434:1433 --name sql_container sql_dat 
         
         - name: Run Tests
           run: |
             dotnet test Project/backend/test/test.csproj --no-build --verbosity normal
-            sleep 30
