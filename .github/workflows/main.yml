@@ -8,14 +8,7 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
-    services:
-      sql.data:
-        image: mcr.microsoft.com/mssql/server:2022-latest
-        env:
-          SA_PASSWORD: Daniel123
-          ACCEPT_EULA: Y
-        ports:
-          - "1434:1433"
+
     steps:
       - name: Checkout
         uses: actions/checkout@v2
