@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       sql.data:
-        image: mcr.microsoft.com/mssql/server:2022-latest
+        image: docker build -t sql_dat -f Project/docker/Dockerfile Project/docker/
         env:
           SA_PASSWORD: Daniel123
           ACCEPT_EULA: Y
@@ -28,20 +28,8 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore Project/backend/backend.sln
 
-      - name: Build Docker image
-        run: docker build -t sql_dat -f Project/docker/Dockerfile Project/docker/
-
-      - name: Start SQL Server Container
-        run: docker run -d -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=Daniel123' -p 1434:1433 --name sql_container sql_dat
-
-      - name: Wait for SQL Server to Start
-        run: sleep 30s  # Adjust this based on the time your SQL Server takes to start
-
       - name: Build
         run: dotnet build Project/backend/backend.sln --configuration Release
 
       - name: Run Tests
         run: dotnet test Project/backend/test/test.csproj
-
-      - name: Stop SQL Server Container
-        run: docker stop sql_container
