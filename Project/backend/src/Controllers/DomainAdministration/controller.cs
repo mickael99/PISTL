@@ -13,7 +13,7 @@ public class DomainAdministrationController : ControllerBase
         try
         {
             // get all domains
-            var context = new MasterContext();
+            var context = new DatContext();
             var domains = context.Domains;
             return Ok(domains);
         }
@@ -28,7 +28,7 @@ public class DomainAdministrationController : ControllerBase
     {
         try
         {
-            var context = new MasterContext();
+            var context = new DatContext();
             Domain domain = addDomain(model.DomainName, model.CreatedBy, model.Edition);
             context.Domains.Add(domain);
             context.SaveChanges();
