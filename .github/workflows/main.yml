@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       sql.data:
-        image: docker build -t sql_dat -f Project/docker/Dockerfile Project/docker/
+        image: docker build -f Project/docker/Dockerfile Project/docker/
         env:
           SA_PASSWORD: Daniel123
           ACCEPT_EULA: Y
