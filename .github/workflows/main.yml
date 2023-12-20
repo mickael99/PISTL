@@ -24,4 +24,4 @@ jobs:
           run: dotnet build Project/backend/backend.sln --configuration Release
           
         - name: NUnit Tests
-          run: dotnet test --no-build --verbosity normal
+          run: dotnet test Project/backend/backend.sln --no-build --verbosity normal
