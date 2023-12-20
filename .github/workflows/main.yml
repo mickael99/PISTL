@@ -27,7 +27,4 @@ jobs:
           run: docker build -t sql_dat -f Project/docker/Dockerfile Project/docker/ 
 
         - name: Run Docker image
-          run: docker run -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=Daniel123' -p 1434:1433 --name sql_container sql_dat
-          
-        - name: NUnit Tests
-          run: dotnet test Project/backend/test/test.csproj --no-build --verbosity normal
+          run: docker run -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=Daniel123' -p 1434:1433 --name sql_container sql_dat dotnet test Project/backend/test/test.csproj --no-build --verbosity normal
