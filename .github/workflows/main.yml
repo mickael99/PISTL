@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       sql.data:
-        image: docker build -f Project/docker/Dockerfile Project/docker/
+        image: mcr.microsoft.com/mssql/server:2022-latest
         env:
           SA_PASSWORD: Daniel123
           ACCEPT_EULA: Y
@@ -27,6 +27,10 @@ jobs:
 
       - name: Restore dependencies
         run: dotnet restore Project/backend/backend.sln
+
+      - name: Build Docker image
+        run: docker build -t sql_dat -f Project/docker/Dockerfile Project/docker/
+             docker run -d -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=Daniel123' -p 1434:1433 --name sql_container sql_dat
 
       - name: Build
         run: dotnet build Project/backend/backend.sln --configuration Release
