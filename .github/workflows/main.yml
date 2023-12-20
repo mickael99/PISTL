@@ -21,7 +21,7 @@ jobs:
           run: dotnet restore Project/backend/backend.sln
 
         - name: Build
-          run: dotnet build --configuration Release
+          run: dotnet build Project/backend/backend.sln --configuration Release
           
         - name: NUnit Tests
           run: dotnet test --no-build --verbosity normal
