@@ -18,7 +18,7 @@ jobs:
             dotnet-version: 3.1.100
 
         - name: Restore dependencies
-          run: dotnet restore
+          run: dotnet restore Project/backend/src/Project.csproj
 
         - name: Build
           run: dotnet build --configuration Release
