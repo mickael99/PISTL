@@ -30,7 +30,7 @@ jobs:
 
       - name: Build Docker image
         run: docker build -t sql_dat -f Project/docker/Dockerfile Project/docker/
-             docker run -d -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=Daniel123' -p 1434:1433 --name sql_container sql_dat
+        #      docker run -d -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=Daniel123' -p 1434:1433 --name sql_container sql_dat
 
       - name: Build
         run: dotnet build Project/backend/backend.sln --configuration Release
