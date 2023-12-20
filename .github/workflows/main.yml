@@ -29,7 +29,7 @@ jobs:
         - name: Run Docker image
           run: |
             docker run -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=Daniel123' -p 1434:1433 --name sql_container sql_dat
-            sleep 30
+            echo "Running Docker image"
         
         - name: Run Tests
           run: |
