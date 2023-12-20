@@ -5,6 +5,7 @@ using Project.Controllers.Login;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using Newtonsoft.Json;
 
 
 /****************************************************************************************/
@@ -30,64 +31,103 @@ public class ConnectionTests
     Utils.AddLogin(user.Email, user.Password);
 
     // Act
-    // var result = controller.Connect(user);
     var result = controller.Connect(user) as OkObjectResult;
 
     // Assert
-    Assert.IsNotNull(result);
+    Assert.IsNotNull(result, "Connect result is null.");
+    Assert.AreEqual(200, result.StatusCode, "Status code is not 200.");
     dynamic data = result.Value;
-    Assert.IsNotNull(data);
+    Assert.IsNotNull(data, "Data is null.");
 
-    string tokenString = result.Value.ToString();
-    Assert.IsFalse(string.IsNullOrWhiteSpace(tokenString), "JWT should not be empty or null.");
+    var stringProperty = data?.GetType().GetProperty("token");
+    var stringTokenValue = stringProperty.GetValue(data) as string;
 
-    // var handler = new JwtSecurityTokenHandler();
+    var handler = new JwtSecurityTokenHandler();
 
-    // JwtSecurityToken jsonToken = null;
-    // try
-    // {
-    //   jsonToken = handler.ReadToken(tokenString) as JwtSecurityToken;
-    // }
-    // catch (ArgumentException)
-    // {
-    //   Assert.Fail("JWT was not well-formed.");
-    // }
+    JwtSecurityToken jsonToken = null;
+    try
+    {
+      jsonToken = handler.ReadToken(stringTokenValue) as JwtSecurityToken;
+    }
+    catch (ArgumentException)
+    {
+      Assert.Fail("JWT was not well-formed.");
+    }
 
-    // if (jsonToken != null)
-    // {
-    //   foreach (var claim in jsonToken.Claims)
-    //   {
-    //     if (claim.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name") // TODO AR 
-    //     {
-    //       string userEmail = claim.Value;
-    //       Assert.AreEqual(user.Email, userEmail, "User email claim does not match.");
-    //       Assert.Pass("User email claim verified.");
-    //     }
-    //   }
-    // }
+    if (jsonToken != null)
+    {
+      foreach (var claim in jsonToken.Claims)
+      {
+        if (claim.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name")
+        {
+          string userEmail = claim.Value;
+          Assert.AreEqual(user.Email, userEmail, "User email claim does not match.");
+        }
+      }
+    }
 
     Utils.remove_login(user.Email);
+    Assert.Pass("User email claim verified.");
   }
 
+  /****************************************************************************************/
   [Test]
-  public void OnPost_ValidTokenAndModel_ReturnsOk()
+  public static void LoginController_Connect_ReturnsBadRequestPassword()
   {
-    // Arrange
-    // var registerController = new RegisterController
-    // {
-    //   QrCodeUrl = "your_qr_code_url",
-    //   ManualEntryCode = "123456"
-    // };
+    // Arrange 
+    var controller = new UsersController();
+    var user = new UsersController.User
+    {
+      Email = "simadaniel@hotmail.com",
+      Password = "wrongpassword"
+    };
 
-    // var authorizationHeader = "Bearer validToken";
+    Utils.AddLogin(user.Email, "goodpassword");
 
-    // // Act
-    // var result = controller.OnPost(authorizationHeader, registerController);
+    // Act
+    var result = controller.Connect(user) as BadRequestObjectResult;
 
-    // // Assert
-    // Assert.IsType<OkObjectResult>(result);
-    // var okResult = (OkObjectResult)result;
-    // Assert.Equal("2FA is now enabled for this user.", okResult.Value.message);
+    // Assert
+    Assert.NotNull(result, "Connect result is null.");
+    Assert.AreEqual(400, result.StatusCode, "Status code is not 400.");
+
+    var stringProperty = result.Value.GetType().GetProperty("message");
+    var stringMessageValue = stringProperty.GetValue(result.Value) as string;
+    Assert.NotNull(result.Value, "result.Value is null.");
+    Assert.AreEqual("User not found.", stringMessageValue);
+
+    Utils.remove_login(user.Email);
+    Assert.Pass("User wrong password verified.");
+  }
+
+  /****************************************************************************************/
+  [Test]
+  public static void LoginController_Connect_ReturnsBadRequestEmail()
+  {
+    // Arrange 
+    var controller = new UsersController();
+    var user = new UsersController.User
+    {
+      Email = "good@email.com",
+      Password = "goodpassword"
+    };
+
+    Utils.AddLogin("wrong@email.com", user.Password);
+
+    // Act
+    var result = controller.Connect(user) as BadRequestObjectResult;
+
+    // Assert
+    Assert.NotNull(result, "Connect result is null.");
+    Assert.AreEqual(400, result.StatusCode, "Status code is not 400.");
+
+    var stringProperty = result.Value.GetType().GetProperty("message");
+    var stringMessageValue = stringProperty.GetValue(result.Value) as string;
+    Assert.NotNull(result.Value, "result.Value is null.");
+    Assert.AreEqual("User not found.", stringMessageValue);
+
+    Utils.remove_login(user.Email);
+    Assert.Pass("User wrong email verified.");
   }
 }
 /****************************************************************************************/
