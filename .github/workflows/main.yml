@@ -1,38 +1,38 @@
 name: NUnit Tests
 
 on:
-    push:
-        branches:
-            - login
+        push:
+                branches:
+                        - login
 
 jobs:
-    run-tests:
-        runs-on: ubuntu-latest
-        services:
-            sql.data:
-                image: mcr.microsoft.com/mssql/server:2019-latest
-                env:
-                    SA_PASSWORD: Daniel123
-                    ACCEPT_EULA: Y
-                ports:
-                    - "1434:1433"
-        steps:
-            - name: Checkout
-              uses: actions/checkout@v2 
+        run-tests:
+                runs-on: ubuntu-latest
+                services:
+                        sql.data:
+                                image: mcr.microsoft.com/mssql/server:2019-latest
+                                env:
+                                        SA_PASSWORD: Daniel123
+                                        ACCEPT_EULA: Y
+                                ports:
+                                        - "1434:1433"
+                steps:
+                        - name: Checkout
+                          uses: actions/checkout@v2 
 
-            - name: Setup .NET Core
-              uses: actions/setup-dotnet@v1
-              with:
-                    dotnet-version: 8.0.x
+                        - name: Setup .NET Core
+                          uses: actions/setup-dotnet@v1
+                          with:
+                                        dotnet-version: 8.0.x
 
-            - name: Restore dependencies
-              run: dotnet restore Project/backend/backend.sln
+                        - name: Restore dependencies
+                          run: dotnet restore Project/backend/backend.sln
 
-            - name: Build Docker image
-              run: docker build -t sql_dat -f Project/docker/Dockerfile Project/docker/
+                        - name: Build Docker image
+                          run: docker build -t sql_dat -f Project/docker/Dockerfile Project/docker/
 
-            - name: Build
-              run: dotnet build Project/backend/backend.sln --configuration Release
+                        - name: Build
+                          run: dotnet build Project/backend/backend.sln --configuration Release
 
-            - name: Run Tests
-              run: dotnet test Project/backend/test/test.csproj
+                        - name: Run Tests 
+                          run: dotnet test Project/backend/test/test.csproj --configuration Release --filter FullyQualifiedName~UnitTestNamespace UnitTestClass --logger trx --results-directory ./TestResults
