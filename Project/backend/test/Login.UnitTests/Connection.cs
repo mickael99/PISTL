@@ -126,7 +126,7 @@ public class ConnectionTests
     Assert.NotNull(result.Value, "result.Value is null.");
     Assert.AreEqual("User not found.", stringMessageValue);
 
-    Utils.remove_login(user.Email);
+    Utils.remove_login("wrong@email.com");
     Assert.Pass("User wrong email verified.");
   }
 }
