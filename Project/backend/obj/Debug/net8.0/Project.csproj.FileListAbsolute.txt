@@ -371,3 +371,7 @@ C:\Users\walte\Desktop\MASTER\PISTL\PISTL\Project\backend\obj\Debug\net8.0\refin
 C:\Users\walte\Desktop\MASTER\PISTL\PISTL\Project\backend\obj\Debug\net8.0\Project.pdb
 C:\Users\walte\Desktop\MASTER\PISTL\PISTL\Project\backend\obj\Debug\net8.0\Project.genruntimeconfig.cache
 C:\Users\walte\Desktop\MASTER\PISTL\PISTL\Project\backend\obj\Debug\net8.0\ref\Project.dll
+C:\Users\walte\Desktop\MASTER\PISTL\PISTL\Project\backend\bin\Debug\net8.0\xunit.abstractions.dll
+C:\Users\walte\Desktop\MASTER\PISTL\PISTL\Project\backend\bin\Debug\net8.0\xunit.assert.dll
+C:\Users\walte\Desktop\MASTER\PISTL\PISTL\Project\backend\bin\Debug\net8.0\xunit.core.dll
+C:\Users\walte\Desktop\MASTER\PISTL\PISTL\Project\backend\bin\Debug\net8.0\xunit.execution.dotnet.dll

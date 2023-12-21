@@ -22,6 +22,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatCardModule } from '@angular/material/card';
 import {MatButtonModule} from '@angular/material/button';
+import {MatDatepickerModule} from '@angular/material/datepicker';
 
 @NgModule({
   declarations: [
@@ -48,7 +49,8 @@ import {MatButtonModule} from '@angular/material/button';
     MatPaginatorModule,
     MatSortModule,
     MatCardModule,
-    MatButtonModule],
+    MatButtonModule,
+    MatDatepickerModule],
   providers: [],
   bootstrap: [AppComponent]
 })
