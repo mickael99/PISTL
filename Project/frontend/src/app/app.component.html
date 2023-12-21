@@ -26,7 +26,11 @@
         <ul class="main-nav-list">
           <li class="list">
             <div ngbDropdown class="d-inline-block dropdown">
-              <a class="btn--1" id="dropdownBasic1" ngbDropdownToggle>
+              <a
+                class="btn--1 btn--in-progress"
+                id="dropdownBasic1"
+                ngbDropdownToggle
+              >
                 Domain
               </a>
               <div
@@ -37,19 +41,19 @@
                 <a
                   routerLink="/domain-administration"
                   ngbDropdownItem
-                  class="btn--2"
+                  class="btn--2 btn--margin-right btn--in-progress"
                   >Domain Administration</a
                 >
                 <a
                   routerLink="sys-admin-by-domain"
                   ngbDropdownItem
-                  class="btn--2"
+                  class="btn--2 btn--margin-right btn--in-progress"
                   >SysAdmin by Domain</a
                 >
                 <a
                   routerLink="domain-by-sys-admin"
                   ngbDropdownItem
-                  class="btn--2"
+                  class="btn--2 btn--margin-right btn--in-progress"
                   >Domain by SysAdmin</a
                 >
               </div>
@@ -57,7 +61,11 @@
           </li>
           <li>
             <div ngbDropdown class="d-inline-block dropdown">
-              <a class="btn--1" id="dropdownBasic1" ngbDropdownToggle>
+              <a
+                class="btn--1 btn--in-progress"
+                id="dropdownBasic1"
+                ngbDropdownToggle
+              >
                 Infrastructure
               </a>
               <div
@@ -65,7 +73,7 @@
                 aria-labelledby="dropdownBasic1"
                 class="dropdown-menu"
               >
-                <a ngbDropdownItem class="btn--2">Database</a>
+                <a ngbDropdownItem class="btn--2 btn--in-progress">Database</a>
                 <a ngbDropdownItem class="btn--2">Server</a>
                 <a ngbDropdownItem class="btn--2">Server Parameter</a>
               </div>
