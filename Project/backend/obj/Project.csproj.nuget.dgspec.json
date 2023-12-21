@@ -1,25 +1,32 @@
 {
   "format": 1,
   "restore": {
-    "/home/walter/Desktop/MASTER/PISTL/PISTL/Project/backend/Project.csproj": {}
+    "C:\\Users\\walte\\Desktop\\MASTER\\PISTL\\PISTL\\Project\\backend\\Project.csproj": {}
   },
   "projects": {
-    "/home/walter/Desktop/MASTER/PISTL/PISTL/Project/backend/Project.csproj": {
+    "C:\\Users\\walte\\Desktop\\MASTER\\PISTL\\PISTL\\Project\\backend\\Project.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/walter/Desktop/MASTER/PISTL/PISTL/Project/backend/Project.csproj",
+        "projectUniqueName": "C:\\Users\\walte\\Desktop\\MASTER\\PISTL\\PISTL\\Project\\backend\\Project.csproj",
         "projectName": "Project",
-        "projectPath": "/home/walter/Desktop/MASTER/PISTL/PISTL/Project/backend/Project.csproj",
-        "packagesPath": "/home/walter/.nuget/packages/",
-        "outputPath": "/home/walter/Desktop/MASTER/PISTL/PISTL/Project/backend/obj/",
+        "projectPath": "C:\\Users\\walte\\Desktop\\MASTER\\PISTL\\PISTL\\Project\\backend\\Project.csproj",
+        "packagesPath": "C:\\Users\\walte\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\walte\\Desktop\\MASTER\\PISTL\\PISTL\\Project\\backend\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "/home/walter/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\walte\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -56,6 +63,10 @@
             "Microsoft.EntityFrameworkCore.SqlServer": {
               "target": "Package",
               "version": "[8.0.0, )"
+            },
+            "xunit": {
+              "target": "Package",
+              "version": "[2.6.3, )"
             }
           },
           "imports": [
@@ -77,7 +88,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/8.0.100/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
