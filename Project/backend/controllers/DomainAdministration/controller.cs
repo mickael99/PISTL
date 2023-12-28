@@ -33,6 +33,30 @@ public class DomainAdministrationController : ControllerBase {
         }
     } 
 
+    [HttpPut("{id}")]
+    public IActionResult PutDomain(int id, [FromBody] DomainModel model) {
+        Console.WriteLine("===============> POST /api/domain");
+        try {
+            var context = new MasterContext();
+            var existingDomain = context.Domains.FirstOrDefault(d => d.DomainId == id);
+
+            if (existingDomain == null)
+                return NotFound($"Domain with ID {id} not found.");
+            
+            existingDomain.Name = model.Name;
+            existingDomain.Logo = Encoding.UTF8.GetBytes(model.Logo); 
+            existingDomain.Edition = model.Edition;
+            existingDomain.IsSsoEnabled = model.isSsoEnabled;
+            existingDomain.Comment = model.Comment;
+            existingDomain.ParentCompany = model.ParentCompany;
+            context.SaveChanges();
+
+            return Ok(context.Domains);
+        } catch(Exception ex) {
+            return BadRequest(ex.Message);
+        }
+    }
+
     // create a domain to add to the database
     static Domain addDomain
         (string name, 

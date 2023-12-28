@@ -18,6 +18,7 @@ export class DomainAdministrationComponent {
   selectedDomain: any;
 
   isNewDomainMode: boolean = false;
+  isEditDomainMode: boolean = false;
 
   constructor(private renderer: Renderer2, private http: HttpClient, private router: Router) {
     this.http.get('http://localhost:5050/api/domain').subscribe(
@@ -30,10 +31,9 @@ export class DomainAdministrationComponent {
     );
   }
 
-  displayLogo(EncodinglogoPath: string) {
-    const imagePreview = document.getElementById('logo');
-    const logoPath = atob(EncodinglogoPath);
-    imagePreview.innerHTML = `<img src="${logoPath}" alt="Logo" style="max-width: 10%; max-height: 10%;">`;
+  displayLogo(encodingLogoPath: string): void {
+    const imagePreview = document.getElementById('printLogo') as HTMLDivElement;
+    imagePreview.innerHTML = `<img src="data:image/png;base64,${encodingLogoPath}" alt="Logo" style="max-width: 100%; max-height: 100%;">`;
   }
 
   onSelect(selectedDomain: any) : void {
@@ -44,7 +44,6 @@ export class DomainAdministrationComponent {
   }
 
   startNewDomainMode() : void {
-    console.log("je rentre dans startnewdomain");
     this.isNewDomainMode = true;
 
     this.name = '';
@@ -56,13 +55,16 @@ export class DomainAdministrationComponent {
   }
 
   endNewDomainMode() : void {
-    this.isNewDomainMode = false;
+    if(this.isNewDomainMode)
+      this.isNewDomainMode = false;
+  }
+
+  endEditDomainMode() : void {
+    if(this.isEditDomainMode)
+      this.isEditDomainMode = false;
   }
 
   addDomain() : void {
-    if(!this.isNewDomainMode)
-      throw new Error("problem while domain adding");
-
     this.http
       .post('http://localhost:5050/api/domain', {
         name: this.name,
@@ -85,12 +87,21 @@ export class DomainAdministrationComponent {
   } 
 
   confirmSave() : void {
-    if(!this.isNewDomainMode)
+    if(!this.isNewDomainMode && !this.isEditDomainMode)
       throw new Error("problem while domain adding");
 
-    const isConfirmed = window.confirm("Are you sure to add the domain ?");
-    if(isConfirmed)
-      this.addDomain();
+    //ajouter un domaine
+    if(!this.isEditDomainMode) {
+      const isConfirmed = window.confirm("Are you sure to add the domain ?");
+      if(isConfirmed)
+        this.addDomain();
+    }
+    //modifier un domaine
+    else {
+      const isConfirmed = window.confirm("Are you sure to edit the domain ?");
+      if(isConfirmed)
+        this.updateDomain();
+    }
   }
 
   onLogoChange(event : any) : void {
@@ -112,5 +123,66 @@ export class DomainAdministrationComponent {
   isFileFormatConformed(file : string) : boolean {
     const regex = /\.(jpeg|jpg|png)$/i;
     return regex.test(file);
+  }
+
+  editDomain() : void {
+    if(this.selectedDomain) {
+      this.isNewDomainMode = true;
+      this.isEditDomainMode = true;
+
+      this.name = this.selectedDomain.name;
+      this.logo = this.selectedDomain.logo;
+      this.edition = this.selectedDomain.edition;
+      this.isSsoEnabled = this.selectedDomain.isSsoEnabled;
+      this.comment = this.selectedDomain.comment;
+      this.parentCompany = this.selectedDomain.parentCompany;
+    }
+  }
+
+  updateDomain() : void {
+    if(this.selectedDomain && this.isEditDomainMode) {
+      const updatedDomain = {
+        domainId: this.selectedDomain.domainId,
+        name: this.name,
+        logo: this.logo,
+        edition: this.edition,
+        isSsoEnabled: this.isSsoEnabled,
+        comment: this.comment,
+        parentCompany: this.parentCompany, 
+      };
+
+      this.http.put(`http://localhost:5050/api/domain/${this.selectedDomain.domainId}`, {
+        name: this.name,
+        logo: this.logo,
+        edition: this.edition,
+        isSsoEnabled: this.isSsoEnabled,
+        comment: this.comment,
+        parentCompany: this.parentCompany
+        })
+        .subscribe((data: any) => {
+          this.domains = data;
+        }, (error) => {
+          alert("Connection error: " + error.message);
+        });
+        this.endEditDomainMode();
+        this.endNewDomainMode();
+    }
+  }
+
+  copyDomain(): void {
+    if (this.selectedDomain) {
+      const isConfirmed = window.confirm("Are you sure to copy the domain?");
+      if (isConfirmed) {
+        this.name = this.selectedDomain.name;
+        this.logo = this.selectedDomain.logo;
+        this.edition = this.selectedDomain.edition;
+        this.isSsoEnabled = this.selectedDomain.isSsoEnabled;
+        this.comment = this.selectedDomain.comment;
+        this.parentCompany = this.selectedDomain.parentCompany;
+  
+        // Ajoutez le domaine copié en appelant la fonction addDomain
+        this.addDomain();
+      }
+    }
   }
 }

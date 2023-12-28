@@ -64,13 +64,13 @@
       </select>
 
       <button class="button" (click)="startNewDomainMode()">New</button>
-      <button class="button">Edit</button>
-      <button class="button">Copy</button>
+      <button class="button" (click)="editDomain()">Edit</button>
+      <button class="button" (click)="copyDomain()">Copy</button>
     </div>
 
     <div class="containerTexte">
         <!-- Logo -->
-      <div id="logo" class="domainLogo"></div>
+      <div id="printLogo" class="domainLogo"></div>
 
       <!-- SSO -->
       <div class="ssoCheck">
