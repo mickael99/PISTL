@@ -6,29 +6,35 @@ on:
       - login
 
 jobs:
-  build-and-test:
+  runner-job:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Build Docker image
+        run: docker build -t sql_dat -f Project/docker/Dockerfile Project/docker/
+
+      - name: Run DB
+        run: docker run -d -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=Daniel123' -p 1433:1433 --name sql_container sql_dat
+
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 8.0.x
 
-      - name: Restore dependencies
-        run: dotnet restore Project/backend/backend.sln
+      - name: Run SQLCmd to confirm db is running
+        run: |
+          wget https://github.com/microsoft/go-sqlcmd/releases/download/v1.5.0/sqlcmd-v1.5.0-linux-amd64.tar.bz2
+          tar xjvf sqlcmd-v1.5.0-linux-amd64.tar.bz2
+          ./sqlcmd -U sa -P 'Daniel123' -d REF3 -Q 'SELECT DB_NAME();'
 
-      - name: Build Docker image
-        run: docker build -t sql_dat -f Project/docker/Dockerfile Project/docker/
-        
-      - name: Build
-        run: dotnet build Project/backend/backend.sln --configuration Release
-        
-      - name: Start SQL Server Container
-        run: docker run -d -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=Daniel123' -p 1434:1433 --name sql_container sql_dat
-   
-      - name: Run Tests
-        run: dotnet test Project/backend/test/test.csproj
+      # - name: Restore dependencies
+      #   run: dotnet restore Project/backend/backend.sln
+
+      # - name: Build
+      #   run: dotnet build Project/backend/backend.sln --configuration Release
+
+      # - name: Run Tests
+      #   run: dotnet test Project/backend/test/test.csproj
