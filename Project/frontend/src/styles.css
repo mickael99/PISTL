@@ -19,3 +19,5 @@ body {
   color: #555;
   overflow-x: hidden; /* cacher tous les elements qui debordent sur x*/
 }
+
+@import "@angular/material/prebuilt-themes/indigo-pink.css";

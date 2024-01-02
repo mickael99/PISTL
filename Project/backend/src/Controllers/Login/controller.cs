@@ -11,7 +11,7 @@ using System.Security.Cryptography;
 /***************************************************************************************/
 [Route("api/auth")]
 [ApiController]
-public class UsersController : ControllerBase
+public class UsersController : ControllerBase // TODO change name
 {
     /***************************************************************************************/
     /// <summary>

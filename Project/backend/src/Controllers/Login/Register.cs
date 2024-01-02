@@ -15,9 +15,14 @@ public class RegisterController : ControllerBase
   public required string QrCodeUrl { get; set; }
   public required string ManualEntryCode { get; set; }
 
-  // /***************************************************************************************/
+  /***************************************************************************************/
+  /// <summary>
+  /// Represents an action result that performs a HTTP GET request to retrieve a QR code.
+  /// </summary>
+  /// <param name="authorizationHeader">The authorization header containing the JWT token.</param>
+  /// <returns>An IActionResult object representing the HTTP response.</returns>
   [HttpGet]
-  public IActionResult OnGet([FromHeader(Name = "Authorization")] string authorizationHeader)
+  public IActionResult Get_QR_Code([FromHeader(Name = "Authorization")] string authorizationHeader)
   {
     string email = "";
     try
@@ -155,7 +160,7 @@ public class RegisterController : ControllerBase
         if (login.Email == model.email)
         {
           TwoFactorAuthenticator tfa = new TwoFactorAuthenticator();
-          result = tfa.ValidateTwoFactorPIN(login.ResetPasswordKey, model.code, true);
+          result = tfa.ValidateTwoFactorPIN(login.ResetPasswordKey, model.code, true); // Preciser qu'il faut ajouter une nouvelle colonne dans la DB 
           string[] pinsWithOneHourTolerance = tfa.GetCurrentPINs(login.ResetPasswordKey);
         }
       }

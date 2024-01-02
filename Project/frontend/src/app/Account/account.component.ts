@@ -47,7 +47,7 @@ export class AccountComponent {
   /***************************************************************************************/
   added2FA() {
     this.hidden2FA = true;
-    console.log('===> key: ', this.manualEntryKey);
+    console.log('===> this.manualEntryKey: ', this.manualEntryKey);
     let JWTToken = localStorage.getItem('token');
 
     const options = {
