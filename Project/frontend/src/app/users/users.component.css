@@ -23,6 +23,44 @@
   font-size: 3rem;
 }
 
+.container {
+  margin: 0 0 0 2rem;
+}
+
+.table {
+  width: 35%;
+}
+
+.listes {
+  display: flex;
+}
+
+/**********************************************************************/
+/************************** CREATE NEW FORM ***************************/
+/**********************************************************************/
+
+.formCreate {
+  margin-left: 10rem;
+}
+
+.mat-mdc-raised-button.color-button {
+  background-color: #37b24d;
+  color: #fff;
+  font-size: 1.2rem;
+  margin-right: 1rem;
+}
+
+.example-form {
+  margin-top: 1rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.example-form {
+  width: 110%;
+}
+
 /**********************************************************************/
 /**********************************************************************/
 /**********************************************************************/

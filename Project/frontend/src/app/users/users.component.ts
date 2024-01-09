@@ -2,7 +2,6 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, Renderer2 } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
-import { PopUpComponent } from './pop-up/pop-up.component';
 
 @Component({
   selector: 'app-users',
@@ -16,8 +15,12 @@ export class UsersComponent {
   isClicked: boolean = false;
   showFormCreate: boolean = false;
   formDataCreate = {
+    name: '',
     email: '',
-    password: '',
+    phone: '',
+    modifiedBy: '',
+    DATEnabled: '',
+    locked: '',
   };
 
   /***************************************************************************************/
@@ -64,11 +67,43 @@ export class UsersComponent {
 
   /***************************************************************************************/
   showFormCreateUser() {
-    this.dialog.open(PopUpComponent, {
-      data: {
-        name: 'Daniel',
-      },
-    });
+    this.showFormCreate = !this.showFormCreate;
+    this.formDataCreate = {
+      name: '',
+      email: '',
+      phone: '',
+      modifiedBy: '',
+      DATEnabled: '',
+      locked: '',
+    };
+  }
+
+  /***************************************************************************************/
+  afffFormCreateUser() {
+    this.formDataCreate.modifiedBy = localStorage.getItem('email');
+    console.table(this.formDataCreate);
+
+    let JWTToken = localStorage.getItem('token');
+
+    const options = {
+      headers: new HttpHeaders({
+        Authorization: 'Bearer ' + JWTToken,
+        'Content-Type': 'application/json',
+      }),
+    };
+
+    const requestBody = { formDataCreate: this.formDataCreate };
+
+    this.http
+      .post('http://localhost:5050/api/users/create', requestBody, options)
+      .subscribe(
+        (data: any) => {
+          console.log('Response from server:', data);
+        },
+        (error) => {
+          console.error('Error from server:', error);
+        }
+      );
   }
 }
 /***************************************************************************************/

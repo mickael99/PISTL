@@ -25,7 +25,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
-import { PopUpComponent } from './users/pop-up/pop-up.component';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @NgModule({
   declarations: [
@@ -37,7 +37,6 @@ import { PopUpComponent } from './users/pop-up/pop-up.component';
     AccountComponent,
     TwoFAComponent,
     UsersComponent,
-    PopUpComponent,
   ],
   imports: [
     BrowserModule,
@@ -58,6 +57,7 @@ import { PopUpComponent } from './users/pop-up/pop-up.component';
     MatDatepickerModule,
     MatIconModule,
     MatDividerModule,
+    MatCheckboxModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
