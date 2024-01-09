@@ -1,5 +1,4 @@
 using System.Data.Common;
-using Project.Data;
 using Project.Models;
 using Project.Interface;
 
@@ -7,8 +6,9 @@ namespace Project.Repository
 {
     public class DatabaseRepository: IDatabaseRepository{
 
-        private readonly DatabaseContext _context;
-        public DatabaseRepository(DatabaseContext context){
+        private readonly DatContext _context;
+
+        public DatabaseRepository(DatContext context){
             _context = context;
         }
 

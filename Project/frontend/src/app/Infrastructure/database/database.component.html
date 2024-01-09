@@ -1,1 +1,72 @@
-<p>database works!</p>
+<div class="centre">
+  <table class="table">
+      <thead>
+        <tr>
+          <th>DatabaseID</th>
+          <th>Name</th>
+          <th>ServerId</th>
+          <th>UserName</th>
+          <th>Created Date</th>
+          <th>Created By</th>
+          <th>Modified Date</th>
+          <th>Modified By</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let db of database" (click)="openModal(db.databaseId)">
+          <td>{{ db.databaseId }}</td>
+          <td>{{ db.name }}</td>
+          <td>{{ db.serverId }}</td>
+          <td>{{ db.userName }}</td>
+          <td>{{ db.createdDate | date }}</td>
+          <td>{{ db.createdBy }}</td>
+          <td>{{ db.modifiedDate | date }}</td>
+          <td>{{ db.modifiedBy }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <app-database-detail #detailModal></app-database-detail>
+
+    <div class="add-database">
+      <h2>Ajouter une database</h2>\
+
+      <div>
+        <label for="databaseName">Id:</label>
+        <input type="text" id="DatabaseId" [(ngModel)]="DatabaseId" />
+      </div>
+
+      <div>
+        <label for="databaseName">Name:</label>
+        <input type="text" id="Name" [(ngModel)]="Name" />
+      </div>
+
+      <div>
+        <label for="databaseName">UserName:</label>
+        <input type="text" id="UserName" [(ngModel)]="UserName" />
+      </div>
+
+      <div>
+        <label for="databaseName">Password:</label>
+        <input type="text" id="Password" [(ngModel)]="Password" />
+      </div>
+  
+      <div>
+        <label for="createdBy">createdBy:</label>
+        <input type="text" id="createdBy" [(ngModel)]="createdBy" />
+      </div>
+  
+      <div>
+        <label for="serverSelect">Server:</label>
+        <select id="serverSelect" [(ngModel)]="ServerSelected">
+          <option *ngFor="let s of server" [ngValue]="s">{{ s.name }}</option>
+        </select>
+      </div>
+  
+      <div class="btn--center">
+        <button class="btn btn-primary btn-lg" (click)="addDatabase()">
+          Confirm
+        </button>
+      </div>
+    </div>
+</div>

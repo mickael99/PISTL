@@ -1,0 +1,58 @@
+<div class="centre">
+    <table class="table">
+        <thead>
+          <tr>
+            <th>ServerID</th>
+            <th>Name</th>
+            <th>Address</th>
+            <th>Created Date</th>
+            <th>Created By</th>
+            <th>Modified Date</th>
+            <th>Modified By</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let s of server" (click)="openModal(s.serverId)">
+            <td>{{ s.serverId }}</td>
+            <td>{{ s.name }}</td>
+            <td>{{ s.address }}</td>
+            <td>{{ s.createdDate | date }}</td>
+            <td>{{ s.createdBy }}</td>
+            <td>{{ s.modifiedDate | date }}</td>
+            <td>{{ s.modifiedBy }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <app-server-detail #detailModal></app-server-detail>
+
+      <div class="add-server">
+        <h2>Create server</h2>
+        <div>
+          <label for="serverName">ID:</label>
+          <input type="text" id="id" [(ngModel)]="id" />
+        </div>
+
+        <div>
+          <label for="serverName">Name:</label>
+          <input type="text" id="Name" [(ngModel)]="Name" />
+        </div>
+    
+        <div>
+          <label for="createdBy">Address:</label>
+          <input type="text" id="address" [(ngModel)]="Address" />
+        </div>
+
+        <div>
+          <label for="createdBy">createdBy:</label>
+          <input type="text" id="createdBy" [(ngModel)]="createdBy" />
+        </div>
+
+        <div class="btn--center">
+          <button class="btn btn-primary btn-lg" (click)="addServer()">
+            Confirm
+          </button>
+        </div>
+      </div>
+  </div>
+  

@@ -3,7 +3,6 @@ using Project.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Text;
 using Project.Interface;
-using Project.Data;
 using Microsoft.AspNetCore.Http.HttpResults;
 
 [Route("api/database")]
@@ -12,9 +11,9 @@ public class DatabaseController : Controller
 {
     
     private readonly IDatabaseRepository _databaseRepository;
-    private readonly DatabaseContext context;
+    private readonly DatContext context;
 
-    public DatabaseController(IDatabaseRepository databaseRepository, DatabaseContext context){
+    public DatabaseController(IDatabaseRepository databaseRepository, DatContext context){
         _databaseRepository = databaseRepository;
         this.context = context;
     }
@@ -54,28 +53,41 @@ public class DatabaseController : Controller
     [ProducesResponseType(204)]
     [ProducesResponseType(400)]
     public IActionResult CreateDatabase([FromBody] Database databaseCreate){
+        Console.WriteLine("-------->Create Database");
+
         if (databaseCreate == null)
             return BadRequest(ModelState);
-        
-        var db = _databaseRepository.GetDataBases()
-                    .Where(db => db.DatabaseId == databaseCreate.DatabaseId)
-                    .FirstOrDefault();
 
-        if(db != null){
-            ModelState.AddModelError("", "DataBase already exists!");
-            return StatusCode(422, ModelState);
+        Console.WriteLine("start creating");
+        try
+        {
+
+            context.Databases.Add(new Database
+            {
+                DatabaseId = databaseCreate.DatabaseId,
+                Name = databaseCreate.Name,
+                UserName = databaseCreate.UserName,
+                Password = databaseCreate.Password,
+                ServerId = databaseCreate.ServerId,
+                Server = databaseCreate.Server,
+                ModifiedBy = databaseCreate.ModifiedBy,
+                CreatedBy = databaseCreate.CreatedBy, 
+                CreatedDate = DateTime.Now,
+                ModifiedDate = DateTime.Now,
+            });
+
+            Console.WriteLine("data enter finish");
+
+            context.SaveChanges();
+            
+            Console.WriteLine("saved");
+
+            return Ok(context.Databases);
         }
-
-        if(!ModelState.IsValid){
-            return BadRequest(ModelState);
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
         }
-
-        if(!_databaseRepository.CreateDatabase(databaseCreate)){
-            ModelState.AddModelError("", "Something went Wrong while saving");
-            return StatusCode(500, ModelState);
-        }
-
-        return Ok("Successfully created");
     }
 
     [HttpPut("{id}")]
@@ -83,6 +95,9 @@ public class DatabaseController : Controller
     [ProducesResponseType(204)]
     [ProducesResponseType(404)]
     public IActionResult UpdateDatabase(int dataBaseId, [FromBody]Database dbUpdated){
+
+        Console.WriteLine("-------->Update Database");
+
         if(dbUpdated == null){
             return BadRequest(ModelState);
         }
@@ -91,11 +106,33 @@ public class DatabaseController : Controller
             return BadRequest(ModelState);
 
         if(!_databaseRepository.DatabaseExists(dataBaseId)){
+            Console.WriteLine("-------->Database not found");
             return NotFound();
         }
 
+        Console.WriteLine("-------->start editing");
+
+
+        var dbToUpdate = _databaseRepository.GetDatabase(dataBaseId);
+
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        // Update the server properties
+        dbToUpdate.Name = dbUpdated.Name;
+        dbToUpdate.UserName = dbUpdated.UserName;
+        dbToUpdate.Password = dbUpdated.Password;
+        dbToUpdate.ServerId = dbUpdated.ServerId;
+        dbToUpdate.Server = dbUpdated.Server;
+        dbToUpdate.ModifiedBy = dbUpdated.ModifiedBy;
+        dbToUpdate.ModifiedDate = DateTime.Now;
+        dbToUpdate.Context = dbUpdated.Context;
+
         if(!ModelState.IsValid)
             return BadRequest(ModelState);
+
+        Console.WriteLine("-------->end editing");
+
 
         if(!_databaseRepository.UpdateDatabase(dbUpdated)){
             ModelState.AddModelError("","Something went wrong updating database");

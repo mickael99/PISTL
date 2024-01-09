@@ -6,8 +6,10 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Project.Interface;
 using Project.Repository;
-using Project.Data;
+using Project.Models;
 using Microsoft.Extensions.Configuration;
+using System.Text.Json.Serialization;
+using Project.interfaces;
 
 public class Startup 
 {
@@ -20,7 +22,11 @@ public class Startup
 
     public void ConfigureServices(IServiceCollection services)
     {
-        services.AddControllers();
+        services.AddControllers()
+                    .AddJsonOptions(options =>
+                    {
+                        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+                    });
 
         services.AddCors(options =>
         {
@@ -32,10 +38,14 @@ public class Startup
             });
         });
 
-        services.AddDbContext<DatabaseContext>(options =>
-            options.UseSqlServer("Server=LAPTOP-C49R77JJ/SQLEXPRESS;Database=master;TrustServerCertificate=true;Trusted_Connection=True;"));
-            
+        services.AddDbContext<DatContext>(options =>
+        {
+            options.UseSqlServer(Configuration?.GetConnectionString("DAT_projectConnectionString"));
+        });
+
+
         services.AddScoped<IDatabaseRepository, DatabaseRepository>();
+        services.AddScoped<IServerRepository, ServerRepository>();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env) 
