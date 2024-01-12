@@ -3,7 +3,6 @@ using NUnit.Framework;
 using Microsoft.AspNetCore.Mvc;
 using Project.Controllers.Login;
 using System.IdentityModel.Tokens.Jwt;
-using Microsoft.AspNetCore.Mvc;
 using System;
 using Newtonsoft.Json;
 
@@ -16,7 +15,9 @@ public class ConnectionTests
 {
   // ClassName_MethodName_ExpectedResult
   /****************************************************************************************/
-
+  /// <summary>
+  /// Tests the behavior of the LoginController's Connect method when the DTO is correct.
+  /// </summary>
   [Test]
   public static void LoginController_Connect_ReturnsToken()
   {
@@ -71,6 +72,9 @@ public class ConnectionTests
   }
 
   /****************************************************************************************/
+  /// <summary>
+  /// Tests the behavior of the LoginController's Connect method when the Password is wrong.
+  /// </summary>
   [Test]
   public static void LoginController_Connect_ReturnsBadRequestPassword()
   {
@@ -101,6 +105,9 @@ public class ConnectionTests
   }
 
   /****************************************************************************************/
+  /// <summary>
+  /// Tests the behavior of the LoginController's Connect method when the Email is wrong.
+  /// </summary>
   [Test]
   public static void LoginController_Connect_ReturnsBadRequestEmail()
   {

@@ -3,25 +3,45 @@ import { Component, Renderer2 } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 
+/***************************************************************************************/
+/***************************************************************************************/
+/***************************************************************************************/
 @Component({
   selector: 'app-users',
   templateUrl: './users.component.html',
   styleUrls: ['./users.component.css'],
 })
 export class UsersComponent {
+  // Users form the DB
   users: any;
-  displayedColumns: string[] = ['email', 'DAT'];
+
+  // Table used for data display
   dataSource: any;
+
+  // Columns names in the table
+  displayedColumns: string[] = ['email', 'DAT'];
+
+  // Bool used for the 'Edit', 'Delete', 'Reset Password' and 'Unlock' buttons
   isClicked: boolean = false;
+
+  // Bool that allows or not the display of the create a new user form
   showFormCreate: boolean = false;
+
+  // Form data used to create a new user
   formDataCreate = {
     name: '',
     email: '',
     phone: '',
     modifiedBy: '',
-    DATEnabled: '',
-    locked: '',
+    DATEnabled: false,
+    locked: false,
   };
+
+  // Bool that allows or not to display the error popup
+  showPopup: boolean = false;
+
+  // Error message to display in the popup
+  popupMessage: string = '';
 
   /***************************************************************************************/
   /**
@@ -48,40 +68,44 @@ export class UsersComponent {
         this.dataSource = new MatTableDataSource(this.users);
       },
       (error) => {
-        console.log('GET error: ' + error.message);
+        this.showErrorPopup(error.error);
       }
     );
   }
 
   /***************************************************************************************/
-  // createUser() {
-  //   let JWTToken = localStorage.getItem('token');
-
-  //   const   options = {
-  //     headers: new HttpHeaders({
-  //       Authorization: 'Bearer ' + JWTToken,
-  //       'Content-Type': 'application/json',
-  //     }),
-  //   };
-  // }
-
-  /***************************************************************************************/
+  /**
+   * Function used to display the user's information in the form.
+   */
   showFormCreateUser() {
     this.showFormCreate = !this.showFormCreate;
+
+    // Reinitialize the form if reclicked
     this.formDataCreate = {
       name: '',
       email: '',
       phone: '',
       modifiedBy: '',
-      DATEnabled: '',
-      locked: '',
+      DATEnabled: false,
+      locked: false,
     };
   }
 
   /***************************************************************************************/
+  /**
+   * Function used to POST the user's information from the form.
+   */
   afffFormCreateUser() {
+    if (
+      this.formDataCreate.name == '' ||
+      this.formDataCreate.email == '' ||
+      this.formDataCreate.phone == ''
+    ) {
+      this.showErrorPopup('Please fill all the fields.');
+      return;
+    }
+
     this.formDataCreate.modifiedBy = localStorage.getItem('email');
-    console.table(this.formDataCreate);
 
     let JWTToken = localStorage.getItem('token');
 
@@ -92,18 +116,38 @@ export class UsersComponent {
       }),
     };
 
-    const requestBody = { formDataCreate: this.formDataCreate };
+    console.log('requestBody: ', this.formDataCreate);
 
     this.http
-      .post('http://localhost:5050/api/users/create', requestBody, options)
-      .subscribe(
-        (data: any) => {
-          console.log('Response from server:', data);
+      .post('http://localhost:5050/api/users', this.formDataCreate, options)
+      .subscribe({
+        next: (data: any) => {
+          this.users = data.users;
+          this.dataSource = new MatTableDataSource(this.users);
         },
-        (error) => {
-          console.error('Error from server:', error);
-        }
-      );
+        error: (error: any) => {
+          console.error(error.error.message);
+          this.showErrorPopup(error.error.message);
+        },
+      });
+  }
+
+  /***************************************************************************************/
+  /**
+   * Function used to display activate the error popup.
+   * @param message - Error message.
+   */
+  showErrorPopup(message: string) {
+    this.showPopup = true;
+    this.popupMessage = message;
+  }
+
+  /***************************************************************************************/
+  /**
+   * Function used to close the error popup.
+   */
+  closeErrorPopup() {
+    this.showPopup = false;
   }
 }
 /***************************************************************************************/

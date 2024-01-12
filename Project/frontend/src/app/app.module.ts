@@ -26,6 +26,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { ErrorPopupComponent } from './utils/error-popup/error-popup.component';
 
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     AccountComponent,
     TwoFAComponent,
     UsersComponent,
+    ErrorPopupComponent,
   ],
   imports: [
     BrowserModule,

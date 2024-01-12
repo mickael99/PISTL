@@ -51,7 +51,13 @@ public class UsersPageController : ControllerBase // TODO change name
   }
 
   /*************************************************************************************/
-  [HttpPost("create")]
+  // [HttpPost("create")]
+
+  /// <summary>
+  /// This POST method is used to create a new DAT user by adding it to the database at the Login table.
+  /// </summary>
+  /// <returns>An HTTP response.</returns>
+  [HttpPost]
   public IActionResult Add_New_DAT_User([FromHeader(Name = "Authorization")] string authorizationHeader, [FromBody] FormDataCreateModel model)
   {
     try
@@ -67,44 +73,55 @@ public class UsersPageController : ControllerBase // TODO change name
       var jsonToken = handler.ReadToken(token) as JwtSecurityToken;
       if (jsonToken != null)
       {
-        bool found = false;
         foreach (var claim in jsonToken.Claims)
         {
           if (claim.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name") // TODO AR 
           {
+            var context = new DatContext();
+            var users = context.Logins;
+
+            // Test if the user (email or phone) already exists
+            foreach (var login in users)
+            {
+              if (login.Email == model.Email)
+              {
+                return BadRequest(new { message = "User email already exists." });
+              }
+
+              if (login.Phone == model.Phone)
+              {
+                return BadRequest(new { message = "User phone already exists." });
+              }
+            }
+
             var bytes = Encoding.UTF8.GetBytes("test");
             var encryptedBytes = SHA512.HashData(bytes);
             var newLogin = new Project.Models.Login
             {
-              Email = model.email,
-              Name = model.name,
+              Email = model.Email,
+              Name = model.Name,
               Password = encryptedBytes, // test
               PasswordModifiedDate = DateTime.Now,
               PasswordExpirationDate = DateTime.Now.AddDays(30),
               InvalidAttemptCount = 3,
               ResetPasswordEndDate = DateTime.Now.AddDays(1),
               ResetPasswordKey = null,
-              ResetPasswordSentCount = 1,
-              ResetPasswordInvalidAttemptCount = 1,
-              LastLoginDate = DateTime.Now,
-              TermsAccepted = model.locked, // TODO AR
+              ResetPasswordSentCount = 1, // TODO a voir ce que c'est
+              ResetPasswordInvalidAttemptCount = 0,
+              LastLoginDate = null,
+              TermsAccepted = model.Locked,
               Datenabled = model.DATEnabled,
-              Phone = model.phone,
-              BlockedReason = "No reason yet",
+              Phone = model.Phone,
+              BlockedReason = "No reason yet", // TODO mettre par rapport a locked  
               CreatedDate = DateTime.Now,
-              CreatedBy = model.modifiedBy,
+              CreatedBy = model.ModifiedBy,
               ModifiedDate = DateTime.Now,
-              ModifiedBy = model.modifiedBy
+              ModifiedBy = model.ModifiedBy
             };
 
-            using (var context = new DatContext())
-            {
-              context.Logins.Add(newLogin);
-              context.SaveChanges();
-            }
-
-            return Ok(new { message = "User found." });
-
+            users.Add(newLogin);
+            context.SaveChanges();
+            return Ok(new { users, message = "User found." });
           }
         }
       }
@@ -122,18 +139,18 @@ public class UsersPageController : ControllerBase // TODO change name
   }
 
   /*************************************************************************************/
+  /// <summary>
+  /// Represents the data model for creating a form data.
+  /// </summary>
   public class FormDataCreateModel
   {
-    public string name { get; set; }
-    public string email { get; set; }
-    public string phone { get; set; }
-    public int invalidAttemptsCount { get; set; }
-    public string modifiedBy { get; set; }
-    public DateTime createdDate { get; set; }
+    public required string Name { get; set; }
+    public required string Email { get; set; }
+    public required string Phone { get; set; }
+    public required string ModifiedBy { get; set; }
     public bool DATEnabled { get; set; }
-    public bool locked { get; set; }
+    public bool Locked { get; set; }
   }
-
 }
 /***************************************************************************************/
 /***************************************************************************************/

@@ -44,6 +44,8 @@ public class Startup
 
         app.UseCors("AllowSpecificOrigin");
 
+        app.UseCors("AllowMyOrigin");
+
         app.UseStaticFiles();
 
         app.UseRouting();

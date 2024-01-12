@@ -166,6 +166,13 @@
           >
         </form>
       </ng-container>
+      <div>
+        <app-error-popup
+          *ngIf="showPopup"
+          [errorMessage]="popupMessage"
+          (close)="closeErrorPopup()"
+        ></app-error-popup>
+      </div>
     </div>
   </div>
 </div>
