@@ -15,5 +15,10 @@ namespace Project.Models.DTO
         /// Gets or sets the name of the domain.
         /// </summary>
         public string Name { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets the environments presence of the domain.
+        /// </summary>
+        public bool[] Environments { get; set; } = new bool[6];
     }
 }

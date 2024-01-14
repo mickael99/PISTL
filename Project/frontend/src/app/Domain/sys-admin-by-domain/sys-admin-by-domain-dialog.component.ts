@@ -4,6 +4,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import {DatePipe, formatDate} from '@angular/common';
 import {MatDatepicker} from '@angular/material/datepicker';
 import { NativeDateAdapter, DateAdapter } from '@angular/material/core';
+import { AbstractControl, ValidationErrors, AsyncValidatorFn } from '@angular/forms';
 
 @Component({
   selector: 'app-sys-admin-by-domain-dialog',  providers: [DatePipe, MatDatepicker, { provide: DateAdapter, useClass: NativeDateAdapter }],
@@ -18,6 +19,9 @@ import { NativeDateAdapter, DateAdapter } from '@angular/material/core';
         <mat-form-field>
           <mat-label>To</mat-label>
           <input matInput type="date" formControlName="to" />
+          <mat-error *ngIf="newAdminForm.get('to').hasError('dateError')">
+            {{ newAdminForm.get('to').getError('dateError') }}
+          </mat-error>
         </mat-form-field>
         <mat-form-field>
           <mat-label>Comment</mat-label>
@@ -34,19 +38,42 @@ import { NativeDateAdapter, DateAdapter } from '@angular/material/core';
 
 export class SysAdminByDomainDialog {
   newAdminForm: FormGroup;
-  
+  user: any;
+
   constructor(
     private dialogRef: MatDialogRef<SysAdminByDomainDialog>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private fb: FormBuilder,
     public datepipe: DatePipe
   ) {
+    // Set the default value for "from" to the current date
+    const currentDate = new Date();
+    const formattedCurrentDate = this.datepipe.transform(currentDate, 'yyyy-MM-dd');
+
     this.newAdminForm = this.fb.group({
-      from: ['', Validators.required],
+      from: [formattedCurrentDate, Validators.required], // Set default value
       to: ['', Validators.required],
       comment: ['', Validators.required],
       user: [data],
     });
+  }
+
+  asyncDateValidation(): AsyncValidatorFn {
+    return async (control: AbstractControl): Promise<ValidationErrors | null> => {
+      const from = this.newAdminForm.get('from').value;
+      const to = control.value;
+
+      if (from && to) {
+        const fromDate = new Date(from);
+        const toDate = new Date(to);
+
+        if (toDate <= fromDate) {
+          return { dateError: 'To date must be after From date' };
+        }
+      }
+
+      return null;
+    };
   }
 
   setDate(event, dp) {
@@ -61,7 +88,6 @@ export class SysAdminByDomainDialog {
   }
 
   onCancel(): void {
-    console.log("onCancel");
     this.dialogRef.close(null);
   }
 }

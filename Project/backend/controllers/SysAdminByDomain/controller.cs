@@ -2,6 +2,7 @@ using System;
 using Project.Models;
 using Microsoft.AspNetCore.Mvc;
 using Project.Models.DTO;
+using System.Collections;
 
 namespace Project.Controllers
 {
@@ -9,6 +10,109 @@ namespace Project.Controllers
     [ApiController]
     public class SysAdminByDomainController : ControllerBase
     {
+        [HttpGet("{domainId}")]
+        public IActionResult GetSysAdminByDomain(int domainId)
+        {
+            try
+            {
+                // Retrieve the domain selected from your data source
+                var context = new MasterContext();
+                var domains = context.Domains.Select(d => new DomainDTO
+                {
+                    // Map properties from Domain to DomainDTO
+                    DomainId = d.DomainId,
+                    Name = d.Name,
+                    Environments = new bool[6] {false, false, false, false, false, false}
+                }).ToList();
+                
+                // Retrieve the list of all users with sysadmin rights and the domain selected from your data source
+                var users = context.LoginDomainUsers.Where(u => u.DomainId == domainId && u.UserId == "99999999-9999-9999-9999-999999999999")
+                                                    .Select(u => new LoginDomainUserDTO
+                {
+                    // Map properties from LoginDomainUser to LoginDomainUserDTO
+                    LoginId = u.LoginId,
+                    DomainId = u.DomainId,
+                    UserId = u.UserId,
+                    Environment = u.Environment,
+                    SysAdmin = u.SysAdmin,
+                    SysAdminStartDate = u.SysAdminStartDate,
+                    SysAdminEndDate = u.SysAdminEndDate,
+                    Comment = u.Comment,
+                    UserName = u.UserName,
+                    ModifiedBy = u.ModifiedBy,
+                }).ToList();
+
+                // Retrieve the list of all logins from your data source
+                var logins = context.Logins.Select(l => new LoginDTO
+                {
+                    // Map properties from Login to LoginDTO
+                    LoginId = l.LoginId,
+                    Email = l.Email
+                }).ToList();
+
+                // Retrieve the list of all users from your data source
+                var all_users = context.LoginDomainUsers.Where(u => u.UserId == "99999999-9999-9999-9999-999999999999")
+                                                    .Select(u => new LoginDomainUserDTO
+                {
+                    // Map properties from LoginDomainUser to LoginDomainUserDTO
+                    LoginId = u.LoginId,
+                    DomainId = u.DomainId,
+                    UserId = u.UserId,
+                    Environment = u.Environment,
+                    SysAdmin = u.SysAdmin,
+                    SysAdminStartDate = u.SysAdminStartDate,
+                    SysAdminEndDate = u.SysAdminEndDate,
+                    Comment = u.Comment,
+                    UserName = u.UserName,
+                    ModifiedBy = u.ModifiedBy,
+                }).ToList();
+                foreach (var domain in domains)
+                {
+                    foreach (var user in all_users)
+                    {
+                        if (domain.DomainId == user.DomainId && user.SysAdmin == true){
+                            {
+                                if(user.Environment == 1)
+                                {
+                                    domain.Environments[0] = true;
+                                }
+                                else if(user.Environment == 2)
+                                {
+                                    domain.Environments[1] = true;
+                                }
+                                else if(user.Environment == 3)
+                                {
+                                    domain.Environments[2] = true;
+                                }
+                                else if(user.Environment == 4)
+                                {
+                                    domain.Environments[3] = true;
+                                }
+                                else if(user.Environment == 5)
+                                {
+                                    domain.Environments[4] = true;
+                                }
+                                else if(user.Environment == 6)
+                                {
+                                    domain.Environments[5] = true;
+                                }
+                            }
+                        }
+                    }
+                }
+                // free all_users
+                all_users = null;
+
+
+                return Ok(new { domains, users, logins });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
         [HttpGet]
         public IActionResult GetSysAdmin()
         {
@@ -22,9 +126,23 @@ namespace Project.Controllers
                     DomainId = d.DomainId,
                     Name = d.Name
                 }).ToList();
-                
+
                 // Retrieve the list of all users from your data source
-                var users = context.LoginDomainUsers.Where(u => u.UserId == "99999999-9999-9999-9999-999999999999").ToList();
+                var users = context.LoginDomainUsers.Where(u => u.UserId == "99999999-9999-9999-9999-999999999999")
+                                                    .Select(u => new LoginDomainUserDTO
+                {
+                    // Map properties from LoginDomainUser to LoginDomainUserDTO
+                    LoginId = u.LoginId,
+                    DomainId = u.DomainId,
+                    UserId = u.UserId,
+                    Environment = u.Environment,
+                    SysAdmin = u.SysAdmin,
+                    SysAdminStartDate = u.SysAdminStartDate,
+                    SysAdminEndDate = u.SysAdminEndDate,
+                    Comment = u.Comment,
+                    UserName = u.UserName,
+                    ModifiedBy = u.ModifiedBy,
+                }).ToList();
 
                 // Retrieve the list of all logins from your data source
                 var logins = context.Logins.Select(l => new LoginDTO
@@ -33,7 +151,8 @@ namespace Project.Controllers
                     LoginId = l.LoginId,
                     Email = l.Email
                 }).ToList();
-                return Ok(new{domains, users, logins});
+
+                return Ok(new { domains, users, logins });
             }
             catch (Exception ex)
             {
@@ -41,23 +160,17 @@ namespace Project.Controllers
             }
         }
 
-        [HttpPost]
-        public IActionResult PostSysAdmin([FromBody] LoginDomainUserDTO userDTO)
-        {
+        [HttpPut]
+        public IActionResult UpdateUser([FromBody] LoginDomainUserDTO userDTO) {
             try
             {
-                Console.WriteLine("Posting new user...");
-                Console.WriteLine("DTO: "+userDTO.LoginId+" "+userDTO.Environment+" "+userDTO.DomainId+" "+userDTO.UserId+" | "+ userDTO.SysAdmin);
-                
                 var context = new MasterContext();
-                Console.WriteLine("Before");
-                foreach (var user in context.LoginDomainUsers.ToList())
+                var user = context.LoginDomainUsers.Where(u => u.LoginId == userDTO.LoginId && u.DomainId == userDTO.DomainId
+                        && u.Environment == userDTO.Environment && u.UserId == userDTO.UserId).SingleOrDefault();
+                if(user == null)
                 {
-                    Console.WriteLine(user.LoginId +" "+ user.Environment+" "+ user.SysAdmin);
-                }
-                try
-                {
-                    context.LoginDomainUsers.Add(new LoginDomainUser
+                    //Console.WriteLine("Not found");
+                    user = new LoginDomainUser
                     {
                         LoginId = userDTO.LoginId,
                         DomainId = userDTO.DomainId,
@@ -67,59 +180,15 @@ namespace Project.Controllers
                         SysAdminStartDate = userDTO.SysAdminStartDate,
                         SysAdminEndDate = userDTO.SysAdminEndDate,
                         Comment = userDTO.Comment,
-                        UserName = userDTO.UserName,
                         ModifiedBy = userDTO.ModifiedBy,
-                        UserActive = false,
-                        LoginEnabled = true,
-                        LoginTypeId = null,
-                        AnalyticsEnabled = null,
-                        IsLight = null,
-                        DomainLastLoginDate = null,
-                        CreatedBy = "admin", // TODO: Change this to the current user
-                        CreatedDate = DateTime.Now,
                         ModifiedDate = DateTime.Now,
-                        Domain = context.Domains.Find(userDTO.DomainId),
-                        Login = context.Logins.Find(userDTO.LoginId)
-                    });
+                        CreatedBy = "actual_user", // TODO get the actual session user
+                        CreatedDate = DateTime.Now,
+                        Login = context.Logins.Where(u => u.LoginId == userDTO.LoginId).Single<Login>(),
+                        Domain = context.Domains.Where(d => d.DomainId == userDTO.DomainId).Single<Domain>()
+                    };
+                    context.LoginDomainUsers.Add(user);
                     context.SaveChanges();
-                    Console.WriteLine("Added new one");
-                }
-                catch (Exception ex)
-                {
-                    return BadRequest(ex.Message);
-                }
-                Console.WriteLine("After");
-                foreach (var user in context.LoginDomainUsers.ToList())
-                {
-                    Console.WriteLine(user.LoginId +" "+ user.Environment+" "+ user.SysAdmin);
-                }
-                return Ok(userDTO);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-        [HttpPut]
-        public IActionResult UpdateUser([FromBody] LoginDomainUserDTO userDTO)
-        {
-            try
-            {
-                var context = new MasterContext();
-
-                Console.WriteLine("Updating user "+userDTO.UserId+"...");
-                Console.WriteLine("Before");
-                foreach (var u in context.LoginDomainUsers.ToList())
-                {
-                    Console.WriteLine(u.LoginId +" "+ u.SysAdmin);
-                }
-                LoginDomainUser user = context.LoginDomainUsers.Where(u => u.LoginId == userDTO.LoginId && u.DomainId == userDTO.DomainId
-                        && u.Environment == userDTO.Environment && u.UserId == userDTO.UserId).Single<LoginDomainUser>();
-                if(user == null)
-                {
-                    Console.WriteLine("Not found");
-                    return NotFound();
                 }
                 else
                 { 
@@ -135,17 +204,11 @@ namespace Project.Controllers
                     user.ModifiedBy = userDTO.ModifiedBy;
                     
                     context.Entry(user).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-                    Console.WriteLine("Modified user "+user.UserId);
+                    //Console.WriteLine("Modified user "+user.UserId);
                     context.SaveChanges();
-
-                    Console.WriteLine("After");
-                    foreach (var u in context.LoginDomainUsers.ToList())
-                    {
-                        Console.WriteLine(u.LoginId +" "+ u.SysAdmin);
-                    }
-                    
-                    return Ok(user);
                 }
+                
+                return Ok(userDTO);
             }
             catch (Exception ex)
             {
@@ -153,21 +216,14 @@ namespace Project.Controllers
             }
         }
 
-        [HttpDelete]
-        public IActionResult DeleteUser([FromBody] LoginDomainUserDTO userDTO)
+        [HttpDelete("{loginID}+{userID}+{domainID}+{env}")]
+        public IActionResult DeleteUser(int loginID, string userID, int domainID, int env)
         {
             try
             {
                 var context = new MasterContext();
-
-                Console.WriteLine("Deleting user "+userDTO.UserId+"...");
-                Console.WriteLine("Before");
-                foreach (var u in context.LoginDomainUsers.ToList())
-                {
-                    Console.WriteLine(u.LoginId +" "+ u.SysAdmin);
-                }
-                LoginDomainUser user = context.LoginDomainUsers.Where(u => u.LoginId == userDTO.LoginId && u.DomainId == userDTO.DomainId
-                        && u.Environment == userDTO.Environment && u.UserId == userDTO.UserId).Single<LoginDomainUser>();
+                LoginDomainUser user = context.LoginDomainUsers.Where(u => u.LoginId == loginID && u.DomainId == domainID
+                        && u.Environment == env && u.UserId == userID).Single<LoginDomainUser>();
                 if(user == null)
                 {
                     Console.WriteLine("Not found");
@@ -180,14 +236,65 @@ namespace Project.Controllers
                     Console.WriteLine("Deleted user "+user.UserId);
                     context.SaveChanges();
 
-                    Console.WriteLine("After");
-                    foreach (var u in context.LoginDomainUsers.ToList())
+                    var response = new Hashtable
                     {
-                        Console.WriteLine(u.LoginId +" "+ u.SysAdmin);
-                    }
-                    
-                    return Ok(user);
+                        { "loginID", loginID },
+                        { "userID", userID },
+                        { "domainID", domainID },
+                        { "env", env }
+                    };
+
+                    return Ok(response);
                 }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+    
+        /*  TODO : faire une fonction save qui est appelé lorsque le bouton Save est cliqué pour sauvegarder le contexte 
+            Lorsqu'on appuie sur Add on peut ajouter des users en sysadmin (id:9999) dans des env, si on Cancel après avoir coché tous les
+            changements doivent être reinit, si on appuie sur Save on recharge seulement les sysadmin en incluant les nouveaux. 
+            Pour ça on a besoin que les modifs soient entrée ds BDD seulement qd requête save appelée avec le contexte (userDTOS) actif
+        */
+        [HttpPost("save")]
+        public IActionResult SaveDomains([FromBody] LoginDomainUserDTO[] userDTOs)
+        {
+            try
+            {
+                var context = new MasterContext();
+                foreach (var userDTO in userDTOs)
+                {
+                    LoginDomainUser user = context.LoginDomainUsers.Where(u => u.LoginId == userDTO.LoginId && u.DomainId == userDTO.DomainId
+                        && u.Environment == userDTO.Environment && u.UserId == userDTO.UserId).Single<LoginDomainUser>();
+                    if(user == null){
+                        Console.WriteLine("Not found");
+                        return NotFound();
+                    }
+                    if(userDTO.SysAdmin == true){
+                        Console.WriteLine("Found user "+user.UserId+ ": "+user.DomainId+" | "+user.Environment+" | "+user.SysAdmin);
+                        user.LoginId = userDTO.LoginId;
+                        user.DomainId = userDTO.DomainId;
+                        user.UserId = userDTO.UserId;
+                        user.Environment = userDTO.Environment;
+                        user.SysAdmin = userDTO.SysAdmin;
+                        user.SysAdminStartDate = userDTO.SysAdminStartDate;
+                        user.SysAdminEndDate = userDTO.SysAdminEndDate;
+                        user.Comment = userDTO.Comment;
+                        user.ModifiedBy = userDTO.ModifiedBy;
+                        
+                        context.Entry(user).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                        Console.WriteLine("Modified user "+user.UserId);
+                        context.SaveChanges();
+                    } else {
+                        Console.WriteLine("Found user "+user.UserId+ ": "+user.DomainId+" | "+user.Environment+" | "+user.SysAdmin);
+                        context.LoginDomainUsers.Remove(user);
+                        Console.WriteLine("Deleted user "+user.UserId);
+                        context.SaveChanges();
+                    }
+                }
+                return Ok(userDTOs);
             }
             catch (Exception ex)
             {

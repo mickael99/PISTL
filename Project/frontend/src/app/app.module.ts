@@ -23,6 +23,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatCardModule } from '@angular/material/card';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatIconModule} from '@angular/material/icon';
 
 @NgModule({
   declarations: [
@@ -50,7 +51,8 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
     MatSortModule,
     MatCardModule,
     MatButtonModule,
-    MatDatepickerModule],
+    MatDatepickerModule,
+    MatIconModule],
   providers: [],
   bootstrap: [AppComponent]
 })
