@@ -1,5 +1,11 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Component, Renderer2 } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  HostListener,
+  Renderer2,
+  ViewChild,
+} from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 
@@ -42,6 +48,42 @@ export class UsersComponent {
 
   // Error message to display in the popup
   popupMessage: string = '';
+
+  // User selected in the table
+  userSelected = {
+    name: '',
+    email: '',
+    phone: '',
+    lastLoginDate: '',
+    invalidAttemptCount: '',
+    modifiedBy: '',
+    passwordModifiedDate: '',
+    createdDate: '',
+    DATEnabled: false,
+    locked: false,
+  };
+
+  // Copy of the user selected in the table (for the 'Save' button)
+  userSelectedCopy = {
+    phone: '',
+    DATEnabled: false,
+    locked: false,
+  };
+
+  // Hover the two columns in the table
+  isHovered: boolean = false;
+
+  // User hovered in the table
+  userHovered: string = '';
+
+  // Bool used to activate the 'Edit' button
+  editEnabled: boolean = false;
+
+  // Bool used to display the delete confirmation popup
+  showDeleteConfirmation: boolean = false;
+
+  // Confirmation message to display
+  confirmationMessage: string = '';
 
   /***************************************************************************************/
   /**
@@ -89,13 +131,15 @@ export class UsersComponent {
       DATEnabled: false,
       locked: false,
     };
+
+    this.reinitaliseUserSelectedForm();
   }
 
   /***************************************************************************************/
   /**
    * Function used to POST the user's information from the form.
    */
-  afffFormCreateUser() {
+  newUserFormCreateUser() {
     if (
       this.formDataCreate.name == '' ||
       this.formDataCreate.email == '' ||
@@ -119,11 +163,16 @@ export class UsersComponent {
     console.log('requestBody: ', this.formDataCreate);
 
     this.http
-      .post('http://localhost:5050/api/users', this.formDataCreate, options)
+      .post(
+        'http://localhost:5050/api/users/create',
+        this.formDataCreate,
+        options
+      )
       .subscribe({
         next: (data: any) => {
           this.users = data.users;
           this.dataSource = new MatTableDataSource(this.users);
+          this.showFormCreateUser();
         },
         error: (error: any) => {
           console.error(error.error.message);
@@ -148,6 +197,203 @@ export class UsersComponent {
    */
   closeErrorPopup() {
     this.showPopup = false;
+  }
+
+  /***************************************************************************************/
+  getUser(user: any) {
+    this.userSelected.email = user.email;
+    this.userSelected.name = user.name;
+    this.userSelected.phone = user.phone;
+    this.userSelected.lastLoginDate = user.lastLoginDate;
+    this.userSelected.invalidAttemptCount = user.invalidAttemptCount;
+    this.userSelected.modifiedBy = user.modifiedBy;
+    this.userSelected.passwordModifiedDate = user.passwordModifiedDate;
+    this.userSelected.createdDate = user.createdDate;
+    this.userSelected.DATEnabled = user.datenabled;
+    this.userSelected.locked = user.termsAccepted;
+
+    this.reinitaliseUserCreatedForm();
+
+    // Activate the 'Edit', 'Delete', 'Reset Password' and 'Unlock' buttons
+    this.isClicked = true;
+
+    console.table(this.userSelected);
+  }
+
+  /***************************************************************************************/
+  /**
+   * Function used to activate the hover.
+   */
+  onMouseEnter(userHovered: string) {
+    this.isHovered = true;
+    this.userHovered = userHovered;
+  }
+
+  /***************************************************************************************/
+  /**
+   * Function used to deactivate the hover.
+   */
+  onMouseLeave() {
+    this.isHovered = false;
+    this.userHovered = '';
+  }
+
+  /***************************************************************************************/
+  /**
+   * Function used to reinitalise the selected Sys Admin.
+   */
+  reinitaliseUserSelectedForm() {
+    // Disable access user form
+    this.userSelected = {
+      name: '',
+      email: '',
+      phone: '',
+      lastLoginDate: '',
+      invalidAttemptCount: '',
+      modifiedBy: '',
+      passwordModifiedDate: '',
+      createdDate: '',
+      DATEnabled: false,
+      locked: false,
+    };
+
+    // Disable the 'Edit', 'Delete', 'Reset Password' and 'Unlock' buttons
+    this.isClicked = false;
+
+    // Disable the 'Edit' button
+    this.editEnabled = false;
+  }
+
+  /***************************************************************************************/
+  /**
+   * Function used to reinitalise the created Sys Admin form.
+   */
+  reinitaliseUserCreatedForm() {
+    this.showFormCreate = false;
+
+    this.formDataCreate = {
+      name: '',
+      email: '',
+      phone: '',
+      modifiedBy: '',
+      DATEnabled: false,
+      locked: false,
+    };
+  }
+
+  /***************************************************************************************/
+  /**
+   * Function used to enable the a Sys Admin edition.
+   */
+  editEnable() {
+    this.editEnabled = true;
+
+    // Copy the user selected to compare the changes
+    this.userSelectedCopy.phone = this.userSelected.phone;
+    this.userSelectedCopy.DATEnabled = this.userSelected.DATEnabled;
+    this.userSelectedCopy.locked = this.userSelected.locked;
+  }
+
+  /***************************************************************************************/
+  /**
+   * Function used to edit the Sys Admin's information.
+   */
+  editUser() {
+    if (
+      this.userSelected.phone == this.userSelectedCopy.phone &&
+      this.userSelected.DATEnabled == this.userSelectedCopy.DATEnabled &&
+      this.userSelected.locked == this.userSelectedCopy.locked
+    ) {
+      this.showErrorPopup('Please do some changes before Save.');
+      return;
+    }
+
+    let JWTToken = localStorage.getItem('token');
+
+    const options = {
+      headers: new HttpHeaders({
+        Authorization: 'Bearer ' + JWTToken,
+        'Content-Type': 'application/json',
+      }),
+    };
+
+    const requestBody = {
+      email: this.userSelected.email,
+      phone: this.userSelected.phone,
+      datenabled: this.userSelected.DATEnabled,
+      termsAccepted: this.userSelected.locked,
+    };
+
+    console.log('requestBody: ', requestBody);
+
+    this.http
+      .post('http://localhost:5050/api/users/edit', requestBody, options)
+      .subscribe({
+        next: (data: any) => {
+          this.users = data.users;
+          this.dataSource = new MatTableDataSource(this.users);
+          this.editEnabled = false;
+        },
+        error: (error: any) => {
+          console.error(error.error.message);
+          this.showErrorPopup(error.error.message);
+        },
+      });
+  }
+
+  /***************************************************************************************/
+  openDeleteConfirmation() {
+    this.showDeleteConfirmation = true;
+    this.confirmationMessage =
+      'Are you sure you want to delete this user: ' +
+      this.userSelected.email +
+      '?';
+  }
+
+  /***************************************************************************************/
+
+  onDeleteConfirm() {
+    this.showDeleteConfirmation = false;
+
+    let JWTToken = localStorage.getItem('token');
+
+    const options = {
+      headers: new HttpHeaders({
+        Authorization: 'Bearer ' + JWTToken,
+        'Content-Type': 'application/json',
+      }),
+    };
+
+    const requestBody = {
+      email: this.userSelected.email,
+      phone: this.userSelected.phone, // Not used
+      datenabled: this.userSelected.DATEnabled, // Not used
+      termsAccepted: this.userSelected.locked, // Not used
+    };
+
+    console.log('requestBody: ', requestBody);
+
+    this.http
+      .post('http://localhost:5050/api/users/delete', requestBody, options)
+      .subscribe({
+        next: (data: any) => {
+          this.users = data.users;
+          this.dataSource = new MatTableDataSource(this.users);
+          this.reinitaliseUserSelectedForm();
+        },
+        error: (error: any) => {
+          console.error(error.error.message);
+          this.showErrorPopup(error.error.message);
+        },
+      });
+  }
+
+  /***************************************************************************************/
+  /**
+   * Function used to close the delta confirmation popup.
+   */
+  onDeleteClose() {
+    this.showDeleteConfirmation = false;
   }
 }
 /***************************************************************************************/

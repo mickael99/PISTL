@@ -27,6 +27,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { ErrorPopupComponent } from './utils/error-popup/error-popup.component';
+import { ConfirmPopupComponent } from './utils/confirm-popup/confirm-popup.component';
 
 @NgModule({
   declarations: [
@@ -39,6 +40,7 @@ import { ErrorPopupComponent } from './utils/error-popup/error-popup.component';
     TwoFAComponent,
     UsersComponent,
     ErrorPopupComponent,
+    ConfirmPopupComponent,
   ],
   imports: [
     BrowserModule,

@@ -51,13 +51,11 @@ public class UsersPageController : ControllerBase // TODO change name
   }
 
   /*************************************************************************************/
-  // [HttpPost("create")]
-
   /// <summary>
   /// This POST method is used to create a new DAT user by adding it to the database at the Login table.
   /// </summary>
   /// <returns>An HTTP response.</returns>
-  [HttpPost]
+  [HttpPost("create")]
   public IActionResult Add_New_DAT_User([FromHeader(Name = "Authorization")] string authorizationHeader, [FromBody] FormDataCreateModel model)
   {
     try
@@ -140,6 +138,136 @@ public class UsersPageController : ControllerBase // TODO change name
 
   /*************************************************************************************/
   /// <summary>
+  /// This POST method is used to edit an existing DAT user by update information to the database at the Login table.
+  /// </summary>
+  /// <returns>An HTTP response.</returns>
+  [HttpPost("edit")]
+  public IActionResult Edit_New_DAT_User([FromHeader(Name = "Authorization")] string authorizationHeader, [FromBody] UserSelectedEdit model)
+  {
+    try
+    {
+      var token = authorizationHeader?.Replace("Bearer ", "");
+
+      if (string.IsNullOrEmpty(token))
+      {
+        return BadRequest("Token JWT missing in the Header.");
+      }
+
+      var handler = new JwtSecurityTokenHandler();
+      var jsonToken = handler.ReadToken(token) as JwtSecurityToken;
+      if (jsonToken != null)
+      {
+        foreach (var claim in jsonToken.Claims)
+        {
+          if (claim.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name") // TODO AR 
+          {
+            var context = new DatContext();
+            var users = context.Logins;
+            bool found = false;
+            foreach (var login in users)
+            {
+              if (login.Email == model.Email)
+              {
+                login.Phone = model.Phone;
+                login.Datenabled = model.DATEnabled;
+                login.TermsAccepted = model.TermsAccepted;
+                found = true;
+              }
+            }
+            if (found)
+            {
+              context.SaveChanges();
+              return Ok(new { users, message = "User found." });
+            }
+            else
+            {
+              return BadRequest(new { message = "User not found." });
+            }
+          }
+        }
+      }
+      else
+      {
+        return BadRequest(new { message = "Invalid JWT token." });
+      }
+    }
+    catch (Exception ex)
+    {
+      return BadRequest(new
+      {
+        message = ex.Message
+      });
+    }
+
+    return Ok(new { message = "User not found." });
+  }
+
+  /*************************************************************************************/
+  /// <summary>
+  /// This POST method is used to remove an existing DAT user by deleting all his information from the database.
+  /// </summary>
+  /// <returns>An HTTP response.</returns>
+  [HttpPost("delete")]
+  public IActionResult Delete_New_DAT_User([FromHeader(Name = "Authorization")] string authorizationHeader, [FromBody] UserSelectedEdit model)
+  {
+    try
+    {
+      var token = authorizationHeader?.Replace("Bearer ", "");
+
+      if (string.IsNullOrEmpty(token))
+      {
+        return BadRequest("Token JWT missing in the Header.");
+      }
+
+      var handler = new JwtSecurityTokenHandler();
+      var jsonToken = handler.ReadToken(token) as JwtSecurityToken;
+      if (jsonToken != null)
+      {
+        foreach (var claim in jsonToken.Claims)
+        {
+          if (claim.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name") // TODO AR 
+          {
+            var context = new DatContext();
+            var users = context.Logins;
+            bool found = false;
+            foreach (var login in users)
+            {
+              if (login.Email == model.Email)
+              {
+                users.Remove(login);
+                found = true;
+              }
+            }
+            if (found)
+            {
+              context.SaveChanges();
+              return Ok(new { users, message = "User deleted." });
+            }
+            else
+            {
+              return BadRequest(new { message = "User not found." });
+            }
+          }
+        }
+      }
+      else
+      {
+        return BadRequest(new { message = "Invalid JWT token." });
+      }
+    }
+    catch (Exception ex)
+    {
+      return BadRequest(new
+      {
+        message = ex.Message
+      });
+    }
+
+    return Ok(new { message = "User not found." });
+  }
+
+  /*************************************************************************************/
+  /// <summary>
   /// Represents the data model for creating a form data.
   /// </summary>
   public class FormDataCreateModel
@@ -150,6 +278,18 @@ public class UsersPageController : ControllerBase // TODO change name
     public required string ModifiedBy { get; set; }
     public bool DATEnabled { get; set; }
     public bool Locked { get; set; }
+  }
+
+  /*************************************************************************************/
+  /// <summary>
+  /// Represents the data model for editing a Sys Admin.
+  /// </summary>
+  public class UserSelectedEdit // TODO change name
+  {
+    public required string Email { get; set; }
+    public required string Phone { get; set; }
+    public bool DATEnabled { get; set; }
+    public bool TermsAccepted { get; set; }
   }
 }
 /***************************************************************************************/

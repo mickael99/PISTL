@@ -17,7 +17,7 @@ export class ErrorPopupComponent {
 
   /***************************************************************************************/
   /**
-   * Closes the error popup component.
+   * Closes the error popup component by emitting the close event.
    */
   onClose() {
     this.close.emit();

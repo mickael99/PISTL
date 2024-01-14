@@ -1,0 +1,13 @@
+<div class="confirmation-popup">
+  <div class="popup-content">
+    <p>{{ confirmationMessage }}</p>
+    <div class="buttons">
+      <button mat-raised-button color="primary" class="btn" (click)="onClose()">
+        Cancel
+      </button>
+      <button mat-raised-button color="warn" class="btn" (click)="onConfirm()">
+        Confirm
+      </button>
+    </div>
+  </div>
+</div>
