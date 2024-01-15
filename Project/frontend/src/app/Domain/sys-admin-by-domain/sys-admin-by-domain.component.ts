@@ -113,10 +113,18 @@ export class SysAdminByDomainComponent {
     }
 
     if(Object.keys(this.show_calendar).length === 0){
-      for (const login of this.logins) {
-        this.show_calendar[login.loginId] = {};
-        for(var i=1; i<7; i++){
-          this.show_calendar[login.loginId][i] = false;
+      const currentDate = new Date();
+      const futureDate = new Date();
+      futureDate.setFullYear(currentDate.getFullYear() + 100);
+
+      for (const loginId of Object.keys(this.login_users)) {
+        this.show_calendar[loginId] = {};
+        if(this.login_users[loginId].length > 0){
+          for(const env of Object.keys(this.login_users[loginId][2])){
+            this.show_calendar[loginId][env] = false;
+            if(this.login_users[loginId][2][env].sysAdminEndDate < this.datepipe.transform(futureDate, 'yyyy-MM-dd'))
+                this.show_calendar[loginId][env] = true;
+          }
         }
       } 
     }
@@ -153,33 +161,24 @@ export class SysAdminByDomainComponent {
     
       // Subscribe to the dialog's afterClosed event to handle the result
       dialogRef.afterClosed().subscribe(result => {
-        if(result.from != "" && result.comment != "") {
+        if(result.from != "") {
           console.log(result)
           const currentDate = new Date();
           const futureDate = new Date();
           futureDate.setFullYear(currentDate.getFullYear() + 100);
+          
+          this.login_users[loginId][2][env].sysAdmin = true;
+          this.login_users[loginId][2][env].sysAdminStartDate = result.from;
+          this.login_users[loginId][2][env].sysAdminEndDate = result.to || this.datepipe.transform(futureDate, 'yyyy-MM-dd');
+          this.login_users[loginId][2][env].comment = result.comment || "";
+          this.login_users[loginId][2][env].modifiedBy = 'admin'; // TODO: Replace with the actual login
 
-          this.http.put('http://localhost:5050/api/sysadminbydomain', {
-            loginId: result.user.loginId,
-            domainId: result.user.domainId,
-            userId: "99999999-9999-9999-9999-999999999999",
-            environment: result.user.environment,
-            sysAdmin: true,
-            sysAdminStartDate: result.from,
-            sysAdminEndDate: result.to || this.datepipe.transform(futureDate, 'yyyy-MM-dd'),
-            comment: result.comment,
-            modifiedBy: 'admin', // TODO: Replace with the actual login
-          }).subscribe(
-            async (data: any) => {
-              console.log('Dialog result:', data);
-              if (this.show_add) {
-                this.getSysAdminByDomain(this.selected_domain.domainId, false);
-              }
-            },
-            (error) => {  
-              alert('Connection error: ' + error.message);
-            }
-          );
+          this.login_users[loginId][1][env] = true;
+    
+          if(this.login_users[loginId][2][env].sysAdminEndDate < this.datepipe.transform(futureDate, 'yyyy-MM-dd'))
+              this.show_calendar[loginId][env] = true;
+
+          this.show_add = false;
         }
       });
     } 
@@ -187,69 +186,55 @@ export class SysAdminByDomainComponent {
     else {
       console.log("User not found");
 
-      this.login_users[loginId][2][env] = {
+      var new_user = {
         loginId: loginId,
         domainId: this.selected_domain.domainId, 
         userId: "99999999-9999-9999-9999-999999999999", 
         environment: env
       };
 
-      dialogConfig.data = this.login_users[loginId][2][env];
+      dialogConfig.data = new_user;
 
       // Open the dialog
       const dialogRef = this.dialog.open(SysAdminByDomainDialog, dialogConfig);
     
       // Subscribe to the dialog's afterClosed event to handle the result
       dialogRef.afterClosed().subscribe(result => {
-        if(result.from != "" && result.comment != "") {
+        if(result.from != "") {
           console.log(result)
           const currentDate = new Date();
           const futureDate = new Date();
-          futureDate.setFullYear(currentDate.getFullYear() + 100);
-
-          this.http.put('http://localhost:5050/api/sysadminbydomain', {
-            loginId: result.user.loginId,
-            domainId: result.user.domainId,
-            userId: "99999999-9999-9999-9999-999999999999",
-            environment: result.user.environment,
+          futureDate.setFullYear(currentDate.getFullYear() + 1000);
+          
+          this.login_users[loginId][2][env] = {
+            loginId: loginId,
+            domainId: this.selected_domain.domainId, 
+            userId: "99999999-9999-9999-9999-999999999999", 
+            environment: env,
             sysAdmin: true,
             sysAdminStartDate: result.from,
             sysAdminEndDate: result.to || this.datepipe.transform(futureDate, 'yyyy-MM-dd'),
-            comment: result.comment,
-            modifiedBy: 'admin', // TODO: Replace with the actual login
-          }).subscribe(
-            async (data: any) => {
-              console.log('Dialog result:', data);
-              if (this.show_add) {
-                this.getSysAdminByDomain(this.selected_domain.domainId, false);
-              }
-              
+            comment: result.comment || "",
+            modifiedBy: 'admin' // TODO: Replace with the actual login
+          }
+    
+          this.login_users[loginId][1][env] = true;
+
+          this.show_add = false;
+          
+          if(this.login_users[loginId][2][env].sysAdminEndDate < this.datepipe.transform(futureDate, 'yyyy-MM-dd'))
               this.show_calendar[loginId][env] = true;
-              console.log(this.show_calendar);
-            },
-            (error) => {  
-              alert('Connection error: ' + error.message);
-            }
-          );
         }
       });
     }
   }
 
   uncheck(loginId: any, env: any): void {
+    this.login_users[loginId][2][env].sysAdmin = false;
+    this.login_users[loginId][1][env] = false;
 
-    let user = this.login_users[loginId][2][env];
-
-    this.http.delete('http://localhost:5050/api/sysadminbydomain/' + user.loginId+ '+' +user.userId+ '+' +user.domainId+ '+' +user.environment, {
-    }).subscribe(
-      (data: any) => {
-        console.log('Dialog result:', data);
-        if(this.show_add) this.getSysAdminByDomain(this.selected_domain.domainId, false);
-      },
-      (error) => {  
-        alert('Connection error: ' + error.message);
-      }
-    );
+    this.show_calendar[loginId][env] = false;
+    this.show_add = false;
   }
 
 
@@ -265,8 +250,37 @@ export class SysAdminByDomainComponent {
     this.show_add = true;
     console.log('Save sys admin');
     // TODO : save current userDTOS into context 
+    
+    // TODO : send request to backend to save all users in context
+    const requests = [];
 
-    this.getSysAdminByDomain(this.selected_domain.domainId, false);
+    for(const loginId of Object.keys(this.login_users)){
+      if(this.login_users[loginId].length > 0){
+        for(const env of Object.keys(this.login_users[loginId][2])){
+          if(this.login_users[loginId][2][env].userId === "99999999-9999-9999-9999-999999999999" && this.login_users[loginId][2][env].sysAdmin === true){
+            const request = this.http.put('http://localhost:5050/api/sysadminbydomain', this.login_users[loginId][2][env]);
+
+            requests.push(request);
+          }
+          else if(this.login_users[loginId][2][env].userId === "99999999-9999-9999-9999-999999999999" && this.login_users[loginId][2][env].sysAdmin === false){
+            let user = this.login_users[loginId][2][env];
+
+            const request = this.http.delete('http://localhost:5050/api/sysadminbydomain/' + user.loginId+ '+' +user.userId+ '+' +user.domainId+ '+' +user.environment);
+            requests.push(request);
+          }
+        }
+      }
+    }
+
+    forkJoin(requests).subscribe(
+      () => {
+        // All requests completed successfully
+        this.getSysAdminByDomain(this.selected_domain.domainId, false);
+      },
+      (error) => {
+        alert('Connection error: ' + error.message);
+      }
+    );
   }
 
   cancelSysAdmin(): void {
@@ -296,9 +310,11 @@ export class SysAdminByDomainComponent {
   oneChecked(env: any): boolean {
     for (const login of Object.keys(this.login_users)) {
       if(this.login_users[login].length > 0){
-        if(this.login_users[login][1][env]){
-          return true;
-        }
+        if(this.login_users[login][2][env])
+          if(this.login_users[login][2][env].userId === "99999999-9999-9999-9999-999999999999" && 
+                                                              this.login_users[login][2][env].sysAdmin === true){
+            return true;
+          }
       }
     }
     return false;
@@ -309,30 +325,34 @@ export class SysAdminByDomainComponent {
    * @param env - The environment to uncheck for.
    */
   uncheckAll(env: any): void {
+    this.show_add = false;
     console.log('unCheckAll');
-    const requests = [];
-    for (const id of Object.keys(this.login_users)) {
-      if (this.login_users[id].length > 0) {
-        if (this.login_users[id][1][env]) {
-          const user = this.login_users[id][2][env];
-          const request = this.http.delete('http://localhost:5050/api/sysadminbydomain/' + user.loginId
-                                                                                         + '+' + user.userId
-                                                                                         + '+' + user.domainId
-                                                                                         + '+' + user.environment);
-          requests.push(request);
+    for (const loginId of Object.keys(this.login_users)) {
+      if (this.login_users[loginId].length > 0) {
+        if (this.login_users[loginId][1][env]) {
+          this.login_users[loginId][2][env].sysAdmin = false;
+          this.login_users[loginId][1][env] = false;
         }
       }
     }
 
-    forkJoin(requests).subscribe(
-      () => {
-        // All requests completed successfully
-        this.getSysAdminByDomain(this.selected_domain.domainId, false);
-      },
-      (error) => {
-        alert('Connection error: ' + error.message);
+    this.data_domain_table = [];
+    for (const login of this.logins) {
+      var line = [login.loginId ,(this.login_users[login.loginId][0])]
+      if(this.login_users[login.loginId][1]){
+        for(var i=1; i<7; i++){
+          line.push(this.login_users[login.loginId][1][i]);
+        }
+        this.data_domain_table.push(line);
       }
-    );
+    }
+
+    console.log("Login_users: ", this.login_users);
+    console.log("DataDomainTable: ", this.data_domain_table);
+
+    this.data_source = new MatTableDataSource(this.data_domain_table);
+    this.data_source.paginator = this.paginator;
+    this.data_source.sort = this.sort;
   }
 
   /**
@@ -340,35 +360,51 @@ export class SysAdminByDomainComponent {
    * @param env - The environment to check for.
    */
   checkAll(env: any): void {
-    console.log('checkAll');
-    console.log(this.login_users);
-    
-    const requests = [];
+    this.show_add = false;
+    console.log('checkAll');  
+    // TODO : ask if it is all users or only the users that are shown in the table
 
-    for (const id of Object.keys(this.login_users)) {
-      const request = this.http.put('http://localhost:5050/api/sysadminbydomain', {
-        loginId: id,
-        domainId: this.selected_domain.domainId,
-        userId: "99999999-9999-9999-9999-999999999999",
-        environment: env,
-        sysAdmin: true,
-        sysAdminStartDate: this.datepipe.transform(new Date(), 'yyyy-MM-dd'),
-        sysAdminEndDate: this.datepipe.transform(new Date().getFullYear() + 100, 'yyyy-MM-dd'),
-        comment: "given rights to all users",
-        modifiedBy: 'admin', // TODO: Replace with the actual login
-      });
-      requests.push(request);
+    for (const loginId of Object.keys(this.login_users)) {
+      if (this.login_users[loginId].length > 0) {
+        console.log(this.login_users[loginId]);
+        const currentDate = new Date();
+        const futureDate = new Date();
+        futureDate.setFullYear(currentDate.getFullYear() + 100);
+        
+        this.login_users[loginId][2][env] = {
+          loginId: loginId,
+          domainId: this.selected_domain.domainId, 
+          userId: "99999999-9999-9999-9999-999999999999", 
+          environment: env,
+          sysAdmin: true,
+          sysAdminStartDate: this.datepipe.transform(currentDate, 'yyyy-MM-dd'),
+          sysAdminEndDate: this.datepipe.transform(futureDate, 'yyyy-MM-dd'),
+          comment: "given all users in this environment sys admin rights",
+          modifiedBy: 'admin'
+        };
+        
+        this.login_users[loginId][1][env] = true;
+
+      }
     }
 
-    forkJoin(requests).subscribe(
-      () => {
-        // All requests completed successfully
-        this.getSysAdminByDomain(this.selected_domain.domainId, false);
-      },
-      (error) => {
-        alert('Connection error: ' + error.message);
+    this.data_domain_table = [];
+    for (const login of this.logins) {
+      var line = [login.loginId ,(this.login_users[login.loginId][0])]
+      if(this.login_users[login.loginId][1]){
+        for(var i=1; i<7; i++){
+          line.push(this.login_users[login.loginId][1][i]);
+        }
+        this.data_domain_table.push(line);
       }
-    );
+    }
+    
+    console.log("Login_users: ", this.login_users);
+    console.log("DataDomainTable: ", this.data_domain_table);
+
+    this.data_source = new MatTableDataSource(this.data_domain_table);
+    this.data_source.paginator = this.paginator;
+    this.data_source.sort = this.sort;
   }
 
   /**

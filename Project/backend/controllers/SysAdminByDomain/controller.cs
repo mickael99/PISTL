@@ -169,7 +169,7 @@ namespace Project.Controllers
                         && u.Environment == userDTO.Environment && u.UserId == userDTO.UserId).SingleOrDefault();
                 if(user == null)
                 {
-                    //Console.WriteLine("Not found");
+                    Console.WriteLine("Not found user "+userDTO.UserId+ ": "+userDTO.LoginId+" | "+userDTO.DomainId+" | "+userDTO.Environment+" | "+userDTO.SysAdmin);
                     user = new LoginDomainUser
                     {
                         LoginId = userDTO.LoginId,
@@ -182,7 +182,7 @@ namespace Project.Controllers
                         Comment = userDTO.Comment,
                         ModifiedBy = userDTO.ModifiedBy,
                         ModifiedDate = DateTime.Now,
-                        CreatedBy = "actual_user", // TODO get the actual session user
+                        CreatedBy = userDTO.ModifiedBy, // TODO get the actual session user
                         CreatedDate = DateTime.Now,
                         Login = context.Logins.Where(u => u.LoginId == userDTO.LoginId).Single<Login>(),
                         Domain = context.Domains.Where(d => d.DomainId == userDTO.DomainId).Single<Domain>()
@@ -192,7 +192,7 @@ namespace Project.Controllers
                 }
                 else
                 { 
-                    Console.WriteLine("Found user "+user.UserId+ ": "+user.DomainId+" | "+user.Environment+" | "+user.SysAdmin);
+                    Console.WriteLine("Found user "+user.UserId+ ": "+userDTO.LoginId+" | "+user.DomainId+" | "+user.Environment+" | "+user.SysAdmin);
                     user.LoginId = userDTO.LoginId;
                     user.DomainId = userDTO.DomainId;
                     user.UserId = userDTO.UserId;
@@ -246,55 +246,6 @@ namespace Project.Controllers
 
                     return Ok(response);
                 }
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-    
-        /*  TODO : faire une fonction save qui est appelé lorsque le bouton Save est cliqué pour sauvegarder le contexte 
-            Lorsqu'on appuie sur Add on peut ajouter des users en sysadmin (id:9999) dans des env, si on Cancel après avoir coché tous les
-            changements doivent être reinit, si on appuie sur Save on recharge seulement les sysadmin en incluant les nouveaux. 
-            Pour ça on a besoin que les modifs soient entrée ds BDD seulement qd requête save appelée avec le contexte (userDTOS) actif
-        */
-        [HttpPost("save")]
-        public IActionResult SaveDomains([FromBody] LoginDomainUserDTO[] userDTOs)
-        {
-            try
-            {
-                var context = new MasterContext();
-                foreach (var userDTO in userDTOs)
-                {
-                    LoginDomainUser user = context.LoginDomainUsers.Where(u => u.LoginId == userDTO.LoginId && u.DomainId == userDTO.DomainId
-                        && u.Environment == userDTO.Environment && u.UserId == userDTO.UserId).Single<LoginDomainUser>();
-                    if(user == null){
-                        Console.WriteLine("Not found");
-                        return NotFound();
-                    }
-                    if(userDTO.SysAdmin == true){
-                        Console.WriteLine("Found user "+user.UserId+ ": "+user.DomainId+" | "+user.Environment+" | "+user.SysAdmin);
-                        user.LoginId = userDTO.LoginId;
-                        user.DomainId = userDTO.DomainId;
-                        user.UserId = userDTO.UserId;
-                        user.Environment = userDTO.Environment;
-                        user.SysAdmin = userDTO.SysAdmin;
-                        user.SysAdminStartDate = userDTO.SysAdminStartDate;
-                        user.SysAdminEndDate = userDTO.SysAdminEndDate;
-                        user.Comment = userDTO.Comment;
-                        user.ModifiedBy = userDTO.ModifiedBy;
-                        
-                        context.Entry(user).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-                        Console.WriteLine("Modified user "+user.UserId);
-                        context.SaveChanges();
-                    } else {
-                        Console.WriteLine("Found user "+user.UserId+ ": "+user.DomainId+" | "+user.Environment+" | "+user.SysAdmin);
-                        context.LoginDomainUsers.Remove(user);
-                        Console.WriteLine("Deleted user "+user.UserId);
-                        context.SaveChanges();
-                    }
-                }
-                return Ok(userDTOs);
             }
             catch (Exception ex)
             {

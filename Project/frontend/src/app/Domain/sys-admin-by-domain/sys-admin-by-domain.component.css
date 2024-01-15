@@ -51,3 +51,9 @@
 button{
   margin: 8px 8px 8px 0;
 }
+
+.mat-mdc-raised-button.color-button {
+  background-color: #37b24d;
+  color: #fff;
+  font-size: 1.2rem;
+}

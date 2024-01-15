@@ -8,6 +8,7 @@ import { AbstractControl, ValidationErrors, AsyncValidatorFn } from '@angular/fo
 
 @Component({
   selector: 'app-sys-admin-by-domain-dialog',  providers: [DatePipe, MatDatepicker, { provide: DateAdapter, useClass: NativeDateAdapter }],
+  styleUrls: ['./sys-admin-by-domain.component.css'],
   template: `
     <h2 mat-dialog-title>From/To Date</h2>
     <mat-dialog-content>
@@ -19,17 +20,14 @@ import { AbstractControl, ValidationErrors, AsyncValidatorFn } from '@angular/fo
         <mat-form-field>
           <mat-label>To</mat-label>
           <input matInput type="date" formControlName="to" />
-          <mat-error *ngIf="newAdminForm.get('to').hasError('dateError')">
-            {{ newAdminForm.get('to').getError('dateError') }}
-          </mat-error>
         </mat-form-field>
         <mat-form-field>
           <mat-label>Comment</mat-label>
           <input matInput type="text" formControlName="comment" />
         </mat-form-field>
         <div mat-dialog-actions>
-          <button mat-button (click)="onCancel()">Cancel</button>
-          <button mat-button type="submit">Submit</button>
+          <button mat-raised-button color="primary" (click)="onCancel()">Cancel</button>
+          <button mat-raised-button class="color-button" type="submit">Submit</button>
         </div>
       </form>
     </mat-dialog-content>
@@ -53,7 +51,7 @@ export class SysAdminByDomainDialog {
     this.newAdminForm = this.fb.group({
       from: [formattedCurrentDate, Validators.required], // Set default value
       to: ['', Validators.required],
-      comment: ['', Validators.required],
+      comment: [data.comment, Validators.required],
       user: [data],
     });
   }
