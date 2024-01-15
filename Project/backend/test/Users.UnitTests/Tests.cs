@@ -351,6 +351,102 @@ public class UsersTests
 
     Assert.Pass("User not edited with not existing Email in the database.");
   }
+
+  /****************************************************************************************/
+  /// <summary>
+  /// Tests the behavior of the UsersController's Delete_New_DAT_User method when the user email exists 
+  /// in the database.
+  /// </summary>
+  [Test]
+  public static void UsersController_Delete_New_DAT_User_ReturnsOkResult()
+  {
+    // Arrange 
+    var controller = new UsersPageController();
+    var authorizationHeader = UsersController.create_token("test@test.com");
+
+    var userAdded = new UsersPageController.FormDataCreateModel
+    {
+      Name = "Daniel",
+      Email = "daniel@upclear.com",
+      Phone = "777",
+      ModifiedBy = "daniel@upclear.com",
+      DATEnabled = true,
+      Locked = false,
+    };
+
+    // Adding the user to remove
+    controller.Add_New_DAT_User(authorizationHeader, userAdded);
+
+    var userToRemove = new UsersPageController.UserSelectedEdit
+    {
+      Email = userAdded.Email,
+      Phone = userAdded.Phone,
+      DATEnabled = userAdded.DATEnabled,
+      TermsAccepted = userAdded.Locked,
+    };
+
+
+    // Act
+    var result = controller.Delete_New_DAT_User(authorizationHeader, userToRemove) as OkObjectResult;
+
+    // Assert
+    Assert.IsNotNull(result, "Edit result is null.");
+    Assert.AreEqual(200, result.StatusCode, "Status code is not 400.");
+    dynamic data = result.Value;
+    Assert.IsNotNull(data, "Data is null.");
+
+    var loginProperty = data?.GetType().GetProperty("users");
+    var loginValue = loginProperty.GetValue(data) as Microsoft.EntityFrameworkCore.Internal.InternalDbSet<Project.Models.Login>;
+
+    if (loginValue != null)
+    {
+      foreach (var login in loginValue)
+      {
+        if (login.Email == userToRemove.Email)
+        {
+          Assert.Fail("User not deleted.");
+        }
+      }
+    }
+
+    Assert.Pass("Delete User verified.");
+  }
+
+  /****************************************************************************************/
+  /// <summary>
+  /// Tests the behavior of the UsersController's Delete_New_DAT_User method when the user email 
+  /// doesn't exists in the database.
+  /// </summary>
+  [Test]
+  public static void UsersController_Delete_New_DAT_User_WithNotExistingEmail_ReturnsBadRequest()
+  {
+    // Arrange 
+    var controller = new UsersPageController();
+    var authorizationHeader = UsersController.create_token("test@test.com");
+
+    var userToRemove = new UsersPageController.UserSelectedEdit
+    {
+      Email = "notExistingEmail@email.not",
+      Phone = "777",
+      DATEnabled = false,
+      TermsAccepted = false,
+    };
+
+    // Act
+    var result = controller.Delete_New_DAT_User(authorizationHeader, userToRemove) as BadRequestObjectResult;
+
+    // Assert
+    Assert.IsNotNull(result, "Edit result is null.");
+    Assert.AreEqual(400, result.StatusCode, "Status code is not 200.");
+    dynamic data = result.Value;
+    Assert.IsNotNull(data, "Data is null.");
+
+    var messageProperty = data?.GetType().GetProperty("message");
+    var messageValue = messageProperty.GetValue(data) as string;
+    Assert.AreEqual("User not found.", messageValue, "Error messages does not match.");
+
+    Assert.Pass("User not delete with not existing Email in the database.");
+  }
 }
 /****************************************************************************************/
 /****************************************************************************************/
