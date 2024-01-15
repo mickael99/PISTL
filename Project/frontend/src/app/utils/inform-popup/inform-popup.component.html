@@ -1,0 +1,23 @@
+<div class="information-popup">
+  <div class="popup-content">
+    <p>{{ informationMessage }}</p>
+    <ng-container>
+      <div class="password-toggle">
+        <p *ngIf="passwordReseted !== ''">
+          {{
+            isPasswordMasked ? maskPassword(passwordReseted) : passwordReseted
+          }}
+        </p>
+        <mat-slide-toggle color="primary" (change)="togglePasswordVisibility()"
+          >Toggle Visibility</mat-slide-toggle
+        >
+      </div>
+    </ng-container>
+
+    <div class="buttons">
+      <button mat-raised-button color="primary" class="btn" (click)="onClose()">
+        Ok
+      </button>
+    </div>
+  </div>
+</div>

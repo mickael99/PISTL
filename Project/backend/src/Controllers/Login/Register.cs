@@ -1,5 +1,6 @@
 using Google.Authenticator;
 using Microsoft.AspNetCore.Mvc;
+using Project.Controllers.Login;
 using Project.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.IO;
@@ -73,7 +74,7 @@ public class RegisterController : ControllerBase
       return BadRequest(new { message = $"Error while decoding the JWT : {ex.Message}" });
     }
 
-    string key = GenerateRandomString(20);
+    string key = Utils.GenerateRandomString(20);
 
     TwoFactorAuthenticator tfa = new TwoFactorAuthenticator();
     var setupInfo = tfa.GenerateSetupCode("DAT_2FA", email, key, true); // AR cmmt
@@ -181,35 +182,6 @@ public class RegisterController : ControllerBase
       return Ok(new { message = "failed" });
     }
   }
-
-  /***************************************************************************************/
-  public static string GenerateRandomString(int length, string? allowableChars = null)
-  {
-    if (string.IsNullOrEmpty(allowableChars))
-    {
-      allowableChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    }
-
-    // Generate random data 
-    var rnd = new byte[length];
-#pragma warning disable SYSLIB0023 // Type or member is obsolete
-    using (var rng = new System.Security.Cryptography.RNGCryptoServiceProvider())
-    {
-      rng.GetBytes(rnd);
-    }
-#pragma warning restore SYSLIB0023 // Type or member is obsolete
-
-    // Generate the output string
-    var allowable = allowableChars.ToCharArray();
-    var l = allowable.Length;
-    var chars = new char[length];
-    for (var i = 0; i < length; i++)
-    {
-      chars[i] = allowable[rnd[i] % l];
-    }
-    return new string(chars);
-  }
-
 
   /***************************************************************************************/
   public class ManualEntryKeyModel

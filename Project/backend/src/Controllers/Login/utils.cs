@@ -29,7 +29,7 @@ public class Utils
       PasswordSalt = passwordSalt,
       PasswordModifiedDate = DateTime.Now,
       PasswordExpirationDate = DateTime.Now.AddDays(30),
-      InvalidAttemptCount = 3,
+      InvalidAttemptCount = 0,
       ResetPasswordEndDate = DateTime.Now.AddDays(1),
       ResetPasswordKey = null,
       ResetPasswordSentCount = 1,
@@ -126,6 +126,40 @@ public class Utils
       context.SaveChanges();
     }
     return;
+  }
+
+  /***************************************************************************************/
+  /// <summary>
+  /// Generates a random string of the specified length.
+  /// </summary>
+  /// <param name="length">The length of the string to be generated.</param>
+  /// <param name="allowableChars">The characters that can be used to generate the string.</param>
+  /// <returns>The generated string.</returns>
+  public static string GenerateRandomString(int length, string? allowableChars = null)
+  {
+    if (string.IsNullOrEmpty(allowableChars))
+    {
+      allowableChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    }
+
+    // Generate random data 
+    var rnd = new byte[length];
+#pragma warning disable SYSLIB0023 // Type or member is obsolete
+    using (var rng = new System.Security.Cryptography.RNGCryptoServiceProvider())
+    {
+      rng.GetBytes(rnd);
+    }
+#pragma warning restore SYSLIB0023 // Type or member is obsolete
+
+    // Generate the output string
+    var allowable = allowableChars.ToCharArray();
+    var l = allowable.Length;
+    var chars = new char[length];
+    for (var i = 0; i < length; i++)
+    {
+      chars[i] = allowable[rnd[i] % l];
+    }
+    return new string(chars);
   }
 }
 /***************************************************************************************/

@@ -28,6 +28,8 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { ErrorPopupComponent } from './utils/error-popup/error-popup.component';
 import { ConfirmPopupComponent } from './utils/confirm-popup/confirm-popup.component';
+import { InformPopupComponent } from './utils/inform-popup/inform-popup.component';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @NgModule({
   declarations: [
@@ -41,6 +43,7 @@ import { ConfirmPopupComponent } from './utils/confirm-popup/confirm-popup.compo
     UsersComponent,
     ErrorPopupComponent,
     ConfirmPopupComponent,
+    InformPopupComponent,
   ],
   imports: [
     BrowserModule,
@@ -62,6 +65,7 @@ import { ConfirmPopupComponent } from './utils/confirm-popup/confirm-popup.compo
     MatIconModule,
     MatDividerModule,
     MatCheckboxModule,
+    MatSlideToggleModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

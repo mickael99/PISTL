@@ -391,7 +391,7 @@ public class UsersTests
 
     // Assert
     Assert.IsNotNull(result, "Edit result is null.");
-    Assert.AreEqual(200, result.StatusCode, "Status code is not 400.");
+    Assert.AreEqual(200, result.StatusCode, "Status code is not 200.");
     dynamic data = result.Value;
     Assert.IsNotNull(data, "Data is null.");
 
@@ -437,7 +437,7 @@ public class UsersTests
 
     // Assert
     Assert.IsNotNull(result, "Edit result is null.");
-    Assert.AreEqual(400, result.StatusCode, "Status code is not 200.");
+    Assert.AreEqual(400, result.StatusCode, "Status code is not 400.");
     dynamic data = result.Value;
     Assert.IsNotNull(data, "Data is null.");
 
@@ -446,6 +446,75 @@ public class UsersTests
     Assert.AreEqual("User not found.", messageValue, "Error messages does not match.");
 
     Assert.Pass("User not delete with not existing Email in the database.");
+  }
+
+  /****************************************************************************************/
+  /// <summary>
+  /// Tests the behavior of the UsersController's Reset_Password_DAT_User method when the user exists 
+  /// in the database.
+  /// </summary>
+  [Test]
+  public static void UsersController_Reset_Password_DAT_User_ReturnsOkResult()
+  {
+    // Arrange 
+    var controller = new UsersPageController();
+    var authorizationHeader = UsersController.create_token("test@test.com");
+
+    var user = new UsersPageController.UserSelectedEdit
+    {
+      Email = "local@upclear.com",
+      Phone = null,
+      DATEnabled = false,
+      TermsAccepted = true,
+      ModifiedBy = "test@test.com",
+    };
+
+    var users = controller.Get_all_Users(authorizationHeader) as OkObjectResult;
+    dynamic dataUsers = users.Value;
+    var loginProperty = dataUsers?.GetType().GetProperty("users");
+    var loginValue = loginProperty.GetValue(dataUsers) as Microsoft.EntityFrameworkCore.Internal.InternalDbSet<Project.Models.Login>;
+    byte[] passwordValue = null;
+    string passwordSaltValue = null;
+    string passwordModifiedDateValue = null;
+    if (loginValue != null)
+    {
+      foreach (var login in loginValue)
+      {
+        if (login.Email == user.Email)
+        {
+          passwordValue = login.Password;
+          passwordSaltValue = login.PasswordSalt;
+          passwordModifiedDateValue = login.PasswordModifiedDate.ToString();
+        }
+      }
+    }
+
+    // Act
+    var result = controller.Reset_Password_DAT_User(authorizationHeader, user) as OkObjectResult;
+
+    // Assert
+    Assert.IsNotNull(result, "Edit result is null.");
+    Assert.AreEqual(200, result.StatusCode, "Status code is not 200.");
+    dynamic data = result.Value;
+    Assert.IsNotNull(data, "Data is null.");
+
+    loginProperty = data?.GetType().GetProperty("users");
+    loginValue = loginProperty.GetValue(data) as Microsoft.EntityFrameworkCore.Internal.InternalDbSet<Project.Models.Login>;
+
+    if (loginValue != null)
+    {
+      foreach (var login in loginValue)
+      {
+        if (login.Email == user.Email)
+        {
+          Assert.AreNotEqual(passwordValue, login.Password.ToString(), "New password should be different from the old one.");
+          Assert.AreNotEqual(passwordSaltValue, login.PasswordSalt, "New password salt should be different from the old one.");
+          Assert.AreNotEqual(passwordModifiedDateValue, login.PasswordModifiedDate.ToString(), "New password modified date should be different from the old one.");
+        }
+      }
+    }
+
+    Assert.Pass("Reset Password verified.");
   }
 }
 /****************************************************************************************/

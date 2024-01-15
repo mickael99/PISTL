@@ -5,6 +5,7 @@ using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Cryptography;
+using Project.Controllers.Login;
 
 /***************************************************************************************/
 /***************************************************************************************/
@@ -37,7 +38,7 @@ public class UsersPageController : ControllerBase // TODO change name
       {
         var context = new DatContext();
         var users = context.Logins;
-        return Ok(users);
+        return Ok(new { users });
       }
       else
       {
@@ -268,6 +269,80 @@ public class UsersPageController : ControllerBase // TODO change name
 
   /*************************************************************************************/
   /// <summary>
+  /// This POST method is used to remove an existing DAT user by deleting all his information from the database.
+  /// </summary>
+  /// <returns>An HTTP response.</returns>
+  [HttpPost("reset-password")]
+  public IActionResult Reset_Password_DAT_User([FromHeader(Name = "Authorization")] string authorizationHeader, [FromBody] UserSelectedEdit model)
+  {
+    try
+    {
+      var token = authorizationHeader?.Replace("Bearer ", "");
+
+      if (string.IsNullOrEmpty(token))
+      {
+        return BadRequest("Token JWT missing in the Header.");
+      }
+
+      var handler = new JwtSecurityTokenHandler();
+      var jsonToken = handler.ReadToken(token) as JwtSecurityToken;
+      if (jsonToken != null)
+      {
+        foreach (var claim in jsonToken.Claims)
+        {
+          if (claim.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name") // TODO AR 
+          {
+            var context = new DatContext();
+            var users = context.Logins;
+            bool found = false;
+            string password = "";
+            foreach (var login in users)
+            {
+              if (login.Email == model.Email)
+              {
+                password = Utils.GenerateRandomString(8);
+                string passwordSalt = Utils.GetSalt(24);
+                byte[] passwordHash = Utils.EncryptPassword(password, passwordSalt);
+                login.Password = passwordHash;
+                login.PasswordSalt = passwordSalt;
+                login.PasswordModifiedDate = DateTime.Now;
+                login.PasswordExpirationDate = DateTime.Now.AddDays(30); // TODO a revoir 
+                login.InvalidAttemptCount = 0;
+                login.ModifiedDate = DateTime.Now; // TODO a revoir
+                login.ModifiedBy = model.ModifiedBy;
+                found = true;
+              }
+            }
+            if (found)
+            {
+              context.SaveChanges();
+              return Ok(new { users, message = "User password reseted.", password });
+            }
+            else
+            {
+              return BadRequest(new { message = "User not found." });
+            }
+          }
+        }
+      }
+      else
+      {
+        return BadRequest(new { message = "Invalid JWT token." });
+      }
+    }
+    catch (Exception ex)
+    {
+      return BadRequest(new
+      {
+        message = ex.Message
+      });
+    }
+
+    return Ok(new { message = "User not found." });
+  }
+
+  /*************************************************************************************/
+  /// <summary>
   /// Represents the data model for creating a form data.
   /// </summary>
   public class FormDataCreateModel
@@ -290,6 +365,7 @@ public class UsersPageController : ControllerBase // TODO change name
     public required string Phone { get; set; }
     public bool DATEnabled { get; set; }
     public bool TermsAccepted { get; set; }
+    public string? ModifiedBy { get; set; }
   }
 }
 /***************************************************************************************/

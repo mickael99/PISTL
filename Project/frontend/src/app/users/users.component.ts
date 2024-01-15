@@ -44,7 +44,7 @@ export class UsersComponent {
   };
 
   // Bool that allows or not to display the error popup
-  showPopup: boolean = false;
+  showPopupError: boolean = false;
 
   // Error message to display in the popup
   popupMessage: string = '';
@@ -82,8 +82,17 @@ export class UsersComponent {
   // Bool used to display the delete confirmation popup
   showDeleteConfirmation: boolean = false;
 
+  // Bool used to display the reset password confirmation popup
+  showResetPasswordConfirmation: boolean = false;
+
   // Confirmation message to display
   confirmationMessage: string = '';
+
+  // Password reseted
+  passwordReseted: string = '';
+
+  // Bool used to display the information popup
+  showInformPopup: boolean = false;
 
   /***************************************************************************************/
   /**
@@ -106,7 +115,7 @@ export class UsersComponent {
 
     this.http.get('http://localhost:5050/api/users', options).subscribe(
       (data: any) => {
-        this.users = data;
+        this.users = data.users;
         this.dataSource = new MatTableDataSource(this.users);
       },
       (error) => {
@@ -187,7 +196,7 @@ export class UsersComponent {
    * @param message - Error message.
    */
   showErrorPopup(message: string) {
-    this.showPopup = true;
+    this.showPopupError = true;
     this.popupMessage = message;
   }
 
@@ -196,7 +205,7 @@ export class UsersComponent {
    * Function used to close the error popup.
    */
   closeErrorPopup() {
-    this.showPopup = false;
+    this.showPopupError = false;
   }
 
   /***************************************************************************************/
@@ -342,6 +351,9 @@ export class UsersComponent {
   }
 
   /***************************************************************************************/
+  /**
+   * Function used to open the Delete user confirmation popup.
+   */
   openDeleteConfirmation() {
     this.showDeleteConfirmation = true;
     this.confirmationMessage =
@@ -351,9 +363,16 @@ export class UsersComponent {
   }
 
   /***************************************************************************************/
-
+  /**
+   * Function used to call the POST request to delete the user.
+   */
   onDeleteConfirm() {
     this.showDeleteConfirmation = false;
+
+    if (this.userSelected.email == localStorage.getItem('email')) {
+      this.showErrorPopup('You cannot delete yourself!');
+      return;
+    }
 
     let JWTToken = localStorage.getItem('token');
 
@@ -390,10 +409,98 @@ export class UsersComponent {
 
   /***************************************************************************************/
   /**
-   * Function used to close the delta confirmation popup.
+   * Function used to close the delete confirmation popup.
    */
   onDeleteClose() {
     this.showDeleteConfirmation = false;
+  }
+
+  /***************************************************************************************/
+  /**
+   * Function used to open the Reset Password confirmation popup.
+   */
+  openResetPasswordConfirmation() {
+    this.showResetPasswordConfirmation = true;
+    this.confirmationMessage =
+      'Are you sure you want to reset the password of this user: ' +
+      this.userSelected.email +
+      '?';
+  }
+
+  /***************************************************************************************/
+  onResetPasswordConfirm() {
+    this.onResetPasswordClose();
+
+    let JWTToken = localStorage.getItem('token');
+
+    const options = {
+      headers: new HttpHeaders({
+        Authorization: 'Bearer ' + JWTToken,
+        'Content-Type': 'application/json',
+      }),
+    };
+
+    const requestBody = {
+      email: this.userSelected.email,
+      phone: this.userSelected.phone, // Not used
+      datenabled: this.userSelected.DATEnabled, // Not used
+      termsAccepted: this.userSelected.locked, // Not used
+      modifiedBy: localStorage.getItem('email'),
+    };
+
+    console.log('requestBody: ', requestBody);
+
+    this.http
+      .post(
+        'http://localhost:5050/api/users/reset-password',
+        requestBody,
+        options
+      )
+      .subscribe({
+        next: (data: any) => {
+          this.users = data.users;
+          this.dataSource = new MatTableDataSource(this.users);
+          this.confirmationMessage =
+            'The password has been reset for the user [' +
+            this.userSelected.email +
+            '] and is now: ';
+          this.passwordReseted = data.password;
+          this.reinitaliseUserSelectedForm();
+          this.show_inform_popup(this.confirmationMessage);
+        },
+        error: (error: any) => {
+          console.error(error.error.message);
+          this.showErrorPopup(error.error.message);
+        },
+      });
+  }
+
+  /***************************************************************************************/
+  /**
+   * Function used to close the Reset Password confirmation popup.
+   */
+  onResetPasswordClose() {
+    this.showResetPasswordConfirmation = false;
+  }
+
+  /***************************************************************************************/
+  /**
+   * Function used to display activate the inform popup.
+   * @param message - Error message.
+   */
+  show_inform_popup(message: string) {
+    this.popupMessage = message;
+    this.showInformPopup = true;
+  }
+
+  /***************************************************************************************/
+  /**
+   * Function used to close the inform popup.
+   */
+  close_inform_popup() {
+    this.showInformPopup = false;
+    this.popupMessage = '';
+    this.passwordReseted = '';
   }
 }
 /***************************************************************************************/

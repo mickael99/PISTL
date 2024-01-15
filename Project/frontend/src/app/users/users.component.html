@@ -26,7 +26,13 @@
   >
     Delete
   </button>
-  <button mat-raised-button color="primary" [disabled]="!isClicked" class="btn">
+  <button
+    mat-raised-button
+    color="primary"
+    (click)="openResetPasswordConfirmation()"
+    [disabled]="!isClicked"
+    class="btn"
+  >
     Reset Password
   </button>
   <button mat-raised-button color="primary" [disabled]="!isClicked" class="btn">
@@ -366,17 +372,36 @@
       <!-- Error pop-up -->
       <div>
         <app-error-popup
-          *ngIf="showPopup"
+          *ngIf="showPopupError"
           [errorMessage]="popupMessage"
           (close)="closeErrorPopup()"
         ></app-error-popup>
       </div>
 
+      <!-- Inform pop-up -->
+      <div>
+        <app-inform-popup
+          *ngIf="showInformPopup"
+          [informationMessage]="popupMessage"
+          [passwordReseted]="passwordReseted"
+          (close)="close_inform_popup()"
+        ></app-inform-popup>
+      </div>
+
+      <!-- Delete confirmation -->
       <app-confirm-popup
         *ngIf="showDeleteConfirmation"
         [confirmationMessage]="confirmationMessage"
         (confirm)="onDeleteConfirm()"
         (close)="onDeleteClose()"
+      ></app-confirm-popup>
+
+      <!-- Reset password confirmation -->
+      <app-confirm-popup
+        *ngIf="showResetPasswordConfirmation"
+        [confirmationMessage]="confirmationMessage"
+        (confirm)="onResetPasswordConfirm()"
+        (close)="onResetPasswordClose()"
       ></app-confirm-popup>
     </div>
   </div>
