@@ -27,28 +27,66 @@ public class UsersController : ControllerBase // TODO change name
             using var context = new DatContext();
 
             var logins = context.Logins;
+            bool found = false; // TODO change name
+            bool blocked = false;
+            Login loginFound = null;
             foreach (var login in logins)
             {
                 if (login.Email == user.Email)
                 {
+
+                    loginFound = login;
+                    if (login.InvalidAttemptCount >= 3)
+                    {
+                        blocked = true;
+                        break;
+                    }
 
                     var bytes = Encoding.UTF8.GetBytes(user.Password + login.PasswordSalt);
                     var computedHash = SHA512.HashData(bytes);
 
                     if (computedHash.SequenceEqual(login.Password))
                     {
-                        if (login.ResetPasswordKey != null)
-                        {
-                            return Ok(new { exist = true });
-                        }
-                        else
-                        {
-                            string token = create_token(user.Email);
-                            return Ok(new { token, exist = false });
-                        }
+                        found = true;
                     }
                 }
             }
+
+            // if the user is found and the attempts count == 3
+            if (blocked && loginFound != null)
+            {
+
+                Console.WriteLine("User blocked, invalid attempts cout = 3.");
+                Console.Write("Email: " + loginFound.Email);
+                loginFound.TermsAccepted = true;
+                context.SaveChanges();
+                return BadRequest(new { message = "User blocked, invalid attempts cout = 3." });
+            }
+
+            // if the user is found and the password is correct
+            if (found && loginFound != null)
+            {
+                if (loginFound.ResetPasswordKey != null)
+                {
+                    // Next step: 2FA
+                    return Ok(new { exist = true });
+                }
+                else
+                {
+                    loginFound.LastLoginDate = DateTime.Now;
+                    context.SaveChanges();
+                    string token = create_token(user.Email);
+                    return Ok(new { token, exist = false });
+                }
+            }
+
+            // if the user is found but the password is incorrect
+            if (found == false && loginFound != null)
+            {
+                loginFound.InvalidAttemptCount++;
+                context.SaveChanges();
+            }
+
         }
         catch (Exception ex)
         {

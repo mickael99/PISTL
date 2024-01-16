@@ -11,8 +11,8 @@ import { Component, EventEmitter, Output, Renderer2 } from '@angular/core';
 })
 /***************************************************************************************/
 export class LoginComponent {
-  /** Indicates whether to show an error message or not.    */
-  showError: boolean = false;
+  // Message shown to the user if the login fails.
+  showErrorMessage: string = '';
 
   /** The email entered by the user.                        */
   email: string = '';
@@ -67,7 +67,13 @@ export class LoginComponent {
           }
         },
         (error) => {
-          this.showError = true;
+          if (error.error.message === 'User not found.') {
+            this.showErrorMessage = 'Incorrect email or password!';
+          } else if (
+            error.error.message === 'User blocked, invalid attempts cout = 3.'
+          ) {
+            this.showErrorMessage = 'User blocked, 3 invalid attempts made!';
+          }
         }
       );
   }

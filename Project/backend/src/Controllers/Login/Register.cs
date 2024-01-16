@@ -152,6 +152,7 @@ public class RegisterController : ControllerBase
   public IActionResult SetupTwoFactorAuth([FromBody] Code2FA model)
   {
     bool result = false;
+    Login loginFound = null;
     try
     {
       var context = new DatContext();
@@ -163,7 +164,20 @@ public class RegisterController : ControllerBase
           TwoFactorAuthenticator tfa = new TwoFactorAuthenticator();
           result = tfa.ValidateTwoFactorPIN(login.ResetPasswordKey, model.code, true); // Preciser qu'il faut ajouter une nouvelle colonne dans la DB 
           string[] pinsWithOneHourTolerance = tfa.GetCurrentPINs(login.ResetPasswordKey);
+          loginFound = login;
         }
+      }
+      if (result && loginFound != null)
+      {
+        loginFound.LastLoginDate = DateTime.Now;
+        context.SaveChanges();
+        string token = UsersController.create_token(model.email);
+        return Ok(new { token, message = "success" });
+
+      }
+      else
+      {
+        return Ok(new { message = "failed" });
       }
     }
     catch (Exception ex)
@@ -171,16 +185,6 @@ public class RegisterController : ControllerBase
       return BadRequest(new { message = $"Error while decoding the JWT : {ex.Message}" });
     }
 
-    if (result)
-    {
-      string token = UsersController.create_token(model.email);
-      return Ok(new { token, message = "success" });
-
-    }
-    else
-    {
-      return Ok(new { message = "failed" });
-    }
   }
 
   /***************************************************************************************/

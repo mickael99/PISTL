@@ -516,6 +516,98 @@ public class UsersTests
 
     Assert.Pass("Reset Password verified.");
   }
+
+  /****************************************************************************************/
+  /// <summary>
+  /// Tests the behavior of the UsersController's Unlock_New_DAT_User method when the user email 
+  /// exists in the database.
+  /// </summary>
+  [Test]
+  public static void UsersController_Unlock_DAT_User_ReturnsOkResult()
+  {
+    // Arrange 
+    var loginContorller = new UsersController();
+    var controller = new UsersPageController();
+    var authorizationHeader = UsersController.create_token("test@test.com");
+
+    var userToConnect = new UsersController.User
+    {
+      Email = "local@upclear.com",
+      Password = "notok" // wrong password
+    };
+
+    loginContorller.Connect(userToConnect);
+
+    var user = new UsersPageController.UserSelectedEdit
+    {
+      Email = "local@upclear.com",
+      Phone = "777",  // not used
+      DATEnabled = false, // not used
+      TermsAccepted = false,  // not used
+    };
+
+    // Act
+    var result = controller.Unlock_DAT_User(authorizationHeader, user) as OkObjectResult;
+
+    // Assert
+    Assert.IsNotNull(result, "Edit result is null.");
+    Assert.AreEqual(200, result.StatusCode, "Status code is not 200.");
+    dynamic data = result.Value;
+    Assert.IsNotNull(data, "Data is null.");
+
+    var loginProperty = data?.GetType().GetProperty("users");
+    var loginValue = loginProperty.GetValue(data) as Microsoft.EntityFrameworkCore.Internal.InternalDbSet<Project.Models.Login>;
+
+    if (loginValue != null)
+    {
+      foreach (var login in loginValue)
+      {
+        if (login.Email == user.Email)
+        {
+          Assert.AreEqual(0, login.InvalidAttemptCount, "InvalidAttemptCount should reinitialized to 0.");
+          Assert.AreEqual(false, login.TermsAccepted, "TermsAccepted shoul be reinitialized at false.");
+        }
+      }
+    }
+
+    Assert.Pass("Unlock Password verified for an exisiting user.");
+  }
+
+  /****************************************************************************************/
+  /// <summary>
+  /// Tests the behavior of the UsersController's Unlock_New_DAT_User method when the user email 
+  /// doesn't exists in the database.
+  /// </summary>
+  [Test]
+  public static void UsersController_Unlock_DAT_User_WithNotExistingEmail_ReturnsBadRequest()
+  {
+    // Arrange 
+    var controller = new UsersPageController();
+    var authorizationHeader = UsersController.create_token("test@test.com");
+
+    var user = new UsersPageController.UserSelectedEdit
+    {
+      Email = "notExistingYet@upclear.com",
+      Phone = "777",  // not used
+      DATEnabled = false, // not used
+      TermsAccepted = false,  // not used
+    };
+
+    // Act
+    var result = controller.Unlock_DAT_User(authorizationHeader, user) as BadRequestObjectResult;
+
+    // Assert
+    Assert.IsNotNull(result, "Edit result is null.");
+    Assert.AreEqual(400, result.StatusCode, "Status code is not 400.");
+    dynamic data = result.Value;
+    Assert.IsNotNull(data, "Data is null.");
+
+    var messageProperty = data?.GetType().GetProperty("message");
+    var messageValue = messageProperty.GetValue(data) as string;
+    Assert.AreEqual("User not found.", messageValue, "Error messages does not match.");
+
+    Assert.Pass("Unlock Password verified for an non-existent user.");
+  }
 }
 /****************************************************************************************/
 /****************************************************************************************/

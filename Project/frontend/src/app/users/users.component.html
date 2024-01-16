@@ -35,7 +35,13 @@
   >
     Reset Password
   </button>
-  <button mat-raised-button color="primary" [disabled]="!isClicked" class="btn">
+  <button
+    mat-raised-button
+    color="primary"
+    (click)="check_if_user_blocked()"
+    [disabled]="!isClicked"
+    class="btn"
+  >
     Unlock
   </button>
   <div class="listes">

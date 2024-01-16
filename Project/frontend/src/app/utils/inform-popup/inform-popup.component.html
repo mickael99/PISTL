@@ -8,7 +8,10 @@
             isPasswordMasked ? maskPassword(passwordReseted) : passwordReseted
           }}
         </p>
-        <mat-slide-toggle color="primary" (change)="togglePasswordVisibility()"
+        <mat-slide-toggle
+          *ngIf="passwordReseted !== ''"
+          color="primary"
+          (change)="togglePasswordVisibility()"
           >Toggle Visibility</mat-slide-toggle
         >
       </div>

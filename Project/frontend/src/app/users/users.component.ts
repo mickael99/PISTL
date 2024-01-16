@@ -502,6 +502,68 @@ export class UsersComponent {
     this.popupMessage = '';
     this.passwordReseted = '';
   }
+
+  /***************************************************************************************/
+  check_if_user_blocked() {
+    let JWTToken = localStorage.getItem('token');
+
+    const options = {
+      headers: new HttpHeaders({
+        Authorization: 'Bearer ' + JWTToken,
+        'Content-Type': 'application/json',
+      }),
+    };
+
+    const requestBody = {
+      email: this.userSelected.email,
+      phone: this.userSelected.phone, // Not used
+      datenabled: this.userSelected.DATEnabled, // Not used
+      termsAccepted: this.userSelected.locked, // Not used
+      modifiedBy: localStorage.getItem('email'),
+    };
+
+    console.log('requestBody: ', requestBody);
+
+    this.http
+      .post('http://localhost:5050/api/users/unlock-user', requestBody, options)
+      .subscribe({
+        next: (data: any) => {
+          this.users = data.users;
+          this.dataSource = new MatTableDataSource(this.users);
+          this.update_user_selected();
+          this.confirmationMessage =
+            'User [' + this.userSelected.email + '] is now unlocked.';
+          this.show_inform_popup(this.confirmationMessage);
+        },
+        error: (error: any) => {
+          console.error(error.error.message);
+          this.showErrorPopup(error.error.message);
+        },
+      });
+  }
+
+  /***************************************************************************************/
+  /**
+   * Function used to update the user selected after Unlock POST request.
+   */
+  update_user_selected() {
+    for (let i = 0; i < this.users.length; i++) {
+      if (this.users[i].email == this.userSelected.email) {
+        this.userSelected.name = this.users[i].name;
+        this.userSelected.email = this.users[i].email;
+        this.userSelected.phone = this.users[i].phone;
+        this.userSelected.lastLoginDate = this.users[i].lastLoginDate;
+        this.userSelected.invalidAttemptCount =
+          this.users[i].invalidAttemptCount;
+        this.userSelected.modifiedBy = this.users[i].modifiedBy;
+        this.userSelected.passwordModifiedDate =
+          this.users[i].passwordModifiedDate;
+        this.userSelected.createdDate = this.users[i].createdDate;
+        this.userSelected.DATEnabled = this.users[i].datenabled;
+        this.userSelected.locked = this.users[i].termsAccepted;
+      }
+    }
+  }
 }
 /***************************************************************************************/
 /***************************************************************************************/

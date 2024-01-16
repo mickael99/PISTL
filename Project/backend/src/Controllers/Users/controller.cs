@@ -343,6 +343,72 @@ public class UsersPageController : ControllerBase // TODO change name
 
   /*************************************************************************************/
   /// <summary>
+  /// This POST method is used to unlock an existing DAT user by reinitializing the invalid attempt count to 0 and the terms accepted to false.
+  /// </summary>
+  /// <returns>An HTTP response.</returns>
+  [HttpPost("unlock-user")]
+  public IActionResult Unlock_DAT_User([FromHeader(Name = "Authorization")] string authorizationHeader, [FromBody] UserSelectedEdit model)
+  {
+    try
+    {
+      var token = authorizationHeader?.Replace("Bearer ", "");
+
+      if (string.IsNullOrEmpty(token))
+      {
+        return BadRequest("Token JWT missing in the Header.");
+      }
+
+      var handler = new JwtSecurityTokenHandler();
+      var jsonToken = handler.ReadToken(token) as JwtSecurityToken;
+      if (jsonToken != null)
+      {
+        foreach (var claim in jsonToken.Claims)
+        {
+          if (claim.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name") // TODO AR 
+          {
+            var context = new DatContext();
+            bool found = false;
+            var users = context.Logins;
+            foreach (var login in users)
+            {
+              if (login.Email == model.Email)
+              {
+                login.InvalidAttemptCount = 0;
+                login.TermsAccepted = false;
+                login.ModifiedDate = DateTime.Now; // TODO a revoir
+                found = true;
+              }
+            }
+            if (found)
+            {
+              context.SaveChanges();
+              return Ok(new { users, message = "User delocked." });
+            }
+            else
+            {
+              return BadRequest(new { message = "User not found." });
+            }
+          }
+        }
+      }
+      else
+      {
+        return BadRequest(new { message = "Invalid JWT token." });
+      }
+    }
+    catch (Exception ex)
+    {
+      return BadRequest(new
+      {
+        message = ex.Message
+      });
+    }
+
+    return Ok(new { message = "User not found." });
+  }
+
+  /*************************************************************************************/
+  /// <summary>
   /// Represents the data model for creating a form data.
   /// </summary>
   public class FormDataCreateModel
