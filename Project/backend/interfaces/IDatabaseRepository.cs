@@ -18,5 +18,7 @@ namespace Project.Interface
         bool UpdateDatabase(Database db);
 
         bool DeleteDatabase(Database db);
+        
+        public int GetDatabaseCount();
     }
 }

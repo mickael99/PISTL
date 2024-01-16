@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Project.interfaces
+namespace Project.Interface
 {
     public interface IServerRepository
     {
@@ -18,5 +18,6 @@ namespace Project.interfaces
         bool Save();
         bool DeleteServer(Server db);
         bool UpdateServer(Server db);
+        int GetServerCount();
     }
 }

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Text;
 using Project.Interface;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Hosting.Server;
 
 [Route("api/database")]
 [ApiController]
@@ -12,9 +13,11 @@ public class DatabaseController : Controller
     
     private readonly IDatabaseRepository _databaseRepository;
     private readonly DatContext context;
+    private readonly IServerRepository _serverRepository;
 
-    public DatabaseController(IDatabaseRepository databaseRepository, DatContext context){
+    public DatabaseController(IDatabaseRepository databaseRepository, DatContext context, IServerRepository serverRepository){
         _databaseRepository = databaseRepository;
+        _serverRepository = serverRepository;
         this.context = context;
     }
 
@@ -22,6 +25,7 @@ public class DatabaseController : Controller
     [ProducesResponseType(200, Type = (typeof(IEnumerable<Database>)))]
     [ProducesResponseType(400)]
     public IActionResult GetDatabases(){
+        Console.WriteLine("-------->Get databases");
         var databases = _databaseRepository.GetDataBases();
 
         if(!ModelState.IsValid){
@@ -55,21 +59,33 @@ public class DatabaseController : Controller
     public IActionResult CreateDatabase([FromBody] Database databaseCreate){
         Console.WriteLine("-------->Create Database");
 
+        Console.WriteLine("-------->databaseCreateServer: " + databaseCreate.ServerId);
+
         if (databaseCreate == null)
             return BadRequest(ModelState);
 
+        Console.WriteLine("-------->Get Server" );
+
+        var server = _serverRepository.GetServer(databaseCreate.ServerId);
+
+        if (server == null)
+        {
+            Console.WriteLine("-------->Server do not exists");
+            return BadRequest("Server do not exists");
+        }
+        
         Console.WriteLine("start creating");
         try
         {
 
             context.Databases.Add(new Database
             {
-                DatabaseId = databaseCreate.DatabaseId,
+                DatabaseId = _databaseRepository.GetDatabaseCount() + 2,
                 Name = databaseCreate.Name,
                 UserName = databaseCreate.UserName,
                 Password = databaseCreate.Password,
                 ServerId = databaseCreate.ServerId,
-                Server = databaseCreate.Server,
+                Server = server,
                 ModifiedBy = databaseCreate.ModifiedBy,
                 CreatedBy = databaseCreate.CreatedBy, 
                 CreatedDate = DateTime.Now,
@@ -94,36 +110,61 @@ public class DatabaseController : Controller
     [ProducesResponseType(400)]
     [ProducesResponseType(204)]
     [ProducesResponseType(404)]
-    public IActionResult UpdateDatabase(int dataBaseId, [FromBody]Database dbUpdated){
+    public IActionResult UpdateDatabase([FromBody]Database dbUpdated){
 
         Console.WriteLine("-------->Update Database");
+        Console.WriteLine("-------->dbUpdated: " + dbUpdated.DatabaseId);
+        Console.WriteLine("-------->dbUpdatedServer: " + dbUpdated.ServerId);
 
         if(dbUpdated == null){
             return BadRequest(ModelState);
         }
 
-        if(dataBaseId != dbUpdated.DatabaseId)
-            return BadRequest(ModelState);
 
-        if(!_databaseRepository.DatabaseExists(dataBaseId)){
+        if(!_databaseRepository.DatabaseExists(dbUpdated.DatabaseId)){
             Console.WriteLine("-------->Database not found");
             return NotFound();
         }
 
         Console.WriteLine("-------->start editing");
 
+        if (dbUpdated == null)
+        {
+            return BadRequest("---------->Provided database is null");
+        }
 
-        var dbToUpdate = _databaseRepository.GetDatabase(dataBaseId);
+        if (dbUpdated.Server == null)
+        {
+            return BadRequest("--------->Provided server is null");
+        }
+
+        Console.WriteLine("-------->Not Null " );
+
+        var dbToUpdate = _databaseRepository.GetDatabase(dbUpdated.DatabaseId);
+
+        var server = _serverRepository.GetServer(dbUpdated.ServerId);
+
+        if (server == null)
+    {
+        return BadRequest("Server not found");
+    }
+
+        if(!_serverRepository.UpdateServer(server)){
+            ModelState.AddModelError("", $"Something went wrong updating the server {server.Name}");
+            return StatusCode(500, ModelState);
+        }
+
 
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
         // Update the server properties
+        dbToUpdate.DatabaseId = dbUpdated.DatabaseId;
         dbToUpdate.Name = dbUpdated.Name;
         dbToUpdate.UserName = dbUpdated.UserName;
         dbToUpdate.Password = dbUpdated.Password;
         dbToUpdate.ServerId = dbUpdated.ServerId;
-        dbToUpdate.Server = dbUpdated.Server;
+        dbToUpdate.Server = server;
         dbToUpdate.ModifiedBy = dbUpdated.ModifiedBy;
         dbToUpdate.ModifiedDate = DateTime.Now;
         dbToUpdate.Context = dbUpdated.Context;
@@ -134,10 +175,12 @@ public class DatabaseController : Controller
         Console.WriteLine("-------->end editing");
 
 
-        if(!_databaseRepository.UpdateDatabase(dbUpdated)){
-            ModelState.AddModelError("","Something went wrong updating database");
+        if(!_databaseRepository.UpdateDatabase(dbToUpdate)){
+            ModelState.AddModelError("", $"Something went wrong updating the record {dbToUpdate.Name}");
             return StatusCode(500, ModelState);
         }
+
+        Console.WriteLine("-------->end updating");
 
         return NoContent();
     }

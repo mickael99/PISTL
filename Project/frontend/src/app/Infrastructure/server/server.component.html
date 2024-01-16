@@ -1,58 +1,341 @@
-<div class="centre">
-    <table class="table">
-        <thead>
-          <tr>
-            <th>ServerID</th>
-            <th>Name</th>
-            <th>Address</th>
-            <th>Created Date</th>
-            <th>Created By</th>
-            <th>Modified Date</th>
-            <th>Modified By</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let s of server" (click)="openModal(s.serverId)">
-            <td>{{ s.serverId }}</td>
-            <td>{{ s.name }}</td>
-            <td>{{ s.address }}</td>
-            <td>{{ s.createdDate | date }}</td>
-            <td>{{ s.createdBy }}</td>
-            <td>{{ s.modifiedDate | date }}</td>
-            <td>{{ s.modifiedBy }}</td>
-          </tr>
-        </tbody>
-      </table>
+<div class="container">
+  <h1 class="title">Servers</h1>
+  <button
+    mat-raised-button
+    color="primary"
+    class="btn"
+    (click)="showFormCreateServer()"
+  >
+    New
+  </button>
+  <button
+    mat-raised-button
+    color="primary"
+    (click)="editEnable()"
+    [disabled]="!isClicked"
+    class="btn"
+  >
+    Edit
+  </button>
+  <button
+    mat-raised-button
+    color="primary"
+    (click)="openDeleteConfirmation()"
+    [disabled]="!isClicked"
+    class="btn"
+  >
+    Delete
+  </button>
 
-      <app-server-detail #detailModal></app-server-detail>
 
-      <div class="add-server">
-        <h2>Create server</h2>
-        <div>
-          <label for="serverName">ID:</label>
-          <input type="text" id="id" [(ngModel)]="id" />
-        </div>
+  <div class="listes">
+    <div class="table">
+      <hr />
+      <mat-card-content>
+        <table
+          matSort
+          mat-table
+          [dataSource]="dataSource"
+          class="custom-table"
+          #tableElement
+        >
+          <ng-container matColumnDef="Server ID">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+            <td
+              mat-cell
+              *matCellDef="let server"
+              (click)="getServer(server)"
+              (mouseenter)="onMouseEnter(server.serverId)"
+              (mouseleave)="onMouseLeave()"
+              [ngClass]="{
+                'server--selected' : (server.serverId == serverSelected.serverId),
+                '' : !(server.serverId == serverSelected.serverId),
+                hovered: server.serverId == serverHovered ? isHovered : false,
+              }"
+            >
+              {{ server.serverId }}
+            </td>
+          </ng-container>
 
-        <div>
-          <label for="serverName">Name:</label>
-          <input type="text" id="Name" [(ngModel)]="Name" />
-        </div>
-    
-        <div>
-          <label for="createdBy">Address:</label>
-          <input type="text" id="address" [(ngModel)]="Address" />
-        </div>
+          <ng-container matColumnDef="Name">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+            <td
+              mat-cell
+              *matCellDef="let server"
+              (click)="getServer(server)"
+              (mouseenter)="onMouseEnter(server.name)"
+              (mouseleave)="onMouseLeave()"
+              [ngClass]="{
+                'server--selected' : (server.name == serverSelected.name),
+                '' : !(server.name == serverSelected.name),
+                hovered: server.name == serverHovered ? isHovered : false,
+              }"
+            >
+              {{ server.name }}
+            </td>
+          </ng-container>
 
-        <div>
-          <label for="createdBy">createdBy:</label>
-          <input type="text" id="createdBy" [(ngModel)]="createdBy" />
-        </div>
+          <ng-container matColumnDef="Address">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Address</th>
+            <td
+              mat-cell
+              *matCellDef="let server"
+              (click)="getServer(server)"
+              (mouseenter)="onMouseEnter(server.address)"
+              (mouseleave)="onMouseLeave()"
+              [ngClass]="{
+                'server--selected' : (server.address == serverSelected.address),
+                '' : !(server.address == serverSelected.address),
+                hovered: server.address == serverHovered ? isHovered : false,
+              }"
+            >
+              {{ server.address }}
+            </td>
+          </ng-container>
 
-        <div class="btn--center">
-          <button class="btn btn-primary btn-lg" (click)="addServer()">
-            Confirm
+          <ng-container matColumnDef="Context">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              Context
+            </th>
+            <td
+              mat-cell
+              *matCellDef="let server"
+              (click)="getServer(server)"
+              (mouseenter)="onMouseEnter(server.createdDate)"
+              (mouseleave)="onMouseLeave()"
+              [ngClass]="{
+                'server--selected' : (server.context == serverSelected.context),
+                '' : !(server.context == serverSelected.context),
+                hovered: server.context == serverHovered ? isHovered : false,
+              }"
+            >
+              {{ server.context }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="Type">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              Type
+            </th>
+            <td
+              mat-cell
+              *matCellDef="let server"
+              (click)="getServer(server)"
+              (mouseenter)="onMouseEnter(server.type)"
+              (mouseleave)="onMouseLeave()"
+              [ngClass]="{
+                'server--selected' : (server.type == serverSelected.type),
+                '' : !(server.type == serverSelected.type),
+                hovered: server.type == serverHovered ? isHovered : false,
+              }"
+            >
+              {{ server.type }}
+            </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let user; columns: displayedColumns"></tr>
+        </table>
+
+        <mat-paginator
+          [pageSizeOptions]="[5, 10]"
+          showFirstLastButtons
+          [length]="dataSource && dataSource.data.length"
+        ></mat-paginator>
+      </mat-card-content>
+    </div>
+
+    <div class="formCreate">
+      <ng-container *ngIf="showFormCreate">
+        <button
+          mat-raised-button
+          class="color-button margin--right"
+          (click)="newServerFormCreateServer()"
+        >
+          Save
+        </button>
+        <button
+          mat-raised-button
+          color="primary"
+          class="btn"
+          (click)="showFormCreateServer()"
+        >
+          Cancel
+        </button>
+        <form class="form--servers">
+          <mat-form-field class="example-full-width">
+            <mat-label>ID</mat-label>
+            <input
+              matInput
+              placeholder="ID"
+              required
+              [(ngModel)]="formDataCreate.ServerId"
+              name="serverId"
+            />
+          </mat-form-field>
+
+          <mat-form-field class="example-full-width">
+            <mat-label>Name</mat-label>
+            <input
+              matInput
+              placeholder="Name"
+              required
+              [(ngModel)]="formDataCreate.Name"
+              name="name"
+            />
+          </mat-form-field>
+
+          <mat-form-field class="example-full-width">
+            <mat-label>Address</mat-label>
+            <input
+              matInput
+              placeholder="Address"
+              required
+              [(ngModel)]="formDataCreate.Address"
+              name="address"
+            />
+          </mat-form-field>
+
+          <mat-form-field class="example-full-width">
+            <mat-label>Context</mat-label>
+            <input
+              matInput
+              placeholder="Context"
+              required
+              [(ngModel)]="formDataCreate.Context"
+              name="context"
+            />
+          </mat-form-field>
+
+          <mat-form-field class="example-full-width">
+            <mat-label>Type</mat-label>
+            <input
+              matInput
+              placeholder="Type"
+              required
+              [(ngModel)]="formDataCreate.Type"
+              name="type"
+            />
+          </mat-form-field>
+        </form>
+      </ng-container>
+
+      <!---------------------------------->
+      <!-- Access an existing Sys Admin -->
+      <!-- Edit an existing Sys Admin   -->
+      <!---------------------------------->
+      <div class="">
+        <ng-container *ngIf="serverSelected.ServerId">
+          <button
+            mat-raised-button
+            (click)="editServer()"
+            [ngClass]="{ 'color-button': editEnabled, 'margin--right': true }"
+            [disabled]="!editEnabled"
+          >
+            Save
           </button>
-        </div>
+          <button
+            mat-raised-button
+            color="primary"
+            class="btn"
+            (click)="reinitaliseServerSelectedForm()"
+          >
+            Cancel
+          </button>
+          <form class="form--servers">
+            
+            <mat-form-field class="example-full-width">
+              <mat-label>ID</mat-label>
+              <input
+                matInput
+                placeholder="ID"
+                required
+                [(ngModel)]="serverSelected.ServerId"
+                name="ServerId"
+                [disabled]="!editEnabled"
+              />
+            </mat-form-field>
+
+            <mat-form-field class="example-full-width">
+              <mat-label>Name</mat-label>
+              <input
+                matInput
+                placeholder="Name"
+                required
+                [(ngModel)]="serverSelected.Name"
+                name="Name"
+                [disabled]="!editEnabled"
+              />
+            </mat-form-field>
+
+            <mat-form-field class="example-full-width">
+              <mat-label>Address</mat-label>
+              <input
+                matInput
+                placeholder="Address"
+                required
+                [(ngModel)]="serverSelected.Address"
+                name="Address"
+                [disabled]="!editEnabled"
+              />
+            </mat-form-field>
+
+            <mat-form-field class="example-full-width">
+              <mat-label>Context</mat-label>
+              <input
+                matInput
+                placeholder="Context"
+                required
+                [(ngModel)]="serverSelected.Context"
+                name="Context"
+                [disabled]="!editEnabled"
+              />
+            </mat-form-field>
+
+            <mat-form-field class="example-full-width">
+              <mat-label>Type</mat-label>
+              <input
+                matInput
+                placeholder="Type"
+                required
+                [(ngModel)]="serverSelected.Type"
+                name="Type"
+                [disabled]="!editEnabled"
+              />
+            </mat-form-field>
+
+          </form>
+        </ng-container>
       </div>
+
+      <!-- Error pop-up -->
+      <div>
+        <app-error-popup
+          *ngIf="showPopupError"
+          [errorMessage]="popupMessage"
+          (close)="closeErrorPopup()"
+        ></app-error-popup>
+      </div>
+
+      <!-- Inform pop-up -->
+      <div>
+        <app-inform-popup
+          *ngIf="showInformPopup"
+          [informationMessage]="popupMessage"
+          [passwordReseted]="passwordReseted"
+          (close)="close_inform_popup()"
+        ></app-inform-popup>
+      </div>
+
+      <!-- Delete confirmation -->
+      <app-confirm-popup
+        *ngIf="showDeleteConfirmation"
+        [confirmationMessage]="confirmationMessage"
+        (confirm)="onDeleteConfirm()"
+        (close)="onDeleteClose()"
+      ></app-confirm-popup>
+
+
+    </div>
   </div>
-  
+</div>
+

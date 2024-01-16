@@ -1,7 +1,15 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { DatabaseDetailComponent } from './database-detail.component'
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import {
+  ElementRef,
+  HostListener,
+  Renderer2,
+} from '@angular/core';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatDialog } from '@angular/material/dialog';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-database',
@@ -10,10 +18,34 @@ import { DatabaseDetailComponent } from './database-detail.component'
 })
 export class DatabaseComponent implements OnInit {
 
+  // Servers form the DB
+  server: any;
+
+  // Table used for data display
+  dataSource: any;
+
+  // Form data used to create a new server
+  formDataCreate = {
+    DatabaseIdId: 0,
+    Name: '',
+    UserName : '',
+    Password: '',
+    ServerId: 0,
+    CreatedBy: '',
+  };
+
+  // Bool used for the 'Edit', 'Delete', 'Reset Password' and 'Unlock' buttons
+  isClicked: boolean = false;
+
+  // Columns names in the table
+  displayedColumns: string[] = ['Server ID','Name', 'Address', 'Context', 'Type'];
+
+  // Bool that allows or not to display the error popup
+  showPopup: boolean = false;
+
   @ViewChild(DatabaseDetailComponent) detailModal: DatabaseDetailComponent;
   database: any;
   DatabaseId: number = 0;
-  server: any;
   Name: string = '';
   UserName: string = '';
   Password: string = '';
@@ -61,8 +93,8 @@ export class DatabaseComponent implements OnInit {
         DatabaseId: this.DatabaseId,
         Name: this.Name,
         createdBy: this.createdBy,
-        Server: this.ServerSelected,
         ServerId: this.ServerSelected.serverId,
+        Server: this.ServerSelected,
         UserName: this.UserName,
         Password: this.Password,
       })

@@ -1,85 +1,83 @@
-.modal {
-    display: none; 
-    position: fixed;
-    z-index: 9999;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.4);
+@import "@angular/material/prebuilt-themes/indigo-pink.css";
+
+  .title {
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: #3d59a7;
   }
   
-  /* 模态框内容 */
-  .modal-content {
-    background-color: #fefefe;
-    margin: 15% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
-    position: relative; 
-}
-  
-  /* 关闭按钮 */
-  .close-button {
-    color: #aaa;
-    position: absolute;
-    top: 10px; 
-    right: 10px; 
-    font-size: 28px;
-    font-weight: bold;
+  .btn {
+    margin: 8px 8px 8px 0;
+    font-weight: 600;
   }
   
-  .close-button:hover,
-  .close-button:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
+  .green-text {
+    color: green;
+    font-size: 3rem;
   }
   
-  .edit-button,
-  .delete-button,
-  .copy-button,
-  .edit-confirm-button,
-  .edit-quit-button {
-    color: white;
-    padding: 10px 20px;
-    margin-top: 10px;
-    cursor: pointer;
-    display: block;
-    float: left;
-    border-radius: 10px; 
-    margin-right: 10px; 
+  .red-text {
+    color: red;
+    font-size: 3rem;
   }
   
-  .edit-button {
-    background-color: blue;
+  .container {
+    margin: 0 0 0 2rem;
   }
   
-  .delete-button {
-    background-color: red;
-  }
-  
-  .copy-button {
-    background-color: green;
+  .table {
+    width: 50%;
+    background-color: #808080;
   }
 
-  .edit-field {
+  .costom-table {
+    background-color: #808080;
+  }
+  
+  .listes {
     display: flex;
-    flex-direction: column;
   }
-
-  .edit-field input {
-    border-radius: 10px;
-    margin-bottom: 10px;
+  
+  /**********************************************************************/
+  /************************** CREATE NEW FORM ***************************/
+  /**********************************************************************/
+  
+  .formCreate {
+    margin-left: 25rem;
+    margin-top: -5.5rem;
   }
-
-  .edit-confirm-button {
-    background-color: blue;
-    margin-top: 10px;
+  
+  .mat-mdc-raised-button.color-button {
+    background-color: #37b24d;
+    color: #fff;
+    font-size: 1.2rem;
   }
-
-  .edit-quit-button {
-    background-color: red;
-    margin-top: 10px;
+  
+  .form--users {
+    margin-top: 1rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    width: 110%;
+  }
+  
+  /**********************************************************************/
+  /************************ ACCESS A USER *******************************/
+  /**********************************************************************/
+  
+  .hovered {
+    cursor: pointer;
+    font-weight: 900;
+    background-color: #ddd;
+  }
+  
+  .user--selected {
+    background-color: #ddd;
+    font-weight: 900;
+  }
+  
+  .form--users {
+    background-color: #6878a5;
+    padding: 5rem;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
   }

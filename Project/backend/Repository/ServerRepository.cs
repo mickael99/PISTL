@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Project.Interface;
-using Project.interfaces;
 
 
 namespace Project.Repository
@@ -61,6 +60,11 @@ namespace Project.Repository
         {
             _context.Remove(s);
             return Save();
+        }
+
+        public int GetServerCount()
+        {
+            return _context.Servers.Count();
         }
     }
 }

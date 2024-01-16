@@ -4,9 +4,10 @@ using Microsoft.AspNetCore.Mvc;
 using System.Text;
 using Project.Interface;
 using Microsoft.AspNetCore.Http.HttpResults;
-using Project.interfaces;
 using Project.Repository;
 using System.Net;
+using Microsoft.Extensions.Logging;
+
 
 [Route("api/server")]
 [ApiController]
@@ -16,11 +17,14 @@ public class ServerController : Controller
 
     private readonly IServerRepository _serverRepository;
     private readonly DatContext context;
+    private readonly ILogger<ServerController> _logger;  // Add this line
 
-    public ServerController(IServerRepository serverRepository, DatContext context)
+
+    public ServerController(IServerRepository serverRepository, DatContext context, ILogger<ServerController> logger)
     {
         _serverRepository = serverRepository;
         this.context = context;
+        _logger = logger; 
     }
 
     [HttpGet]
@@ -43,7 +47,7 @@ public class ServerController : Controller
     [ProducesResponseType(400)]
     public IActionResult GetServer(int id)
     {
-        Console.WriteLine("This is a log message");
+        _logger.LogInformation("----------------->This is a log message");
 
         if (!_serverRepository.ServerExists(id))
             return NotFound();
@@ -61,37 +65,46 @@ public class ServerController : Controller
     [HttpPost]
     [ProducesResponseType(204)]
     [ProducesResponseType(400)]
-    public IActionResult CreateDatabase([FromBody] Server serverCreate)
+    public IActionResult CreateServer([FromBody] Server serverCreate)
     {
-        Console.WriteLine("-------->Create Server");
+        _logger.LogInformation("-------->Create Server");
 
-        if (serverCreate == null)
+        if (!ModelState.IsValid)
+        {
+            _logger.LogInformation("------------------------->Model validation failed. ModelState: {0}", ModelState);
             return BadRequest(ModelState);
+        }
 
-        Console.WriteLine("start creating");
+        _logger.LogInformation("-------->start creating");
 
         try
         {
             context.Servers.Add(new Server
             {
-                ServerId = serverCreate.ServerId,
+                ServerId = _serverRepository.GetServerCount() + 3,
                 Name = serverCreate.Name,
                 Address = serverCreate.Address,
                 Context = serverCreate.Context,
+                Type = serverCreate.Type,
                 ModifiedBy = serverCreate.ModifiedBy,
                 CreatedBy = serverCreate.CreatedBy,
                 CreatedDate = DateTime.Now,
                 ModifiedDate = DateTime.Now,
             });
-            Console.WriteLine("data enter finish");
+
+            _logger.LogInformation("---------->data enter finish");
 
             context.SaveChanges();
-            Console.WriteLine("saved");
+
+            _logger.LogInformation("---------->saved");
 
             return Ok(context.Databases);
         }
         catch (Exception ex)
         {
+            _logger.LogInformation("--------------------->Exception: " + ex.Message);
+            _logger.LogInformation("--------------------->StackTrace: " + ex.StackTrace);
+
             return BadRequest(ex.Message);
         }
     }
@@ -106,6 +119,7 @@ public class ServerController : Controller
 
         if (!_serverRepository.ServerExists(id))
             return NotFound();
+
         Console.WriteLine("Server Found");
 
         var serverToDelete = _serverRepository.GetServer(id);
@@ -150,6 +164,8 @@ public class ServerController : Controller
         serverToUpdate.Address = serverUpdate.Address;  
         serverToUpdate.ModifiedBy = serverUpdate.ModifiedBy;
         serverToUpdate.ModifiedDate = DateTime.Now;
+        serverToUpdate.Context = serverUpdate.Context;
+        serverToUpdate.Type = serverUpdate.Type;
         // Update other properties as needed
 
         if (!_serverRepository.UpdateServer(serverToUpdate))
@@ -160,7 +176,9 @@ public class ServerController : Controller
         // Send message to front-end
         var message = "Server updated successfully";
 
-        return Ok(new { Message = message });
+        Console.WriteLine("----------->Server Updated");
+
+        return Ok(new { serverToUpdate });
     }
 
     

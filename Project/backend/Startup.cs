@@ -9,7 +9,6 @@ using Project.Repository;
 using Project.Models;
 using Microsoft.Extensions.Configuration;
 using System.Text.Json.Serialization;
-using Project.interfaces;
 
 public class Startup 
 {
@@ -22,6 +21,8 @@ public class Startup
 
     public void ConfigureServices(IServiceCollection services)
     {
+
+
         services.AddControllers()
                     .AddJsonOptions(options =>
                     {
@@ -50,12 +51,14 @@ public class Startup
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env) 
     {
+
+
         if (env.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
         }
 
-        app.UseCors("AllowSpecificOrigin"); 
+        app.UseCors("AllowSpecificOrigin");
 
         app.UseStaticFiles();
 

@@ -84,6 +84,7 @@ export class DatabaseDetailComponent implements OnInit {
     console.log(this.ServerSelected);
     this.http
       .put(`http://localhost:5050/api/database/${this.databaseId}`, {
+        DatabaseId: this.databaseId,
         Name: this.databaseDetails.name,
         Context: this.databaseDetails.context,
         ModifiedBy: this.databaseDetails.modifiedBy,

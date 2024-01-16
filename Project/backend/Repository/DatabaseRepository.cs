@@ -44,5 +44,10 @@ namespace Project.Repository
             _context.Remove(db);
             return Save();
         }
+
+        public int GetDatabaseCount()
+        {
+            return _context.Databases.Count();
+        }
     }
 }
