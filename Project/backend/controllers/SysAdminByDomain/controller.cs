@@ -1,4 +1,3 @@
-using System;
 using Project.Models;
 using Microsoft.AspNetCore.Mvc;
 using Project.Models.DTO;
@@ -103,7 +102,6 @@ namespace Project.Controllers
                 // free all_users
                 all_users = null;
 
-
                 return Ok(new { domains, users, logins });
             }
             catch (Exception ex)
@@ -169,7 +167,7 @@ namespace Project.Controllers
                         && u.Environment == userDTO.Environment && u.UserId == userDTO.UserId).SingleOrDefault();
                 if(user == null)
                 {
-                    Console.WriteLine("Not found user "+userDTO.UserId+ ": "+userDTO.LoginId+" | "+userDTO.DomainId+" | "+userDTO.Environment+" | "+userDTO.SysAdmin);
+                    Console.WriteLine("Posted user "+userDTO.UserId+ ": "+userDTO.LoginId+" | "+userDTO.DomainId+" | "+userDTO.Environment+" | "+userDTO.SysAdmin);
                     user = new LoginDomainUser
                     {
                         LoginId = userDTO.LoginId,
@@ -192,7 +190,7 @@ namespace Project.Controllers
                 }
                 else
                 { 
-                    Console.WriteLine("Found user "+user.UserId+ ": "+userDTO.LoginId+" | "+user.DomainId+" | "+user.Environment+" | "+user.SysAdmin);
+                    Console.WriteLine("Modified user "+user.UserId+ ": "+userDTO.LoginId+" | "+user.DomainId+" | "+user.Environment+" | "+user.SysAdmin);
                     user.LoginId = userDTO.LoginId;
                     user.DomainId = userDTO.DomainId;
                     user.UserId = userDTO.UserId;
@@ -222,28 +220,25 @@ namespace Project.Controllers
             try
             {
                 var context = new MasterContext();
+
+                // Retrieve the user to delete from your data source (if it doesn't exist doesn't do anything, just return)
+#pragma warning disable CS8600 // Conversion de littéral ayant une valeur null ou d'une éventuelle valeur null en type non-nullable.
                 LoginDomainUser user = context.LoginDomainUsers.Where(u => u.LoginId == loginID && u.DomainId == domainID
-                        && u.Environment == env && u.UserId == userID).Single<LoginDomainUser>();
-                if(user == null)
-                {
-                    Console.WriteLine("Not found");
-                    return NotFound();
-                }
-                else
+                        && u.Environment == env && u.UserId == userID && u.SysAdmin == true).SingleOrDefault<LoginDomainUser>();
+#pragma warning restore CS8600 // Conversion de littéral ayant une valeur null ou d'une éventuelle valeur null en type non-nullable.
+
+                if(user != null)
                 { 
-                    Console.WriteLine("Found user "+user.UserId+ ": "+user.DomainId+" | "+user.Environment+" | "+user.SysAdmin);
                     context.LoginDomainUsers.Remove(user);
                     Console.WriteLine("Deleted user "+user.UserId);
                     context.SaveChanges();
-
-                    var response = new Hashtable
-                    {
-                        { "loginID", loginID },
-                        { "userID", userID },
-                        { "domainID", domainID },
-                        { "env", env }
-                    };
-
+                    var response = "Deleted user "+userID+ ": "+loginID+" | "+domainID+" | "+env;
+                    return Ok(response);
+                }
+                else
+                {
+                    Console.WriteLine("Unable to delete "+userID+ ": "+loginID+" | "+domainID+" | "+env);
+                    var response = "Unable to find user "+userID+ ": "+loginID+" | "+domainID+" | "+env;
                     return Ok(response);
                 }
             }

@@ -7,7 +7,7 @@
       <mat-label>Select domain</mat-label>
       <mat-select [(value)]="selected_domain" (selectionChange)="onChange($event)">
         <mat-option *ngFor="let domain of domains | keyvalue" [value]="domain.value">
-          <span>{{ domain.value.name }}  
+          <span>{{ domain.value.name }} [{{ domain.value.domainId }}] 
             <span *ngFor="let env of domain.value.environments;let i = index">
               <span *ngIf="env && i==0" style="background-color: #f5a82a; margin-right: 5px; color: white;"> Dev </span>
               <span *ngIf="env && i==1" style="background-color: #c125f2; margin-right: 5px; color: white;"> Preprod </span>
@@ -24,7 +24,7 @@
   <div style="margin: 0%;">
     <mat-card-content>
       <table matSort mat-table [dataSource]="data_source">
-
+        
         <ng-container matColumnDef="email">
           <th mat-header-cell *matHeaderCellDef>
             <div *ngIf="show_add">

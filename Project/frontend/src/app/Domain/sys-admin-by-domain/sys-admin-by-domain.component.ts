@@ -6,7 +6,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { DatePipe } from '@angular/common';
-import { forkJoin, timeout } from 'rxjs';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-sys-admin-by-domain',
@@ -63,6 +63,9 @@ export class SysAdminByDomainComponent {
 
         this.loadDomainUsers(all);
         this.updateOneChecked();
+
+        console.log("Login_users: ", this.login_users);
+        console.log("DataDomainTable: ", this.data_domain_table);
       },
       (error) => {
         alert('Connection error: ' + error.message);
@@ -71,18 +74,18 @@ export class SysAdminByDomainComponent {
   }
 
   loadDomainUsers(all: boolean): void {
-    var login_object = [];
+    var login_object;
     for (const login of this.logins) {
       login_object = [];
-      var tab_users = {};
+      var tab_users: { [key: string] : any} = {};
       for (const user of this.users) {
         if(user.loginId === login.loginId && user.domainId === this.selected_domain.domainId){
           tab_users[user.environment] = user;
         }
       }
       if(Object.keys(tab_users).length > 0){
-        login_object.push(login.email);
-        var user_env = {1: false, 2: false, 3: false, 4: false, 5: false, 6: false};
+        login_object.push(login.email + '[' + login.loginId + ']');
+        var user_env: {[key: number] : boolean} = {1: false, 2: false, 3: false, 4: false, 5: false, 6: false};
         for(const user of Object.keys(tab_users)){
           for(var i=1; i<7; i++){
             if(tab_users[user].environment === i && tab_users[user].sysAdmin === true){
@@ -94,7 +97,7 @@ export class SysAdminByDomainComponent {
         login_object.push(tab_users);
       }
       else if (all){
-        login_object.push(login.email);
+        login_object.push(login.email + '[' + login.loginId + ']');
         login_object.push({1: false, 2: false, 3: false, 4: false, 5: false, 6: false});
         login_object.push({});
       }
@@ -113,24 +116,18 @@ export class SysAdminByDomainComponent {
     }
 
     if(Object.keys(this.show_calendar).length === 0){
-      const currentDate = new Date();
-      const futureDate = new Date();
-      futureDate.setFullYear(currentDate.getFullYear() + 100);
 
       for (const loginId of Object.keys(this.login_users)) {
         this.show_calendar[loginId] = {};
         if(this.login_users[loginId].length > 0){
           for(const env of Object.keys(this.login_users[loginId][2])){
             this.show_calendar[loginId][env] = false;
-            if(this.login_users[loginId][2][env].sysAdminEndDate < this.datepipe.transform(futureDate, 'yyyy-MM-dd'))
+            if(this.login_users[loginId][2][env].sysAdminEndDate || null)
                 this.show_calendar[loginId][env] = true;
           }
         }
       } 
     }
-
-    console.log("Login_users: ", this.login_users);
-    console.log("DataDomainTable: ", this.data_domain_table);
 
     this.data_source = new MatTableDataSource(this.data_domain_table);
     this.data_source.paginator = this.paginator;
@@ -147,36 +144,37 @@ export class SysAdminByDomainComponent {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
-
-    console.log(loginId, env);
-    console.log(this.login_users[loginId]);
     
     if(this.login_users[loginId][2][env]){
       console.log("User found");
 
-      dialogConfig.data = this.login_users[loginId][2][env];
+      dialogConfig.data = {user: this.login_users[loginId][2][env], name: this.login_users[loginId][0]};
 
       // Open the dialog
       const dialogRef = this.dialog.open(SysAdminByDomainDialog, dialogConfig);
     
       // Subscribe to the dialog's afterClosed event to handle the result
       dialogRef.afterClosed().subscribe(result => {
-        if(result.from != "") {
-          console.log(result)
-          const currentDate = new Date();
-          const futureDate = new Date();
-          futureDate.setFullYear(currentDate.getFullYear() + 100);
+        if(result.from === null && result.to === null && result.comment === null){
+          console.log("User not added");
+          this.login_users[loginId][1][env] = false;
+          this.show_add = true;
+          this.loadDomainUsers(false);
+        }
+        else if(result.from != "") {
           
           this.login_users[loginId][2][env].sysAdmin = true;
           this.login_users[loginId][2][env].sysAdminStartDate = result.from;
-          this.login_users[loginId][2][env].sysAdminEndDate = result.to || this.datepipe.transform(futureDate, 'yyyy-MM-dd');
+          this.login_users[loginId][2][env].sysAdminEndDate = result.to || null;
           this.login_users[loginId][2][env].comment = result.comment || "";
           this.login_users[loginId][2][env].modifiedBy = 'admin'; // TODO: Replace with the actual login
 
           this.login_users[loginId][1][env] = true;
     
-          if(this.login_users[loginId][2][env].sysAdminEndDate < this.datepipe.transform(futureDate, 'yyyy-MM-dd'))
+          if(this.login_users[loginId][2][env].sysAdminEndDate != null)
               this.show_calendar[loginId][env] = true;
+          else
+              this.show_calendar[loginId][env] = false;
 
           this.show_add = false;
         }
@@ -193,18 +191,20 @@ export class SysAdminByDomainComponent {
         environment: env
       };
 
-      dialogConfig.data = new_user;
+      dialogConfig.data = {user: new_user, name: this.login_users[loginId][0]};
 
       // Open the dialog
       const dialogRef = this.dialog.open(SysAdminByDomainDialog, dialogConfig);
     
       // Subscribe to the dialog's afterClosed event to handle the result
       dialogRef.afterClosed().subscribe(result => {
-        if(result.from != "") {
-          console.log(result)
-          const currentDate = new Date();
-          const futureDate = new Date();
-          futureDate.setFullYear(currentDate.getFullYear() + 1000);
+        if(result.from === null && result.to === null && result.comment === null){
+          console.log("User not added");
+          this.login_users[loginId][1][env] = false;
+          this.show_add = true;
+          this.loadDomainUsers(false);
+        }
+        else if(result.from != "") {
           
           this.login_users[loginId][2][env] = {
             loginId: loginId,
@@ -213,20 +213,23 @@ export class SysAdminByDomainComponent {
             environment: env,
             sysAdmin: true,
             sysAdminStartDate: result.from,
-            sysAdminEndDate: result.to || this.datepipe.transform(futureDate, 'yyyy-MM-dd'),
+            sysAdminEndDate: result.to || null,
             comment: result.comment || "",
             modifiedBy: 'admin' // TODO: Replace with the actual login
           }
     
           this.login_users[loginId][1][env] = true;
+          
+          if(this.login_users[loginId][2][env].sysAdminEndDate != null)
+              this.show_calendar[loginId][env] = true;
+          else
+              this.show_calendar[loginId][env] = false;
 
           this.show_add = false;
-          
-          if(this.login_users[loginId][2][env].sysAdminEndDate < this.datepipe.transform(futureDate, 'yyyy-MM-dd'))
-              this.show_calendar[loginId][env] = true;
         }
       });
     }
+    console.log("Login_users: ", this.login_users);
   }
 
   uncheck(loginId: any, env: any): void {
@@ -235,6 +238,8 @@ export class SysAdminByDomainComponent {
 
     this.show_calendar[loginId][env] = false;
     this.show_add = false;
+
+    console.log("Login_users: ", this.login_users);
   }
 
 
@@ -242,14 +247,11 @@ export class SysAdminByDomainComponent {
   // TODO: Open form to add a new sys admin to current domain
   addSysAdmin(): void {
     this.show_add = false;
-    console.log('Add sys admin');
     this.getSysAdminByDomain(this.selected_domain.domainId, true);
   }
 
   saveSysAdmin(): void {
     this.show_add = true;
-    console.log('Save sys admin');
-    // TODO : save current userDTOS into context 
     
     // TODO : send request to backend to save all users in context
     const requests = [];
@@ -285,7 +287,6 @@ export class SysAdminByDomainComponent {
 
   cancelSysAdmin(): void {
     this.show_add = true;
-    console.log('Cancel sys admin');
 
     this.getSysAdminByDomain(this.selected_domain.domainId, false);
   }
@@ -308,11 +309,11 @@ export class SysAdminByDomainComponent {
    * @returns True if at least one user is checked for the given environment, false otherwise.
    */
   oneChecked(env: any): boolean {
-    for (const login of Object.keys(this.login_users)) {
-      if(this.login_users[login].length > 0){
-        if(this.login_users[login][2][env])
-          if(this.login_users[login][2][env].userId === "99999999-9999-9999-9999-999999999999" && 
-                                                              this.login_users[login][2][env].sysAdmin === true){
+    for (const loginId of Object.keys(this.login_users)) {
+      if(this.login_users[loginId].length > 0){
+        if(this.login_users[loginId][2][env])
+          if(this.login_users[loginId][2][env].userId === "99999999-9999-9999-9999-999999999999" && 
+                                                              this.login_users[loginId][2][env].sysAdmin === true){
             return true;
           }
       }
@@ -326,7 +327,6 @@ export class SysAdminByDomainComponent {
    */
   uncheckAll(env: any): void {
     this.show_add = false;
-    console.log('unCheckAll');
     for (const loginId of Object.keys(this.login_users)) {
       if (this.login_users[loginId].length > 0) {
         if (this.login_users[loginId][1][env]) {
@@ -347,8 +347,8 @@ export class SysAdminByDomainComponent {
       }
     }
 
-    console.log("Login_users: ", this.login_users);
-    console.log("DataDomainTable: ", this.data_domain_table);
+    //console.log("Login_users: ", this.login_users);
+    //console.log("DataDomainTable: ", this.data_domain_table);
 
     this.data_source = new MatTableDataSource(this.data_domain_table);
     this.data_source.paginator = this.paginator;
@@ -360,16 +360,12 @@ export class SysAdminByDomainComponent {
    * @param env - The environment to check for.
    */
   checkAll(env: any): void {
-    this.show_add = false;
-    console.log('checkAll');  
+    this.show_add = false; 
     // TODO : ask if it is all users or only the users that are shown in the table
 
     for (const loginId of Object.keys(this.login_users)) {
       if (this.login_users[loginId].length > 0) {
-        console.log(this.login_users[loginId]);
         const currentDate = new Date();
-        const futureDate = new Date();
-        futureDate.setFullYear(currentDate.getFullYear() + 100);
         
         this.login_users[loginId][2][env] = {
           loginId: loginId,
@@ -378,7 +374,7 @@ export class SysAdminByDomainComponent {
           environment: env,
           sysAdmin: true,
           sysAdminStartDate: this.datepipe.transform(currentDate, 'yyyy-MM-dd'),
-          sysAdminEndDate: this.datepipe.transform(futureDate, 'yyyy-MM-dd'),
+          sysAdminEndDate: null,
           comment: "given all users in this environment sys admin rights",
           modifiedBy: 'admin'
         };
@@ -399,8 +395,8 @@ export class SysAdminByDomainComponent {
       }
     }
     
-    console.log("Login_users: ", this.login_users);
-    console.log("DataDomainTable: ", this.data_domain_table);
+    //console.log("Login_users: ", this.login_users);
+    //console.log("DataDomainTable: ", this.data_domain_table);
 
     this.data_source = new MatTableDataSource(this.data_domain_table);
     this.data_source.paginator = this.paginator;
@@ -415,29 +411,5 @@ export class SysAdminByDomainComponent {
    */
   isModified(loginId: any, env: any): boolean {
     return this.show_calendar[loginId][env];
-  }
-
-
-
-  /**
-   * Translate the environment number into a string.
-   */
-  getEnv(env: any): string {
-    switch (env) {
-      case 0:
-        return 'Dev';
-      case 1:
-        return 'Preprod';
-      case 2:
-        return 'Prod';
-      case 3:
-        return 'Test';
-      case 4:
-        return 'ProdCopy';
-      case 5:
-        return 'Staging';
-      default:
-        return '';
-    }
   }
 }

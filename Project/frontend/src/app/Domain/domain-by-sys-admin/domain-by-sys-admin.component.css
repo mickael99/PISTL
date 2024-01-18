@@ -1,6 +1,16 @@
 @import '~@angular/material/prebuilt-themes/indigo-pink.css';
 
+.title {
+  margin: 20px;
+  color: #3d59a7;
+}
 
+.body {
+  margin: 20px;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
 
 .dropdown-container {
   position: relative;
@@ -29,6 +39,21 @@
   width: 1000px;
 }
 
+.sysadmin_form {
+  left: 50px;
+  background-color: rgb(255, 255, 255);
+  font-weight: 700;
+  font-size: 2rem;
+  padding: 8px;
+  width: 200px;
+}
+
 button{
   margin: 8px 8px 8px 0;
+}
+
+.mat-mdc-raised-button.color-button {
+  background-color: #37b24d;
+  color: #fff;
+  font-size: 1.2rem;
 }

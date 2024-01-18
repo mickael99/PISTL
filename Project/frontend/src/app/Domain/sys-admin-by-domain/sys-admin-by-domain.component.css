@@ -57,3 +57,39 @@ button{
   color: #fff;
   font-size: 1.2rem;
 }
+
+.drowndown_content_dev {
+  background-color: #f5a82a;
+  margin-right: 5px;
+  color: white;
+}
+
+.drowndown_content_prod {
+  background-color: #4557a2;
+  margin-right: 5px;
+  color: white;
+}
+
+.drowndown_content_test {
+  background-color: #50c63e;
+  margin-right: 5px;
+  color: white;
+}
+
+.drowndown_content_preprod {
+  background-color: #c125f2;
+  margin-right: 5px;
+  color: white;
+}
+
+.drowndown_content_prodcopy {
+  background-color: #956248;
+  margin-right: 5px;
+  color: white;
+}
+
+.drowndown_content_staging {
+  background-color: #f5f334;
+  margin-right: 5px;
+  color: white;
+}
