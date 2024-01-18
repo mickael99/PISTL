@@ -2,6 +2,7 @@ using System;
 using Project.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Text;
+using Microsoft.Extensions.Hosting;
 
 [Route("api/domain")]
 [ApiController]
@@ -31,8 +32,6 @@ public class DomainAdministrationController : ControllerBase {
                     Comment = domain.Comment,
                     ParentCompany = domain.ParentCompany,
                     Environments = environments.Select(environment => new EnvironmentModel {
-                        EnvironmentId = environment.DomainEnvironmentId,
-                        DomainId = environment.DomainId,
                         Environment = environment.Environment,
                         BpwebServerId = environment.BpwebServerId,
                         EaiDatabaseId = environment.EaiDatabaseId,
@@ -61,6 +60,13 @@ public class DomainAdministrationController : ControllerBase {
                                         model.Comment, model.ParentCompany);
             context.Domains.Add(domain);
             context.SaveChanges();
+
+            List<DomainEnvironment> environments = addDomainEnvironments(domain.DomainId, model.Environments);
+            
+            foreach(DomainEnvironment e in environments)
+                context.DomainEnvironments.Add(e);
+            context.SaveChanges();
+            
             return Ok(context.Domains);
         } catch (Exception ex) {
             return BadRequest(ex.Message);
@@ -131,6 +137,26 @@ public class DomainAdministrationController : ControllerBase {
         return newDomain;
     }
 
+    static List<DomainEnvironment> addDomainEnvironments(int domainId, List<EnvironmentModel> environmentModel) {
+        List<DomainEnvironment> environments = new List<DomainEnvironment>();
+
+        foreach(EnvironmentModel e in environmentModel) {
+            var environmentToAdd = new DomainEnvironment {
+                DomainId = e.DomainId,
+                Environment = e.Environment,
+                BpwebServerId = e.BpwebServerId,
+                BpDatabaseId = e.BpDatabaseId,
+                EaiDatabaseId = e.EaiDatabaseId,
+                SsrsServerId = e.SsrsServerId,
+                TableauServerId = e.TableauServerId,
+                EaiftpServerId = e.EaiftpServerId,
+                IsBp5Enabled = e.IsBp5Enabled
+            };
+            environments.Add(environmentToAdd);
+        }
+        return environments;
+    }
+
     public class DomainModel {
         public string Name { get; set; }
         public byte[] Logo { get; set; }
@@ -142,7 +168,6 @@ public class DomainAdministrationController : ControllerBase {
     }
 
     public class EnvironmentModel {
-        public int EnvironmentId {get; set; }
         public int DomainId { get; set; }
         public int Environment { get; set; }
         public int BpwebServerId { get; set; }

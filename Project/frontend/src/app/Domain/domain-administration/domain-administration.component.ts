@@ -23,6 +23,16 @@ export class EnvironmentModel {
   public nameEaiftpServerId: string; 
 }
 
+export class EnvironmentModelForBackend {
+  public environment: number;
+  public bpwebServerId: number;
+  public bpDatabaseId: number;
+  public eaiDatabaseId: number;
+  public ssrsServerId: number;
+  public tableauServerId: number;
+  public eaiftpServerId: number;
+  public isBp5Enabled: boolean;
+}
 
 @Component({
   selector: 'app-domain-administration',
@@ -46,11 +56,11 @@ export class DomainAdministrationComponent {
   comment: string;
   parentCompany: string;
 
-  /* domain liked to environment informations*/
-  environments: EnvironmentModel[];
-
   /* selected environment among dev, preprod, prod, test, prodcopy and staging*/
   selectedEnvironment: EnvironmentModel;
+
+  /* selected environment while adding or editing */
+  idEnvSelected: number;
 
   /* boolean values to manage the options to create and edit a domain */
   isNewDomainMode: boolean = false;
@@ -165,9 +175,8 @@ export class DomainAdministrationComponent {
     this.http.get('http://localhost:5050/api/domain').subscribe(
       (data: any) => {
         this.domains = data;
-        setTimeout(null, 1000);
         if(this.domains.length)
-          this.onSelect(this.domains[0]);
+          setTimeout( () => { this.onSelect(this.domains[0]) }, 500);
       },
       (error) => {
         alert('Connection error: ' + error.message);
@@ -190,6 +199,7 @@ export class DomainAdministrationComponent {
 
   findDatabaseNameFromSelectedEnvironment(): void {
     if(this.selectedEnvironment) {
+      //console.log("qsnjdfnjqsd -> ", this.databases.length);
       const databaseServer = this.databases.find(db => db.databaseId === this.selectedEnvironment.bpDatabaseId);
       if(databaseServer) 
         this.selectedEnvironment.nameBpDatabaseId = databaseServer.name;
@@ -202,6 +212,7 @@ export class DomainAdministrationComponent {
 
   findServerNameFromSelectedEnvironment(): void {
     if(this.selectedEnvironment) {
+      //console.log("qsnjdfnjqsd -> ", this.servers.length);
       const webServer = this.servers.find(s => s.serverId === this.selectedEnvironment.bpwebServerId);
       if(webServer) 
         this.selectedEnvironment.nameBpwebServerId = webServer.name;
@@ -218,6 +229,10 @@ export class DomainAdministrationComponent {
       if(ssrs) 
         this.selectedEnvironment.nameSsrsServerId = ssrs.name;
     }
+  }
+
+  setEnvironment(environmentId: number): void {
+    this.idEnvSelected = environmentId;
   }
 
   onEnvironmentSelect(environmentId: number): void {
@@ -238,6 +253,7 @@ export class DomainAdministrationComponent {
 
   startNewDomainMode() : void {
     this.resetBp5ServersAndDatabasesList();
+    this.idEnvSelected = 2;
     this.isNewDomainMode = true;
 
     this.name = '';
@@ -258,7 +274,54 @@ export class DomainAdministrationComponent {
       this.isEditDomainMode = false;
   }
 
+  getServerOrDatabaseIsSelected(): number[] {
+    const checkIfServerOrDatabaseIsSelected = (environmentId: number): boolean => {
+      return this.selectedDatabaseServers[environmentId] != null ||
+              this.selectedWebServers[environmentId] != null ||
+              this.selectedEaiFtpServers[environmentId] != null ||
+              this.selectedTableauServers[environmentId] != null ||
+              this.selectedSsrsServers[environmentId] != null ||
+              this.selectedElasticPools[environmentId] != null;
+    }
+    let selectedEnvironment: number[] = [];
+    if(checkIfServerOrDatabaseIsSelected(2))
+      selectedEnvironment.push(2);
+    if(checkIfServerOrDatabaseIsSelected(4))
+      selectedEnvironment.push(4);
+    if(checkIfServerOrDatabaseIsSelected(8))
+      selectedEnvironment.push(8);
+    if(checkIfServerOrDatabaseIsSelected(16))
+      selectedEnvironment.push(16);
+    if(checkIfServerOrDatabaseIsSelected(32))
+      selectedEnvironment.push(32);
+    if(checkIfServerOrDatabaseIsSelected(256))
+      selectedEnvironment.push(256);
+    
+    return selectedEnvironment;
+  }
+
   addDomain() : void {
+    let selectedEnvironments: number[];
+    selectedEnvironments = this.getServerOrDatabaseIsSelected();
+
+    let environmentsModel = [];
+    for(const e of selectedEnvironments) {
+      let environmentToAdd = new EnvironmentModelForBackend();
+      environmentToAdd.environment = e;
+      environmentToAdd.bpwebServerId = this.selectedWebServers[e]?.serverId ?? null;
+      environmentToAdd.bpDatabaseId = this.selectedDatabaseServers[e]?.databaseId ?? null;
+      environmentToAdd.eaiDatabaseId = this.selectedElasticPools[e]?.databaseId ?? null;
+      environmentToAdd.ssrsServerId = this.selectedSsrsServers[e]?.serverId ?? null;
+      environmentToAdd.tableauServerId = this.selectedTableauServers[e]?.serverId ?? null;
+      environmentToAdd.eaiftpServerId = this.selectedEaiFtpServers[e]?.serverId ?? null;
+      environmentToAdd.isBp5Enabled = this.selectedBp5[e];
+
+      environmentsModel.push(environmentToAdd);
+    }
+
+    console.log(environmentsModel);
+
+    //add a new domain
     this.http
       .post('http://localhost:5050/api/domain', {
         name: this.name,
@@ -266,11 +329,13 @@ export class DomainAdministrationComponent {
         edition: this.edition,
         isSsoEnabled: this.isSsoEnabled,
         comment: this.comment,
-        parentCompany: this.parentCompany
+        parentCompany: this.parentCompany,
+        environments: environmentsModel
       })
       .subscribe({
         next: (data: any) => {
-          this.domains = data;
+          const newDomainId = data.domainId;
+          console.log("success");
         },
         error: (error: any) => {
           alert('Connection error: ' + error.message);
