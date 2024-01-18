@@ -9,11 +9,45 @@ public class DomainAdministrationController : ControllerBase {
     [HttpGet]
     public IActionResult GetDomains() {
         try {
-            // get all domains
             var context = new MasterContext();
-            var domains = context.Domains.ToList();
-            return Ok(domains);
-        } catch (Exception ex){
+
+            var domainsWithEnvironments = context.Domains
+                .Join(
+                    context.DomainEnvironments,
+                    domain => domain.DomainId,
+                    environment => environment.DomainId,
+                    (domain, environment) => new { Domain = domain, Environment = environment }
+                )
+                .ToList();
+
+            var mappedData = domainsWithEnvironments.GroupBy(
+                pair => pair.Domain,
+                pair => pair.Environment, 
+                (domain, environments) => new DomainModel {
+                    Name = domain.Name,
+                    Logo = domain.Logo,
+                    Edition = domain.Edition,
+                    IsSsoEnabled = domain.IsSsoEnabled,
+                    Comment = domain.Comment,
+                    ParentCompany = domain.ParentCompany,
+                    Environments = environments.Select(environment => new EnvironmentModel {
+                        EnvironmentId = environment.DomainEnvironmentId,
+                        DomainId = environment.DomainId,
+                        Environment = environment.Environment,
+                        BpwebServerId = environment.BpwebServerId,
+                        EaiDatabaseId = environment.EaiDatabaseId,
+                        SsrsServerId = environment.SsrsServerId,
+                        TableauServerId = environment.TableauServerId,
+                        EaiftpServerId = environment.EaiftpServerId,
+                        IsBp5Enabled = environment.IsBp5Enabled,
+                        BpDatabaseId = environment.BpDatabaseId
+                    }).ToList()
+                }
+            ).ToList();
+
+            return Ok(mappedData);
+        } 
+        catch (Exception ex) {
             return BadRequest(ex.Message);
         }
     }
@@ -23,7 +57,7 @@ public class DomainAdministrationController : ControllerBase {
         Console.WriteLine("===============> POST /api/domain");
         try {
             var context = new MasterContext();
-            Domain domain = addDomain(model.Name, model.Logo, model.Edition, model.isSsoEnabled,
+            Domain domain = addDomain(model.Name, model.Logo, model.Edition, model.IsSsoEnabled,
                                         model.Comment, model.ParentCompany);
             context.Domains.Add(domain);
             context.SaveChanges();
@@ -44,9 +78,9 @@ public class DomainAdministrationController : ControllerBase {
                 return NotFound($"Domain with ID {id} not found.");
             
             existingDomain.Name = model.Name;
-            existingDomain.Logo = Encoding.UTF8.GetBytes(model.Logo); 
+            existingDomain.Logo = model.Logo; 
             existingDomain.Edition = model.Edition;
-            existingDomain.IsSsoEnabled = model.isSsoEnabled;
+            existingDomain.IsSsoEnabled = model.IsSsoEnabled;
             existingDomain.Comment = model.Comment;
             existingDomain.ParentCompany = model.ParentCompany;
             context.SaveChanges();
@@ -57,10 +91,29 @@ public class DomainAdministrationController : ControllerBase {
         }
     }
 
+    [HttpDelete("{id}")]
+    public IActionResult DeleteDomain(int id) {
+        try {
+            var context = new MasterContext();
+            var domainToDelete = context.Domains.FirstOrDefault(d => d.DomainId == id);
+
+            if (domainToDelete == null)
+                return NotFound($"Domain with ID {id} not found.");
+
+            context.Domains.Remove(domainToDelete);
+            context.SaveChanges();
+
+            var remainingDomains = context.Domains.ToList();
+            return Ok(remainingDomains);
+        } catch (Exception ex) {
+            return BadRequest(ex.Message);
+        }
+    }
+
     // create a domain to add to the database
     static Domain addDomain
         (string name, 
-         string logo,
+         byte[] logo,
          string edition,
          Boolean isSsoEnabled,
          string comment,
@@ -68,7 +121,7 @@ public class DomainAdministrationController : ControllerBase {
 
         var newDomain = new Domain {
             Name = name,
-            Logo = Encoding.UTF8.GetBytes(logo),
+            Logo = logo,
             Edition = edition,
             IsSsoEnabled = isSsoEnabled,
             Comment = comment,
@@ -80,10 +133,25 @@ public class DomainAdministrationController : ControllerBase {
 
     public class DomainModel {
         public string Name { get; set; }
-        public string Logo { get; set; }
+        public byte[] Logo { get; set; }
         public string Edition { get; set; }
-        public Boolean isSsoEnabled { get; set; }
+        public Boolean IsSsoEnabled { get; set; }
         public string Comment { get; set; }
         public string ParentCompany { get; set; }
+        public List<EnvironmentModel> Environments { get; set; }
+    }
+
+    public class EnvironmentModel {
+        public int EnvironmentId {get; set; }
+        public int DomainId { get; set; }
+        public int Environment { get; set; }
+        public int BpwebServerId { get; set; }
+        public int? BpDatabaseId { get; set; }
+        public int? EaiDatabaseId { get; set; }
+        public int? SsrsServerId { get; set; }
+        public int? TableauServerId { get; set; }
+        public int? EaiftpServerId { get; set; }
+        public bool IsBp5Enabled { get; set; }
     }
 }
+

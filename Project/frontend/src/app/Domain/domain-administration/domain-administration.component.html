@@ -48,24 +48,110 @@
           <input type="text" id="inputComment" [(ngModel)]="comment">
       </div>
     </div>
+
+    <div class="ongletName">
+      <input type="radio" id="dev" name="env" value="dev" (change)="onEnvironmentSelect(2)" checked>
+      <label for="dev">Dev</label>
+    
+      <input type="radio" id="preprod" name="env" value="preprod" (change)="onEnvironmentSelect(4)">
+      <label for="preprod">Preprod</label>
+    
+      <input type="radio" id="prod" name="env" value="prod" (change)="onEnvironmentSelect(8)">
+      <label for="prod">Prod</label> 
+    
+      <input type="radio" id="test" name="env" value="test" (change)="onEnvironmentSelect(16)">
+      <label for="test">Test</label>
+        
+      <input type="radio" id="prodcopy" name="env" value="prodcopy" (change)="onEnvironmentSelect(32)">
+      <label for="prodcopy">Prodcopy</label>
+    
+      <input type="radio" id="staging" name="env" value="staging" (change)="onEnvironmentSelect(256)">
+      <label class="stagingColor" for="staging">Staging</label> 
   </div>
 
+  <div class="ongletContent">
+      <div class="bp5Check">
+        <label for="bp5Toggle"><strong>BP5</strong>
+          <input type="checkbox" id="bp5Toggle" class="bp5Check" [(ngModel)]="selectedBp5[selectedEnvironment.environment]">
+          <label for="bp5Toggle" class="bp5Check"></label>
+        </label>
+      </div>  
 
+      <div class="section">
+        <label for="databaseServer"><strong>Database Server</strong></label>
+        <select id="databaseServer" [(ngModel)]="selectedDatabaseServers[selectedEnvironment.environment]" (change)="onSelectDatabase('databaseServer', selectedDatabaseServers[selectedEnvironment.environmentId], selectedEnvironment.environmentId)">
+          <option value=null [selected]="selectedDatabaseServers[selectedEnvironment.environment] === null">No Database</option>
+          <option *ngFor="let db of databases" [ngValue]="db">
+            {{ db.name }}
+          </option>
+        </select>
+      </div>
+    
+      <div class="section">
+        <label for="webServer"><strong>Web Server</strong></label>
+        <select id="webServer" [(ngModel)]="selectedWebServers[selectedEnvironment.environment]" (change)="onSelectServer('webServer', selectedWebServers[selectedEnvironment.environmentId], selectedEnvironment.environmentId)">
+          <option value=null [selected]="selectedWebServers[selectedEnvironment.environment] === null">No Server</option>
+          <option *ngFor="let server of servers" [ngValue]="server">
+            {{ server.name }}
+          </option>
+        </select>
+      </div>
+      
+      <div class="section">
+        <label for="eaiFtp"><strong>EAI FTP</strong></label>
+        <select id="eaiFtp" [(ngModel)]="selectedEaiFtpServers[selectedEnvironment.environment]" (change)="onSelectServer('eaiFtpServer', selectedEaiFtpServers[selectedEnvironment.environmentId], selectedEnvironment.environmentId)">
+          <option value=null [selected]="selectedEaiFtpServers[selectedEnvironment.environment] === null">No Server</option>
+          <option *ngFor="let server of servers" [ngValue]="server">
+            {{ server.name }}
+          </option>
+        </select>
+      </div>
+      
+      <div class="section">
+        <label for="tableauServer"><strong>Tableau Server</strong></label>
+        <select id="tableauServer" [(ngModel)]="selectedTableauServers[selectedEnvironment.environment]" (change)="onSelectServer('tableauServer', selectedTableauServers[selectedEnvironment.environmentId], selectedEnvironment.environmentId)">
+          <option value=null [selected]="selectedTableauServers[selectedEnvironment.environment] === null">No Server</option>
+          <option *ngFor="let server of servers" [ngValue]="server">
+            {{ server.name }}
+          </option>
+        </select>
+      </div>
+      
+      <div class="section">
+        <label for="ssrsServer"><strong>SSRS Server</strong></label>
+        <select id="ssrsServer" [(ngModel)]="selectedSsrsServers[selectedEnvironment.environment]" (change)="onSelectServer('ssrsServer', selectedSsrsServers[selectedEnvironment.environmentId], selectedEnvironment.environmentId)">
+          <option value=null [selected]="selectedSsrsServers[selectedEnvironment.environment] === null">No Server</option>
+          <option *ngFor="let server of servers" [ngValue]="server">
+            {{ server.name }}
+          </option>
+        </select>
+      </div>
 
+      <div class="section">
+        <label for="elasticPool"><strong>Elastic Pool</strong></label>
+        <select id="elasticPool" [(ngModel)]="selectedElasticPools[selectedEnvironment.environment]" (change)="onSelectDatabase('elasticPool', selectedElasticPools[selectedEnvironment.environmentId], selectedEnvironment.environmentId)">
+          <option value=null [selected]="selectedElasticPools[selectedEnvironment.environment] === null">No Database</option>
+          <option *ngFor="let db of databases" [ngValue]="db">
+            {{ db.name }}
+          </option>
+        </select>
+      </div>
+  </div>
+  </div>
 
   <div *ngIf="!isNewDomainMode">
     <!-- page de base -->>
     <div class="list">
       <select id="domainDropdown" [(ngModel)]="selectedDomain" (change)="onSelect(selectedDomain)">
-        <!--Liste déroulante vide pour le moment-->
         <option *ngFor="let domain of domains | keyvalue" [ngValue]="domain.value">
-          {{ domain.value.domainId }} - {{ domain.value.name }}
+          {{ domain.value.name }}
         </option>
       </select>
 
       <button class="button" (click)="startNewDomainMode()">New</button>
       <button class="button" (click)="editDomain()">Edit</button>
       <button class="button" (click)="copyDomain()">Copy</button>
+      <button class="button" (click)="deleteDomain()">Delete</button>
     </div>
 
     <div class="containerTexte">
@@ -103,57 +189,62 @@
     </div>
 
     <div class="ongletName">
-      <input type="radio" id="dev" class="ongletDev" checked>
-      <label>Dev</label>
-
-      <input type="radio" id="preprod" class="ongletPreprod">
-      <label>Preprod</label>
-
-      <input type="radio" id="prod">
-      <label>Prod</label>
-
-      <input type="radio" id="test">
-      <label>Test</label>
-
-      <input type="radio" id="prodcopy">
-      <label>Prodcopy</label>
-
-      <input type="radio" id="staging">
-      <label class="stagingColor">Staging</label>
+        <input type="radio" id="dev" name="env" value="dev" (change)="onEnvironmentSelect(2)" [disabled]="!isEnvironmentEnabled(2)" checked>
+        <label for="dev">Dev</label>
+      
+        <input type="radio" id="preprod" name="env" value="preprod" (change)="onEnvironmentSelect(4)" [disabled]="!isEnvironmentEnabled(4)">
+        <label for="preprod">Preprod</label>
+      
+        <input type="radio" id="prod" name="env" value="prod" (change)="onEnvironmentSelect(8)" [disabled]="!isEnvironmentEnabled(8)">
+        <label for="prod">Prod</label> 
+      
+        <input type="radio" id="test" name="env" value="test" (change)="onEnvironmentSelect(16)" [disabled]="!isEnvironmentEnabled(16)">
+        <label for="test">Test</label>
+          
+        <input type="radio" id="prodcopy" name="env" value="prodcopy" (change)="onEnvironmentSelect(32)" [disabled]="!isEnvironmentEnabled(32)">
+        <label for="prodcopy">Prodcopy</label>
+      
+        <input type="radio" id="staging" name="env" value="staging" (change)="onEnvironmentSelect(256)" [disabled]="!isEnvironmentEnabled(256)">
+        <label class="stagingColor" for="staging">Staging</label> 
     </div>
 
     <div class="ongletContent">
-      <div class="bp5Check">
-        <label for="bp5Toggle"><strong>BP5</strong>
-          <input type="checkbox" id="bp5Toggle" class="bp5Check" checked disabled>
-          <label for="bp5Toggle" class="bp5Check"></label>
-        </label>
-      </div>  
+        <div class="bp5Check">
+          <label for="bp5Toggle"><strong>BP5</strong>
+            <input type="checkbox" id="bp5Toggle" class="bp5Check" [checked]="selectedEnvironment?.isBp5Enabled" disabled>
+            <label for="bp5Toggle" class="bp5Check"></label>
+          </label>
+        </div>  
 
-      <div class="section">
-        <label for="database"><strong>Database</strong></label>
-        <input type="text" id="database" disabled>
-      </div>
-    
-      <div class="section">
-        <label for="webServer"><strong>Web Server</strong></label>
-        <input type="text" id="webServer" disabled>
-      </div>
-    
-      <div class="section">
-        <label for="eaiFtp"><strong>EAI FTP</strong></label>
-        <input type="text" id="eaiFtp" disabled>
-      </div>
-    
-      <div class="section">
-        <label for="tableauServer"><strong>Tableau Server</strong></label>
-        <input type="text" id="tableauServer" disabled>
-      </div>
-    
-      <div class="section">
-        <label for="ssrsServer"><strong>SSRS Server</strong></label>
-        <input type="text" id="ssrsServer" disabled>
-      </div>
+        <div class="section">
+          <label for="database"><strong>Database Server</strong></label>
+        <input type="text" id="database" [value]="selectedEnvironment?.nameBpDatabaseId" disabled>
+        </div>
+      
+        <div class="section">
+          <label for="webServer"><strong>Web Server</strong></label>
+        <input type="text" id="webServer" [value]="selectedEnvironment?.nameBpwebServerId" disabled>
+        </div>
+      
+        <div class="section">
+          <label for="eaiFtp"><strong>EAI FTP</strong></label>
+          <input type="text" id="eaiFtp" [value]="selectedEnvironment?.nameEaiftpServerId" disabled>
+        </div>
+      
+        <div class="section">
+          <label for="tableauServer"><strong>Tableau Server</strong></label>
+          <input type="text" id="tableauServer" [value]="selectedEnvironment?.nameTableauServerId" disabled>
+        </div>
+      
+        <div class="section">
+          <label for="ssrsServer"><strong>SSRS Server</strong></label>
+          <input type="text" id="ssrsServer" [value]="selectedEnvironment?.nameSsrsServerId" disabled>
+        </div>
+
+        <div class="section">
+          <label for="elasticPool"><strong>Elastic Pool</strong></label>
+          <input type="text" id="ElasticPool" [value]="selectedEnvironment?.nameEaiDatabaseId" disabled>
+        </div>
     </div>
   </div>
 

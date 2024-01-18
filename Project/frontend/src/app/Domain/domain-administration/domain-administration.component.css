@@ -94,12 +94,6 @@ label {
 
 /* Partie inferieur */
 
-
-
-input[type="radio"] {
-  display: none;
-}
-
 input[type="radio"]:checked + label {
   background-color: #fff;
 }
@@ -107,15 +101,17 @@ input[type="radio"]:checked + label {
 .ongletName {
   margin-top: 60px;
   margin-left: 20px;
-}
-
-.ongletName input[type="radio"] {
-  display: none;
+  display: flex;
 }
 
 .ongletName input[type="radio"]:checked + label {
-  transform: scale(1.1); 
+  transform: scale(1.2); 
   box-shadow: 0 0 10px rgba(52, 152, 219, 0.8);
+}
+
+.ongletName input[type="radio"]:disabled + label {
+  opacity: 0.2; 
+  cursor: not-allowed; 
 }
 
 .ongletName label {
@@ -126,8 +122,8 @@ input[type="radio"]:checked + label {
   cursor: pointer;
 }
 
-.ongletName label:hover {
-  transform: scale(1.1); 
+.ongletName input[type="radio"] {
+  display: none;
 }
 
 .ongletName #dev:checked + label {
@@ -142,7 +138,15 @@ input[type="radio"]:checked + label {
   background-color: purple; 
 }
 
+.ongletName #preprod:checked + label {
+  background-color: purple; 
+}
+
 .ongletName #prod:not(:checked) + label {
+  background-color: blue; 
+}
+
+.ongletName #prod:checked + label {
   background-color: blue; 
 }
 
@@ -150,7 +154,15 @@ input[type="radio"]:checked + label {
   background-color: green; 
 }
 
+.ongletName #test:checked + label {
+  background-color: green; 
+}
+
 .ongletName #prodcopy:not(:checked) + label {
+  background-color: maroon; 
+}
+
+.ongletName #prodcopy:checked + label {
   background-color: maroon; 
 }
 
@@ -158,13 +170,21 @@ input[type="radio"]:checked + label {
   background-color: yellow;
 }
 
+.ongletName #staging:checked + label {
+  background-color: yellow; 
+}
+
+input[type="radio"]:checked + label + div {
+  display: block;
+}
+
 .ongletName .stagingColor {
   color: black;
   font-weight: 500;
 }
 
-input[type="radio"]:checked + label + div {
-  display: block;
+.ongletName label:hover :enabled {
+  transform: scale(1.2); 
 }
 
 .ongletContent {
@@ -186,4 +206,8 @@ input[type="radio"]:checked + label + div {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 10px;
+}
+
+.grid-item {
+  /* Ajoutez des styles spécifiques à chaque élément si nécessaire */
 }

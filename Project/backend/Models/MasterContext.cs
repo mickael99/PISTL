@@ -130,24 +130,24 @@ public partial class MasterContext : DbContext
             entity.HasIndex(e => new { e.DomainId, e.Environment }, "IX_DomainID_Environment").IsUnique();
 
             entity.Property(e => e.DomainEnvironmentId).HasColumnName("DomainEnvironmentID");
-            entity.Property(e => e.BpdatabaseId).HasColumnName("BPDatabaseID");
+            entity.Property(e => e.BpDatabaseId).HasColumnName("BPDatabaseID");
             entity.Property(e => e.BpwebServerId).HasColumnName("BPWebServerID");
             entity.Property(e => e.CreatedBy).HasMaxLength(200);
             entity.Property(e => e.CreatedDate)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
             entity.Property(e => e.DomainId).HasColumnName("DomainID");
-            entity.Property(e => e.EaidatabaseId).HasColumnName("EAIDatabaseID");
-            entity.Property(e => e.EaiftpserverId).HasColumnName("EAIFTPServerID");
+            entity.Property(e => e.EaiDatabaseId).HasColumnName("EAIDatabaseID");
+            entity.Property(e => e.EaiftpServerId).HasColumnName("EAIFTPServerID");
             entity.Property(e => e.ModifiedBy).HasMaxLength(200);
             entity.Property(e => e.ModifiedDate)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
-            entity.Property(e => e.SsrsserverId).HasColumnName("SSRSServerID");
+            entity.Property(e => e.SsrsServerId).HasColumnName("SSRSServerID");
             entity.Property(e => e.TableauServerId).HasColumnName("TableauServerID");
 
             entity.HasOne(d => d.Bpdatabase).WithMany(p => p.DomainEnvironmentBpdatabases)
-                .HasForeignKey(d => d.BpdatabaseId)
+                .HasForeignKey(d => d.BpDatabaseId)
                 .HasConstraintName("FK_DomainEnvironment_Database");
 
             entity.HasOne(d => d.BpwebServer).WithMany(p => p.DomainEnvironmentBpwebServers)
@@ -161,15 +161,15 @@ public partial class MasterContext : DbContext
                 .HasConstraintName("FK_DomainEnvironment_Domain");
 
             entity.HasOne(d => d.Eaidatabase).WithMany(p => p.DomainEnvironmentEaidatabases)
-                .HasForeignKey(d => d.EaidatabaseId)
+                .HasForeignKey(d => d.EaiDatabaseId)
                 .HasConstraintName("FK_DomainEnvironment_Database1");
 
             entity.HasOne(d => d.Eaiftpserver).WithMany(p => p.DomainEnvironmentEaiftpservers)
-                .HasForeignKey(d => d.EaiftpserverId)
+                .HasForeignKey(d => d.EaiftpServerId)
                 .HasConstraintName("FK_DomainEnvironment_Server5");
 
             entity.HasOne(d => d.Ssrsserver).WithMany(p => p.DomainEnvironmentSsrsservers)
-                .HasForeignKey(d => d.SsrsserverId)
+                .HasForeignKey(d => d.SsrsServerId)
                 .HasConstraintName("FK_DomainEnvironment_Server1");
 
             entity.HasOne(d => d.TableauServer).WithMany(p => p.DomainEnvironmentTableauServers)
