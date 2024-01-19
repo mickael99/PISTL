@@ -9,6 +9,9 @@ import {
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { ChangeDetectorRef } from '@angular/core';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+
 
 @Component({
   selector: 'app-database',
@@ -67,7 +70,7 @@ export class DatabaseComponent {
   isClicked: boolean = false;
 
   // Columns names in the table
-  displayedColumns: string[] = ['Database ID','Name', 'Server ID', 'User Name', 'Context'];
+  displayedColumns: string[] = ['databaseId','Name', 'Server ID', 'User Name', 'Context'];
 
   // Bool that allows or not to display the error popup
   showPopup: boolean = false;
@@ -105,6 +108,12 @@ export class DatabaseComponent {
   // Error message to display in the popup
   popupMessage: string = '';
 
+  // Paginator used for the table
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+
+  // Sort used for the table
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
+
   constructor(
     private renderer: Renderer2,
     private http: HttpClient,
@@ -123,6 +132,18 @@ export class DatabaseComponent {
       (data: any) => {
         this.database = data;
         this.dataSource = new MatTableDataSource(this.database);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sortingDataAccessor = (item, property) => {
+          switch (property) {
+              case 'databaseId':
+                console.log('databaseId: ', item);
+                return item.databaseId;
+              default:
+                return item[property];
+            
+          }
+        };
+        this.dataSource.sort = this.sort;
       },
       (error) => {
         this.showErrorPopup(error.error);
@@ -132,6 +153,18 @@ export class DatabaseComponent {
     this.http.get('http://localhost:5050/api/server', options).subscribe(
       (data: any) => {
         this.server = data;
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sortingDataAccessor = (item, property) => {
+          switch (property) {
+              case 'databaseId':
+                console.log('databaseId: ', item.databaseId);
+                return item.databaseId;
+              default:
+                return item[property];
+            
+          }
+        };
+        this.dataSource.sort = this.sort;
       },
       (error) => {
         this.showErrorPopup(error.error);
@@ -193,9 +226,22 @@ export class DatabaseComponent {
         this.formDataCreate)
       .subscribe({
         next: (data: any) => {
+          this.showFormCreate = false;
           this.database = data.databases;
           console.log('database: ', this.database);
           this.dataSource = new MatTableDataSource(this.database);
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.sortingDataAccessor = (item, property) => {
+            switch (property) {
+                case 'databaseId':
+                  console.log('databaseId: ', item.databaseId);
+                  return item.databaseId 
+                default:
+                  return item[property];
+              
+            }
+          };
+          this.dataSource.sort = this.sort;
         },
         error: (error: any) => {
           console.error(error.error.message);
@@ -230,6 +276,18 @@ export class DatabaseComponent {
           this.database = data.databases;
           this.dataSource = new MatTableDataSource(this.database);
           this.reinitaliseDatabaseSelectedForm();
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.sortingDataAccessor = (item, property) => {
+            switch (property) {
+                case 'databaseId':
+                  console.log('databaseId: ', item.databaseId);
+                  return item.databaseId 
+                default:
+                  return item[property];
+              
+            }
+          };
+          this.dataSource.sort = this.sort;
         },
         error: (error: any) => {
           console.error(error.error.message);
@@ -277,6 +335,17 @@ export class DatabaseComponent {
           this.database = data.databases;
           this.dataSource = new MatTableDataSource(this.database);
           this.reinitaliseDatabaseSelectedForm();
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.sortingDataAccessor = (item, property) => {
+            switch (property) {
+                case 'databaseId':
+                  console.log('databaseId: ', item.databaseId);
+                  return item.databaseId
+                default:
+                  return item[property];
+            }
+          };
+          this.dataSource.sort = this.sort;
         },
         error: (error: any) => {
           console.error(error.error.message);
@@ -343,6 +412,16 @@ export class DatabaseComponent {
           console.log('database: ', this.database);
           this.dataSource = new MatTableDataSource(this.database);
           this.editEnabled = false;
+          this.dataSource.sortingDataAccessor = (item, property) => {
+            switch (property) {
+                case 'databaseId':
+                  console.log('databaseId: ', item.databaseId);
+                  return item.databaseId
+                default:
+                  return item[property];
+            }
+          };
+          this.dataSource.sort = this.sort;
         },
         error: (error: any) => {
           console.error(error.error.message);
@@ -508,7 +587,7 @@ export class DatabaseComponent {
    * @param message - Error message.
    */
   showErrorPopup(message: string) {
-    this.showPopup = true;
+    this.showPopupError = true;
     this.popupMessage = message;
   }
 
@@ -517,7 +596,7 @@ export class DatabaseComponent {
    * Function used to close the error popup.
    */
   closeErrorPopup() {
-    this.showPopup = false;
+    this.showPopupError = false;
   }
 
   /***************************************************************************************/

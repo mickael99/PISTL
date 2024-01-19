@@ -47,7 +47,7 @@
           class="custom-table"
           #tableElement
         >
-          <ng-container matColumnDef="Database ID">
+          <ng-container matColumnDef ="databaseId">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
             <td
               mat-cell
@@ -144,7 +144,7 @@
         </table>
 
         <mat-paginator
-          [pageSizeOptions]="[10, 20]"
+          [pageSizeOptions]="[5, 10]"
           showFirstLastButtons
           [length]="dataSource && dataSource.data.length"
         ></mat-paginator>

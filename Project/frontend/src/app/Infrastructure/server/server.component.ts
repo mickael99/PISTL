@@ -11,6 +11,8 @@ import {
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { ChangeDetectorRef } from '@angular/core';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 
 
 @Component({
@@ -98,6 +100,12 @@ export class ServerComponent {
   // Error message to display in the popup
   popupMessage: string = '';
 
+  // Paginator used for the table
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+
+  // Sort used for the table
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
+
   /***************************************************************************************/
   /**
    * Creates an instance of ServerComponent.
@@ -122,6 +130,18 @@ export class ServerComponent {
       (data: any) => {
         this.server = data;
         this.dataSource = new MatTableDataSource(this.server);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sortingDataAccessor = (item, property) => {
+          switch (property) {
+              case 'Server ID':
+                console.log('Server ID: ', item);
+                return item.serverId;
+              default:
+                return item[property];
+            
+          }
+        };
+        this.dataSource.sort = this.sort;
       },
       (error) => {
         this.showErrorPopup(error.error);
@@ -138,7 +158,7 @@ export class ServerComponent {
    * @param message - Error message.
    */
   showErrorPopup(message: string) {
-    this.showPopup = true;
+    this.showPopupError = true;
     this.popupMessage = message;
   }
 
@@ -147,7 +167,7 @@ export class ServerComponent {
    * Function used to close the error popup.
    */
   closeErrorPopup() {
-    this.showPopup = false;
+    this.showPopupError = false;
   }
 
   /***************************************************************************************/
@@ -216,8 +236,21 @@ export class ServerComponent {
         })
       .subscribe({
         next: (data: any) => {
+          this.showFormCreate = false;
           this.server = data.servers;
           this.dataSource = new MatTableDataSource(this.server);
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.sortingDataAccessor = (item, property) => {
+            switch (property) {
+                case 'Server ID':
+                  console.log('Server ID: ', item);
+                  return item.serverId;
+                default:
+                  return item[property];
+              
+            }
+          };
+          this.dataSource.sort = this.sort;
         },
         error: (error: any) => {
           console.error(error.error.message);
@@ -367,6 +400,18 @@ export class ServerComponent {
           this.server = data.servers;
           this.dataSource = new MatTableDataSource(this.server);
           this.editEnabled = false;
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.sortingDataAccessor = (item, property) => {
+            switch (property) {
+                case 'Server ID':
+                  console.log('Server ID: ', item);
+                  return item.serverId;
+                default:
+                  return item[property];
+              
+            }
+          };
+          this.dataSource.sort = this.sort;
         },
         error: (error: any) => {
           console.error(error.error.message);
@@ -422,6 +467,18 @@ export class ServerComponent {
           this.server = data.servers;
           this.dataSource = new MatTableDataSource(this.server);
           this.reinitaliseServerSelectedForm();
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.sortingDataAccessor = (item, property) => {
+            switch (property) {
+                case 'Server ID':
+                  console.log('Server ID: ', item);
+                  return item.serverId;
+                default:
+                  return item[property];
+              
+            }
+          };
+          this.dataSource.sort = this.sort;
         },
         error: (error: any) => {
           console.error(error.error.message);
@@ -487,6 +544,18 @@ export class ServerComponent {
           this.server = data.servers;
           this.dataSource = new MatTableDataSource(this.server);
           this.reinitaliseServerSelectedForm();
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.sortingDataAccessor = (item, property) => {
+            switch (property) {
+                case 'Server ID':
+                  console.log('Server ID: ', item);
+                  return item.serverId;
+                default:
+                  return item[property];
+              
+            }
+          };
+          this.dataSource.sort = this.sort;
         },
         error: (error: any) => {
           console.error(error.error.message);
