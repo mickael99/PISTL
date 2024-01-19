@@ -7,11 +7,11 @@ export class EnvironmentModel {
   public environmentId: number;
   public domainId: number;
   public environment: number;
-  public bpwebServerId: number;
+  public bpwebserverId: number;
   public bpdatabaseId: number;
   public eaidatabaseId: number;
   public ssrsserverId: number;
-  public tableauServerId: number;
+  public tableauserverId: number;
   public eaiftpserverId: number;
   public isBp5Enabled: boolean;
 
@@ -44,6 +44,8 @@ export class DomainAdministrationComponent {
   domains: any[];
   databases: any[];
   servers: any[];
+
+  logos: string[];
 
   /* domain selected from the list */
   selectedDomain: any;
@@ -82,6 +84,8 @@ export class DomainAdministrationComponent {
    */
   selectedDatabaseServers: { [key: number]: any } = {};
   selectedElasticPools: { [key: number]: any } = {};
+
+  logoToAdd: any;
 
   /*
    *  Update the selected domain from the list and print the dev information.
@@ -187,7 +191,10 @@ export class DomainAdministrationComponent {
 
     this.http.get('http://localhost:5050/api/domain').subscribe(
       (data: any) => {
-        this.domains = data;
+        this.domains = data.mappedData;
+        this.logos = data.logos;
+        console.table(this.domains);
+        console.log('aaaaa: ', data.logos);
         if (this.domains.length)
           setTimeout(() => {
             this.onSelect(this.domains[0]);
@@ -237,7 +244,7 @@ export class DomainAdministrationComponent {
     if (this.selectedEnvironment) {
       //console.log("qsnjdfnjqsd -> ", this.servers.length);
       const webServer = this.servers.find(
-        (s) => s.serverId === this.selectedEnvironment.bpwebServerId
+        (s) => s.serverId === this.selectedEnvironment.bpwebserverId
       );
       if (webServer)
         this.selectedEnvironment.nameBpwebServerId = webServer.name;
@@ -248,7 +255,7 @@ export class DomainAdministrationComponent {
       if (eaiFTP) this.selectedEnvironment.nameEaiftpServerId = eaiFTP.name;
 
       const tableauServer = this.servers.find(
-        (s) => s.serverId === this.selectedEnvironment.tableauServerId
+        (s) => s.serverId === this.selectedEnvironment.tableauserverId
       );
       if (tableauServer)
         this.selectedEnvironment.nameTableauServerId = tableauServer.name;
@@ -276,8 +283,11 @@ export class DomainAdministrationComponent {
   }
 
   displayLogo(encodingLogoPath: string): void {
+    console.log('this.logos[22] -> ' + this.logos[22]);
     const imagePreview = document.getElementById('printLogo') as HTMLDivElement;
-    imagePreview.innerHTML = `<img src="data:image/png;base64,${encodingLogoPath}" alt="Logo" style="max-width: 100%; max-height: 100%;">`;
+    imagePreview.innerHTML = `<img src="${
+      this.logos[22] && this.logos[22]
+    }" alt="Logo" style="max-width: 100%; max-height: 100%;">`;
   }
 
   startNewDomainMode(): void {
@@ -329,7 +339,7 @@ export class DomainAdministrationComponent {
     let selectedEnvironments: number[];
     selectedEnvironments = this.getServerOrDatabaseIsSelected();
 
-    let environmentsModel = [];
+    let environmentsModel = new Array<EnvironmentModelForBackend>();
     for (const e of selectedEnvironments) {
       let environmentToAdd = new EnvironmentModelForBackend();
       environmentToAdd.environment = e;
@@ -350,28 +360,37 @@ export class DomainAdministrationComponent {
       environmentsModel.push(environmentToAdd);
     }
 
-    console.log(environmentsModel);
+    console.log('environmentsModel: ', environmentsModel);
+
+    console.log('=============> this.logoToAdd: ', this.logoToAdd);
+    this.logo = this.logoToAdd;
+    console.log('=============> this.logo: ', this.logo);
+
+    const requestBody = {
+      Name: this.name,
+      Logo: btoa(this.logo),
+      Edition: this.edition,
+      IsSsoEnabled: this.isSsoEnabled,
+      Comment: this.comment,
+      ParentCompany: this.parentCompany,
+      Environments: environmentsModel,
+    };
+
+    console.log('requestBody: ', requestBody);
 
     //add a new domain
-    this.http
-      .post('http://localhost:5050/api/domain', {
-        name: this.name,
-        logo: this.logo,
-        edition: this.edition,
-        isSsoEnabled: this.isSsoEnabled,
-        comment: this.comment,
-        parentCompany: this.parentCompany,
-        environments: environmentsModel,
-      })
-      .subscribe({
-        next: (data: any) => {
-          const newDomainId = data.domainId;
-          console.log('success');
-        },
-        error: (error: any) => {
-          alert('Connection error: ' + error.message);
-        },
-      });
+    this.http.post('http://localhost:5050/api/domain', requestBody).subscribe({
+      next: (data: any) => {
+        this.domains = data.domains;
+        let newDomainId = data.newDomainId;
+        let domain = this.domains.find((d) => d.domainId === newDomainId);
+        this.onSelect(domain);
+        console.log('success');
+      },
+      error: (error: any) => {
+        alert('Connection error: ' + error.message);
+      },
+    });
 
     this.endNewDomainMode();
   }
@@ -394,13 +413,20 @@ export class DomainAdministrationComponent {
 
   onLogoChange(event: any): void {
     if (this.isFileFormatConformed(this.logo)) {
-      const input = event.target;
+      const file = event.target.files[0];
       const reader = new FileReader();
+
       reader.onload = (e) => {
         const imagePreview = document.getElementById('imagePreview');
         imagePreview.innerHTML = `<img src="${e.target.result}" alt="Preview" style="max-width: 10%; max-height: 10%;">`;
       };
-      reader.readAsDataURL(input.files[0]);
+
+      reader.addEventListener('load', () => {
+        console.log('reader.result: ', reader.result);
+        this.logoToAdd = reader.result;
+      });
+
+      reader.readAsDataURL(file);
     } else {
       alert(
         'The format file is not correct, only jpeg jpg and png extention are allowed'

@@ -1,8 +1,9 @@
-using System;
 using Project.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Text;
 using Microsoft.Extensions.Hosting;
+using System;
+using System.IO;
 
 [Route("api/domain")]
 [ApiController]
@@ -15,14 +16,26 @@ public class DomainAdministrationController : ControllerBase
         {
             var context = new DatContext();
 
+
             var domainsWithEnvironments = context.Domains
-                .Join(
-                    context.DomainEnvironments,
-                    domain => domain.DomainId,
-                    environment => environment.DomainId,
-                    (domain, environment) => new { Domain = domain, Environment = environment }
-                )
-                .ToList();
+            .GroupJoin(
+                context.DomainEnvironments,
+                domain => domain.DomainId,
+                environment => environment.DomainId,
+                (domain, environments) => new { Domain = domain, Environments = environments.DefaultIfEmpty() }
+            )
+            .SelectMany(
+                result => result.Environments,
+                (result, environment) => new { Domain = result.Domain, Environment = environment }
+            )
+            .ToList();
+
+
+            for (int i = 0; i < domainsWithEnvironments.Count; i++)
+            {
+                Console.WriteLine("Domain: " + domainsWithEnvironments[i].Domain.Name);
+            }
+
 
             var mappedData = domainsWithEnvironments.GroupBy(
                 pair => pair.Domain,
@@ -35,21 +48,28 @@ public class DomainAdministrationController : ControllerBase
                     IsSsoEnabled = domain.IsSsoEnabled,
                     Comment = domain.Comment,
                     ParentCompany = domain.ParentCompany,
-                    Environments = environments.Select(environment => new EnvironmentModel
-                    {
-                        Environment = environment.Environment,
-                        BpwebServerId = environment.BpwebServerId,
-                        EaidatabaseId = environment.EaidatabaseId,
-                        SsrsserverId = environment.SsrsserverId,
-                        TableauServerId = environment.TableauServerId,
-                        EaiftpserverId = environment.EaiftpserverId,
-                        IsBp5Enabled = environment.IsBp5Enabled,
-                        BpdatabaseId = environment.BpdatabaseId
-                    }).ToList()
+                    // Environments = environments.Select(environment => new EnvironmentModel
+                    // {
+                    //     Environment = environment.Environment,
+                    //     BpwebServerId = environment.BpwebServerId,
+                    //     EaidatabaseId = environment.EaidatabaseId,
+                    //     SsrsserverId = environment.SsrsserverId,
+                    //     TableauServerId = environment.TableauServerId,
+                    //     EaiftpserverId = environment.EaiftpserverId,
+                    //     IsBp5Enabled = environment.IsBp5Enabled,
+                    //     BpdatabaseId = environment.BpdatabaseId
+                    // }).ToList()
                 }
             ).ToList();
 
-            return Ok(mappedData);
+            var logos = mappedData.Select(domain => Encoding.UTF8.GetString(domain.Logo ?? new byte[0])).ToList();
+
+            for (int i = 0; i < mappedData.Count; i++)
+            {
+                Console.WriteLine("Logo: " + Encoding.UTF8.GetString(mappedData[i].Logo ?? new byte[0]));
+            }
+
+            return Ok(new { mappedData, logos }); ;
         }
         catch (Exception ex)
         {
@@ -60,22 +80,26 @@ public class DomainAdministrationController : ControllerBase
     [HttpPost]
     public IActionResult PostDomain([FromBody] DomainModel model)
     {
-        Console.WriteLine("===============> POST /api/domain");
         try
         {
             var context = new DatContext();
-            Domain domain = addDomain(model.Name, model.Logo, model.Edition, model.IsSsoEnabled,
-                                        model.Comment, model.ParentCompany);
+            Console.WriteLine("===============> POST /api/domain");
+            Console.WriteLine("===============> model.Logo: " + Encoding.UTF8.GetString(model.Logo));
+            // byte[] pathLogoBytes = System.IO.File.ReadAllBytes(model.PathLogo ?? string.Empty);
+            // Console.WriteLine("===============> pathLogoBytes: " + pathLogoBytes);
+
+            Domain domain = addDomain(model.Name, model.Logo, model.Edition ?? string.Empty, model.IsSsoEnabled ?? false,
+                                        model.Comment ?? string.Empty, model.ParentCompany ?? string.Empty);
             context.Domains.Add(domain);
             context.SaveChanges();
 
-            List<DomainEnvironment> environments = addDomainEnvironments(domain.DomainId, model.Environments);
+            // List<DomainEnvironment> environments = addDomainEnvironments(domain.DomainId, model.Environments);
 
-            foreach (DomainEnvironment e in environments)
-                context.DomainEnvironments.Add(e);
-            context.SaveChanges();
+            // foreach (DomainEnvironment e in environments)
+            //     context.DomainEnvironments.Add(e);
+            // context.SaveChanges();
 
-            return Ok(context.Domains);
+            return Ok(new { domains = context.Domains, newDomainId = domain.DomainId });
         }
         catch (Exception ex)
         {
@@ -98,7 +122,7 @@ public class DomainAdministrationController : ControllerBase
             existingDomain.Name = model.Name;
             existingDomain.Logo = model.Logo;
             existingDomain.Edition = model.Edition;
-            existingDomain.IsSsoEnabled = model.IsSsoEnabled;
+            existingDomain.IsSsoEnabled = model.IsSsoEnabled ?? false;
             existingDomain.Comment = model.Comment;
             existingDomain.ParentCompany = model.ParentCompany;
             context.SaveChanges();
@@ -154,6 +178,7 @@ public class DomainAdministrationController : ControllerBase
             ParentCompany = parentCompany
         };
 
+        Console.WriteLine("===============> newDomain.Logo: " + Encoding.UTF8.GetString(newDomain.Logo));
         return newDomain;
     }
 
@@ -182,13 +207,14 @@ public class DomainAdministrationController : ControllerBase
 
     public class DomainModel
     {
-        public string Name { get; set; }
-        public byte[] Logo { get; set; }
-        public string Edition { get; set; }
-        public Boolean IsSsoEnabled { get; set; }
-        public string Comment { get; set; }
-        public string ParentCompany { get; set; }
-        public List<EnvironmentModel> Environments { get; set; }
+        public required string Name { get; set; }
+        public byte[]? Logo { get; set; }
+        public string? PathLogo { get; set; }
+        public string? Edition { get; set; }
+        public Boolean? IsSsoEnabled { get; set; }
+        public string? Comment { get; set; }
+        public string? ParentCompany { get; set; }
+        public List<EnvironmentModel>? Environments { get; set; }
     }
 
     public class EnvironmentModel

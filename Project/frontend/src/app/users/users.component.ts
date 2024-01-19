@@ -480,6 +480,9 @@ export class UsersComponent {
   }
 
   /***************************************************************************************/
+  /**
+   * Function used to call the POST request to reset the password.
+   */
   onResetPasswordConfirm() {
     this.onResetPasswordClose();
 
