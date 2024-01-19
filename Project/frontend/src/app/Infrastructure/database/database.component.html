@@ -71,12 +71,12 @@
               mat-cell
               *matCellDef="let database"
               (click)="getDatabase(database)"
-              (mouseenter)="onMouseEnter(database.name)"
+              (mouseenter)="onMouseEnter(database.databaseId)"
               (mouseleave)="onMouseLeave()"
               [ngClass]="{
                 'database--selected' : (database.name == databaseSelected.name),
                 '' : !(database.name == databaseSelected.name),
-                hovered: database.name == databaseHovered ? isHovered : false,
+                hovered: database.databaseId == databaseHovered ? isHovered : false,
               }"
             >
               {{ database.name }}
@@ -89,12 +89,12 @@
               mat-cell
               *matCellDef="let database"
               (click)="getDatabase(database)"
-              (mouseenter)="onMouseEnter(database.serverId)"
+              (mouseenter)="onMouseEnter(database.databaseId)"
               (mouseleave)="onMouseLeave()"
               [ngClass]="{
                 'database--selected' : (database.serverId == databaseSelected.serverId),
                 '' : !(database.serverId == databaseSelected.serverId),
-                hovered: database.serverId == databaseHovered ? isHovered : false,
+                hovered: database.databaseId == databaseHovered ? isHovered : false,
               }"
             >
               {{ database.serverId }}
@@ -107,12 +107,12 @@
               mat-cell
               *matCellDef="let database"
               (click)="getDatabase(database)"
-              (mouseenter)="onMouseEnter(database.userName)"
+              (mouseenter)="onMouseEnter(database.databaseId)"
               (mouseleave)="onMouseLeave()"
               [ngClass]="{
                 'database--selected' : (database.userName == databaseSelected.userName),
                 '' : !(database.userName == databaseSelected.userName),
-                hovered: database.userName == databaseHovered ? isHovered : false,
+                hovered: database.databaseId == databaseHovered ? isHovered : false,
               }"
             >
               {{ database.userName }}
@@ -127,15 +127,15 @@
               mat-cell
               *matCellDef="let database"
               (click)="getDatabase(database)"
-              (mouseenter)="onMouseEnter(database.context)"
+              (mouseenter)="onMouseEnter(database.databaseId)"
               (mouseleave)="onMouseLeave()"
               [ngClass]="{
                 'database--selected' : (database.context == databaseSelected.context),
                 '' : !(database.context == databaseSelected.context),
-                hovered: database.context == databaseHovered ? isHovered : false,
+                hovered: database.databaseId == databaseHovered ? isHovered : false,
               }"
             >
-              {{ database.context }}
+              {{ database.context || "N/A" }}
             </td>
           </ng-container>
 
@@ -256,18 +256,6 @@
         </button>
 
         <form class="form--databases">          
-          <mat-form-field class="example-full-width">
-            <mat-label>ID</mat-label>
-            <input
-              matInput
-              placeholder="ID"
-              required
-              [(ngModel)]="databaseSelected.DatabaseId"
-              name="DatabaseId"
-              [disabled]="!editEnabled"
-            />
-          </mat-form-field>
-
           <mat-form-field class="example-full-width">
             <mat-label>Name</mat-label>
             <input

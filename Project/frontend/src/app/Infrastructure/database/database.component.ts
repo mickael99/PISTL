@@ -82,7 +82,7 @@ export class DatabaseComponent {
   isHovered: boolean = false;
 
   // User hovered in the table
-  databaseHovered: string = '';
+  databaseHovered: number;
 
   // Bool used to activate the 'Edit' button
   editEnabled: boolean = false;
@@ -460,7 +460,7 @@ export class DatabaseComponent {
     this.databaseSelected.Name = database.name;
     this.databaseSelected.UserName = database.userName;
     this.databaseSelected.Password = database.password;
-    this.databaseSelected.Server = database.Server;
+    this.databaseSelected.Server = database.server;
     console.log('databaseSelected.Server: ', this.server);
     this.databaseSelected.ServerId = database.serverId;
     this.databaseSelected.CreatedBy = database.createdBy;
@@ -603,7 +603,7 @@ export class DatabaseComponent {
   /**
    * Function used to activate the hover.
    */
-  onMouseEnter(databaseHovered: string) {
+  onMouseEnter(databaseHovered: number) {
     this.isHovered = true;
     this.databaseHovered = databaseHovered;
   }
@@ -614,7 +614,7 @@ export class DatabaseComponent {
    */
   onMouseLeave() {
     this.isHovered = false;
-    this.databaseHovered = '';
+    this.databaseHovered = 0;
   }
 
   /***************************************************************************************/
