@@ -7,7 +7,9 @@ import {
   ViewChild,
 } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSort } from '@angular/material/sort';
 
 /***************************************************************************************/
 /***************************************************************************************/
@@ -23,6 +25,12 @@ export class UsersComponent {
 
   // Table used for data display
   dataSource: any;
+
+  // Paginator used for the table
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+
+  // Sort used for the table
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   // Columns names in the table
   displayedColumns: string[] = ['email', 'DAT'];
@@ -117,6 +125,17 @@ export class UsersComponent {
       (data: any) => {
         this.users = data.users;
         this.dataSource = new MatTableDataSource(this.users);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sortingDataAccessor = (item, property) => {
+          switch (property) {
+            case 'DAT':
+              console.log('DAT: ', item.datenabled);
+              return item.datenabled ? true : false;
+            default:
+              return item[property];
+          }
+        };
+        this.dataSource.sort = this.sort;
       },
       (error) => {
         this.showErrorPopup(error.error);
@@ -181,6 +200,17 @@ export class UsersComponent {
         next: (data: any) => {
           this.users = data.users;
           this.dataSource = new MatTableDataSource(this.users);
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.sortingDataAccessor = (item, property) => {
+            switch (property) {
+              case 'DAT':
+                console.log('DAT: ', item.datenabled);
+                return item.datenabled ? true : false;
+              default:
+                return item[property];
+            }
+          };
+          this.dataSource.sort = this.sort;
           this.showFormCreateUser();
         },
         error: (error: any) => {
@@ -341,7 +371,18 @@ export class UsersComponent {
         next: (data: any) => {
           this.users = data.users;
           this.dataSource = new MatTableDataSource(this.users);
+          this.dataSource.paginator = this.paginator;
           this.editEnabled = false;
+          this.dataSource.sortingDataAccessor = (item, property) => {
+            switch (property) {
+              case 'DAT':
+                console.log('DAT: ', item.datenabled);
+                return item.datenabled ? true : false;
+              default:
+                return item[property];
+            }
+          };
+          this.dataSource.sort = this.sort;
         },
         error: (error: any) => {
           console.error(error.error.message);
@@ -398,6 +439,17 @@ export class UsersComponent {
         next: (data: any) => {
           this.users = data.users;
           this.dataSource = new MatTableDataSource(this.users);
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.sortingDataAccessor = (item, property) => {
+            switch (property) {
+              case 'DAT':
+                console.log('DAT: ', item.datenabled);
+                return item.datenabled ? true : false;
+              default:
+                return item[property];
+            }
+          };
+          this.dataSource.sort = this.sort;
           this.reinitaliseUserSelectedForm();
         },
         error: (error: any) => {
@@ -465,6 +517,17 @@ export class UsersComponent {
             this.userSelected.email +
             '] and is now: ';
           this.passwordReseted = data.password;
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.sortingDataAccessor = (item, property) => {
+            switch (property) {
+              case 'DAT':
+                console.log('DAT: ', item.datenabled);
+                return item.datenabled ? true : false;
+              default:
+                return item[property];
+            }
+          };
+          this.dataSource.sort = this.sort;
           this.reinitaliseUserSelectedForm();
           this.show_inform_popup(this.confirmationMessage);
         },
@@ -530,6 +593,17 @@ export class UsersComponent {
         next: (data: any) => {
           this.users = data.users;
           this.dataSource = new MatTableDataSource(this.users);
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.sortingDataAccessor = (item, property) => {
+            switch (property) {
+              case 'DAT':
+                console.log('DAT: ', item.datenabled);
+                return item.datenabled ? true : false;
+              default:
+                return item[property];
+            }
+          };
+          this.dataSource.sort = this.sort;
           this.update_user_selected();
           this.confirmationMessage =
             'User [' + this.userSelected.email + '] is now unlocked.';

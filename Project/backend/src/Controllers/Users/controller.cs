@@ -102,7 +102,7 @@ public class UsersPageController : ControllerBase // TODO change name
               Password = encryptedBytes, // test
               PasswordModifiedDate = DateTime.Now,
               PasswordExpirationDate = DateTime.Now.AddDays(30),
-              InvalidAttemptCount = 3,
+              InvalidAttemptCount = 0,
               ResetPasswordEndDate = DateTime.Now.AddDays(1),
               ResetPasswordKey = null,
               ResetPasswordSentCount = 1, // TODO a voir ce que c'est
