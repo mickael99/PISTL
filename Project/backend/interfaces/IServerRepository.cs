@@ -19,5 +19,8 @@ namespace Project.Interface
         bool DeleteServer(Server db);
         bool UpdateServer(Server db);
         int GetServerCount();
+        public int GetUnusedMinServerId();
+        public bool AddDatabaseToServer(int databaseId, int serverId);
+
     }
 }

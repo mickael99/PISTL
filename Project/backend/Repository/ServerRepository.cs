@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Project.Interface;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace Project.Repository
@@ -53,6 +54,7 @@ namespace Project.Repository
         public bool Save()
         {
             var saved = _context.SaveChanges();
+            Console.WriteLine("-------->Save success" + saved);
             return saved > 0 ? true : false;
         }
 
@@ -65,6 +67,45 @@ namespace Project.Repository
         public int GetServerCount()
         {
             return _context.Servers.Count();
+        }
+
+        public int GetUnusedMinServerId()
+        {
+            int minServerId = 1;
+            while (_context.Servers.Any(s => s.ServerId == minServerId))
+            {
+                minServerId++;
+            }
+            return minServerId;
+        }
+
+        public bool AddDatabaseToServer(int databaseId, int serverId)
+        {
+            Console.WriteLine("-------->AddDatabaseToServer begin");
+            var server = GetServer(serverId);
+
+            Console.WriteLine("-------->server found ");
+            Console.WriteLine("--------> Total databases: " + server.Databases.Count );
+            Console.WriteLine("--------> Last entity ID: " + server.Databases.LastOrDefault()?.DatabaseId);
+            var database = _context.Databases.FirstOrDefault(d => d.DatabaseId == databaseId);
+ 
+            Console.WriteLine("-------->database found ");
+            if (server != null && database != null)
+            {
+                server.Databases.Add(database);
+                UpdateServer(server);
+                
+                Console.WriteLine("--------> Total databases: " + server.Databases.Count );
+                Console.WriteLine("--------> Last entity ID: " + server.Databases.FirstOrDefault()?.DatabaseId);
+
+                Console.WriteLine("--------> Last entity ID: " + server.Databases.LastOrDefault()?.DatabaseId);
+                _context.Entry(server).State = EntityState.Modified; 
+
+                Console.WriteLine("-------->AddDatabaseToServer success");
+                return Save();
+            }
+
+            return false;
         }
     }
 }

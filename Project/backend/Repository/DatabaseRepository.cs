@@ -49,5 +49,15 @@ namespace Project.Repository
         {
             return _context.Databases.Count();
         }
+
+        public int GetUnusedMinDatabaseId()
+        {
+            int minDatabaseId = 1;
+            while (_context.Databases.Any(db => db.DatabaseId == minDatabaseId))
+            {
+                minDatabaseId++;
+            }
+            return minDatabaseId;
+        }
     }
 }

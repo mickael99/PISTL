@@ -47,6 +47,7 @@ public class Startup
 
         services.AddScoped<IDatabaseRepository, DatabaseRepository>();
         services.AddScoped<IServerRepository, ServerRepository>();
+        services.AddScoped<IServerParameterRepository, ServerParameterRepository>();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env) 

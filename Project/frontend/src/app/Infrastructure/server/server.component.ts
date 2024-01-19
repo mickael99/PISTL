@@ -1,6 +1,5 @@
 import { OnInit, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ServerDetailComponent } from './server-detail.component'
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import {
   Component,
@@ -46,7 +45,7 @@ export class ServerComponent {
   // Bool that allows or not to display the error popup
   showPopup: boolean = false;
 
-  // User selected in the table
+  // Server selected in the table
   serverSelected = {
     ServerId: 0,
     Name: '',
@@ -57,9 +56,10 @@ export class ServerComponent {
     ModifiedBy: '',
     CreatedDate: '',
     ModifiedDate: '',
+    Databases: null,
   };
 
-  // Copy of the user selected in the table (for the 'Save' button)
+  // Copy of the server selected in the table (for the 'Save' button)
   serverSelectedCopy = {
     ServerId: 0,
     Name: '',
@@ -71,8 +71,8 @@ export class ServerComponent {
   // Hover the two columns in the table
   isHovered: boolean = false;
 
-  // User hovered in the table
-  userHovered: string = '';
+  // Server hovered in the table
+  serverHovered: string = '';
 
   // Bool used to activate the 'Edit' button
   editEnabled: boolean = false;
@@ -82,6 +82,9 @@ export class ServerComponent {
 
   // Bool used to display the delete confirmation popup
   showDeleteConfirmation: boolean = false;
+
+  // Bool used to display the copy confirmation popup
+  showCopyConfirmation: boolean = false;
 
   // Confirmation message to display
   confirmationMessage: string = '';
@@ -94,8 +97,6 @@ export class ServerComponent {
 
   // Error message to display in the popup
   popupMessage: string = '';
-
-  @ViewChild(ServerDetailComponent) detailModal: ServerDetailComponent;
 
   /***************************************************************************************/
   /**
@@ -215,7 +216,7 @@ export class ServerComponent {
         })
       .subscribe({
         next: (data: any) => {
-          this.server = data.server;
+          this.server = data.servers;
           this.dataSource = new MatTableDataSource(this.server);
         },
         error: (error: any) => {
@@ -236,6 +237,7 @@ export class ServerComponent {
     this.serverSelected.ModifiedBy = server.modifiedBy;
     this.serverSelected.CreatedDate = server.createdDate;
     this.serverSelected.ModifiedDate = server.modifiedDate;
+    this.serverSelected.Databases = server.databases;
 
     this.reinitaliseServerCreatedForm();
 
@@ -245,13 +247,13 @@ export class ServerComponent {
     console.table(this.serverSelected);
   }
 
-    /***************************************************************************************/
+  /***************************************************************************************/
   /**
    * Function used to activate the hover.
    */
-  onMouseEnter(userHovered: string) {
+  onMouseEnter(serverHovered: string) {
     this.isHovered = true;
-    this.userHovered = userHovered;
+    this.serverHovered = serverHovered;
   }
 
   /***************************************************************************************/
@@ -260,7 +262,7 @@ export class ServerComponent {
    */
   onMouseLeave() {
     this.isHovered = false;
-    this.userHovered = '';
+    this.serverHovered = '';
   }
 
   /***************************************************************************************/
@@ -279,6 +281,7 @@ export class ServerComponent {
       ModifiedBy: '',
       CreatedDate: '',
       ModifiedDate: '', 
+      Databases: null,
     };
 
     // Disable the 'Edit', 'Delete', 'Reset Password' and 'Unlock' buttons
@@ -288,7 +291,7 @@ export class ServerComponent {
     this.editEnabled = false;
   }
 
-    /***************************************************************************************/
+  /***************************************************************************************/
   /**
    * Function used to reinitalise the created Sys Admin form.
    */
@@ -305,7 +308,7 @@ export class ServerComponent {
     };
   };
 
-    /***************************************************************************************/
+  /***************************************************************************************/
   /**
    * Function used to enable the a Server edition.
    */
@@ -361,7 +364,7 @@ export class ServerComponent {
       .put('http://localhost:5050/api/server/' + requestBody.ServerId, requestBody)
       .subscribe({
         next: (data: any) => {
-          this.server = data.serverToUpdate;
+          this.server = data.servers;
           this.dataSource = new MatTableDataSource(this.server);
           this.editEnabled = false;
         },
@@ -385,32 +388,111 @@ export class ServerComponent {
 
   }
 
+  /***************************************************************************************/
+  /**
+   * Function used to close the delete confirmation popup.
+   */
+  onDeleteClose() {
+    this.showDeleteConfirmation = false;
+  }
+
+  /***************************************************************************************/
+  /**
+   * Function used to call the POST request to delete the server.
+   */
+  onDeleteConfirm() {
+    this.showDeleteConfirmation = false;
+    console.log('onDeleteConfirm: ', this.showDeleteConfirmation);
+
+    let JWTToken = localStorage.getItem('token');
+
+    const options = {
+      headers: new HttpHeaders({
+        Authorization: 'Bearer ' + JWTToken,
+        'Content-Type': 'application/json',
+      }),
+    };
+
+    console.log('Delete server:', this.serverSelected.ServerId);
+
+    this.http
+      .delete(`http://localhost:5050/api/server/${this.serverSelected.ServerId}`)
+      .subscribe({
+        next: (data: any) => {
+          this.server = data.servers;
+          this.dataSource = new MatTableDataSource(this.server);
+          this.reinitaliseServerSelectedForm();
+        },
+        error: (error: any) => {
+          console.error(error.error.message);
+          this.showErrorPopup(error.error.message);
+        },
+      });
+  }
+
+  /***************************************************************************************/
+  openCopyConfirmation() {
+    this.showCopyConfirmation = true;
+    console.log('showCopyConfirmation: ', this.showDeleteConfirmation);
+    this.confirmationMessage =
+      'Are you sure you want to copy this server: ' +
+      this.serverSelected.Name +
+      '?';
+    console.log('confirmationMessage: ', this.confirmationMessage);
+    this.changeDetectorRef.detectChanges();
+  }
+
+  /***************************************************************************************/
+  /**
+   * Function used to close the copy confirmation popup.
+   */
+  onCopyClose() {
+    this.showCopyConfirmation = false;
+  }
   
+    /***************************************************************************************/
+  /**
+   * Function used to call the POST request to delete the database.
+   */
+  onCopyConfirm() {
+    this.showCopyConfirmation = false;
+    console.log('onCopyConfirm: ', this.showCopyConfirmation);
+
+    let JWTToken = localStorage.getItem('token');
+
+    const options = {
+      headers: new HttpHeaders({
+        Authorization: 'Bearer ' + JWTToken,
+        'Content-Type': 'application/json',
+      }),
+    };
+
+    console.log('Copy server:', this.serverSelected.ServerId);
+
+    // Create the request body
+    const requestBody = {
+      Name: this.serverSelected.Name,
+      Address: this.serverSelected.Address,
+      Context: this.serverSelected.Context,
+      Type: this.serverSelected.Type,
+      CreatedBy: localStorage.getItem('email'),
+    };
+
+    console.log('requestBody: ', requestBody);
+
+    this.http
+      .post('http://localhost:5050/api/server', requestBody)
+      .subscribe({
+        next: (data: any) => {
+          this.server = data.servers;
+          this.dataSource = new MatTableDataSource(this.server);
+          this.reinitaliseServerSelectedForm();
+        },
+        error: (error: any) => {
+          console.error(error.error.message);
+          this.showErrorPopup(error.error.message);
+        },
+      });
+  }
   
-
-
-  // addServer() {
-  //   this.http
-  //     .post('http://localhost:5050/api/server', {
-  //       Name: this.Name,
-  //       createdBy: this.createdBy,
-  //       Address: this.Address,
-  //       ServerId: this.id,
-  //    })
-  //     .subscribe({
-  //       next: (data: any) => {
-  //         this.server = data;
-  //       },
-  //       error: (error: any) => {
-  //         alert('Connection error: ' + error.message);
-  //       },
-  //     });
-  // }
-
-  // openModal(serverId: number) {
-  //   console.log(serverId);
-  //   this.detailModal.serverId = serverId;
-  //   this.detailModal.openModal();
-  // }
-
 }

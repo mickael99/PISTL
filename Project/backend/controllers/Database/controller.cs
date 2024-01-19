@@ -61,6 +61,10 @@ public class DatabaseController : Controller
 
         Console.WriteLine("-------->databaseCreateServer: " + databaseCreate.ServerId);
 
+        var newId = _databaseRepository.GetUnusedMinDatabaseId();
+
+        Console.WriteLine("-------->newId: " + newId);
+
         if (databaseCreate == null)
             return BadRequest(ModelState);
 
@@ -80,7 +84,7 @@ public class DatabaseController : Controller
 
             context.Databases.Add(new Database
             {
-                DatabaseId = _databaseRepository.GetDatabaseCount() + 2,
+                DatabaseId = newId,
                 Name = databaseCreate.Name,
                 UserName = databaseCreate.UserName,
                 Password = databaseCreate.Password,
@@ -95,10 +99,23 @@ public class DatabaseController : Controller
             Console.WriteLine("data enter finish");
 
             context.SaveChanges();
-            
-            Console.WriteLine("saved");
 
-            return Ok(context.Databases);
+
+            if(!_serverRepository.AddDatabaseToServer(newId, databaseCreate.ServerId)){
+                Console.WriteLine("-------->AddDatabaseToServer failed");
+                return BadRequest("AddDatabaseToServer failed");
+            }
+
+            Console.WriteLine("-------->AddDatabaseToServer success");
+
+            context.SaveChanges();
+            
+            Console.WriteLine("----------->saved");
+
+
+            var databases = _databaseRepository.GetDataBases();
+
+            return Ok(new { databases });
         }
         catch (Exception ex)
         {
@@ -182,7 +199,12 @@ public class DatabaseController : Controller
 
         Console.WriteLine("-------->end updating");
 
-        return NoContent();
+        var databases = _databaseRepository.GetDataBases();
+
+        Console.WriteLine("-------->success");
+
+
+        return Ok(new { databases });
     }
 
     [HttpDelete("{id}")]
@@ -202,6 +224,8 @@ public class DatabaseController : Controller
             ModelState.AddModelError("", "Something went wrong deleting database");
         }
 
-        return NoContent();
-    }
+        var databases = _databaseRepository.GetDataBases();
+
+
+        return Ok(new { databases });    }
 }

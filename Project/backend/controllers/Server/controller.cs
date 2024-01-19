@@ -81,7 +81,7 @@ public class ServerController : Controller
         {
             context.Servers.Add(new Server
             {
-                ServerId = _serverRepository.GetServerCount() + 3,
+                ServerId = _serverRepository.GetUnusedMinServerId(),
                 Name = serverCreate.Name,
                 Address = serverCreate.Address,
                 Context = serverCreate.Context,
@@ -98,7 +98,9 @@ public class ServerController : Controller
 
             _logger.LogInformation("---------->saved");
 
-            return Ok(context.Databases);
+            var servers = _serverRepository.GetServers();
+
+            return Ok( new { servers });
         }
         catch (Exception ex)
         {
@@ -137,7 +139,9 @@ public class ServerController : Controller
         // Send message to front-end
         var message = "Server deleted successfully";
 
-        return Ok(new { Message = message });
+        var servers = _serverRepository.GetServers();
+
+        return Ok(new { servers });
     }
 
 
@@ -178,7 +182,9 @@ public class ServerController : Controller
 
         Console.WriteLine("----------->Server Updated");
 
-        return Ok(new { serverToUpdate });
+        var servers = _serverRepository.GetServers();
+
+        return Ok(new { servers });
     }
 
     
