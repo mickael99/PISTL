@@ -4,6 +4,12 @@ C:\Users\walte\Desktop\MASTER\PISTL\PISTL\Project\backend.Tests\bin\Debug\net8.0
 C:\Users\walte\Desktop\MASTER\PISTL\PISTL\Project\backend.Tests\bin\Debug\net8.0\Project.runtimeconfig.json
 C:\Users\walte\Desktop\MASTER\PISTL\PISTL\Project\backend.Tests\bin\Debug\net8.0\Project.exe
 C:\Users\walte\Desktop\MASTER\PISTL\PISTL\Project\backend.Tests\bin\Debug\net8.0\testhost.exe
+C:\Users\walte\Desktop\MASTER\PISTL\PISTL\Project\backend.Tests\bin\Debug\net8.0\NUnit3.TestAdapter.dll
+C:\Users\walte\Desktop\MASTER\PISTL\PISTL\Project\backend.Tests\bin\Debug\net8.0\NUnit3.TestAdapter.pdb
+C:\Users\walte\Desktop\MASTER\PISTL\PISTL\Project\backend.Tests\bin\Debug\net8.0\nunit.engine.dll
+C:\Users\walte\Desktop\MASTER\PISTL\PISTL\Project\backend.Tests\bin\Debug\net8.0\nunit.engine.api.dll
+C:\Users\walte\Desktop\MASTER\PISTL\PISTL\Project\backend.Tests\bin\Debug\net8.0\nunit.engine.core.dll
+C:\Users\walte\Desktop\MASTER\PISTL\PISTL\Project\backend.Tests\bin\Debug\net8.0\testcentric.engine.metadata.dll
 C:\Users\walte\Desktop\MASTER\PISTL\PISTL\Project\backend.Tests\bin\Debug\net8.0\backend.Tests.deps.json
 C:\Users\walte\Desktop\MASTER\PISTL\PISTL\Project\backend.Tests\bin\Debug\net8.0\backend.Tests.runtimeconfig.json
 C:\Users\walte\Desktop\MASTER\PISTL\PISTL\Project\backend.Tests\bin\Debug\net8.0\backend.Tests.dll
