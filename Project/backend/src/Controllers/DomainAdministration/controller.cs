@@ -5,17 +5,23 @@ using Microsoft.Extensions.Hosting;
 using System;
 using System.IO;
 
+/***************************************************************************************/
+/***************************************************************************************/
+/***************************************************************************************/
 [Route("api/domain")]
 [ApiController]
 public class DomainAdministrationController : ControllerBase
 {
+    /// <summary>
+    /// Retrieves the domains with their associated environments from the database.
+    /// </summary>
+    /// <returns>An IActionResult representing the result of the operation.</returns>
     [HttpGet]
-    public IActionResult GetDomains()
+    public IActionResult GetDomains() // TODO add JWT
     {
         try
         {
             var context = new DatContext();
-
 
             var domainsWithEnvironments = context.Domains
             .GroupJoin(
@@ -29,13 +35,6 @@ public class DomainAdministrationController : ControllerBase
                 (result, environment) => new { Domain = result.Domain, Environment = environment }
             )
             .ToList();
-
-
-            for (int i = 0; i < domainsWithEnvironments.Count; i++)
-            {
-                Console.WriteLine("Domain: " + domainsWithEnvironments[i].Domain.Name);
-            }
-
 
             var mappedData = domainsWithEnvironments.GroupBy(
                 pair => pair.Domain,
@@ -62,14 +61,7 @@ public class DomainAdministrationController : ControllerBase
                 }
             ).ToList();
 
-            var logos = mappedData.Select(domain => Encoding.UTF8.GetString(domain.Logo ?? new byte[0])).ToList();
-
-            for (int i = 0; i < mappedData.Count; i++)
-            {
-                Console.WriteLine("Logo: " + Encoding.UTF8.GetString(mappedData[i].Logo ?? new byte[0]));
-            }
-
-            return Ok(new { mappedData, logos }); ;
+            return Ok(new { mappedData }); ;
         }
         catch (Exception ex)
         {
@@ -77,18 +69,21 @@ public class DomainAdministrationController : ControllerBase
         }
     }
 
+    /***************************************************************************************/
+    /// <summary>
+    /// Creates a new domain and adds it to the database.
+    /// </summary>
+    /// <param name="model">The domain model containing the necessary information for creating the domain.</param>
+    /// <returns>An IActionResult representing the result of the operation.</returns>
     [HttpPost]
     public IActionResult PostDomain([FromBody] DomainModel model)
     {
         try
         {
             var context = new DatContext();
-            Console.WriteLine("===============> POST /api/domain");
-            Console.WriteLine("===============> model.Logo: " + Encoding.UTF8.GetString(model.Logo));
-            // byte[] pathLogoBytes = System.IO.File.ReadAllBytes(model.PathLogo ?? string.Empty);
-            // Console.WriteLine("===============> pathLogoBytes: " + pathLogoBytes);
+            Console.WriteLine("=> POST /api/domain");
 
-            Domain domain = addDomain(model.Name, model.Logo, model.Edition ?? string.Empty, model.IsSsoEnabled ?? false,
+            Domain domain = addDomain(model.Name, model.Logo ?? new byte[0], model.Edition ?? string.Empty, model.IsSsoEnabled ?? false,
                                         model.Comment ?? string.Empty, model.ParentCompany ?? string.Empty);
             context.Domains.Add(domain);
             context.SaveChanges();
@@ -107,6 +102,7 @@ public class DomainAdministrationController : ControllerBase
         }
     }
 
+    /***************************************************************************************/
     [HttpPut("{id}")]
     public IActionResult PutDomain(int id, [FromBody] DomainModel model)
     {
@@ -178,7 +174,6 @@ public class DomainAdministrationController : ControllerBase
             ParentCompany = parentCompany
         };
 
-        Console.WriteLine("===============> newDomain.Logo: " + Encoding.UTF8.GetString(newDomain.Logo));
         return newDomain;
     }
 
@@ -230,4 +225,6 @@ public class DomainAdministrationController : ControllerBase
         public bool IsBp5Enabled { get; set; }
     }
 }
-
+/***************************************************************************************/
+/***************************************************************************************/
+/***************************************************************************************/

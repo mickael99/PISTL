@@ -2,6 +2,9 @@ import { HttpClient } from '@angular/common/http';
 import { Component, Renderer2 } from '@angular/core';
 import { Router } from '@angular/router';
 
+/***************************************************************************************/
+/***************************************************************************************/
+/***************************************************************************************/
 /* represent a domain linked to an environment */
 export class EnvironmentModel {
   public environmentId: number;
@@ -23,6 +26,7 @@ export class EnvironmentModel {
   public nameEaiftpServerId: string;
 }
 
+/***************************************************************************************/
 export class EnvironmentModelForBackend {
   public environment: number;
   public bpwebServerId: number;
@@ -34,6 +38,7 @@ export class EnvironmentModelForBackend {
   public isBp5Enabled: boolean;
 }
 
+/***************************************************************************************/
 @Component({
   selector: 'app-domain-administration',
   templateUrl: './domain-administration.component.html',
@@ -44,8 +49,6 @@ export class DomainAdministrationComponent {
   domains: any[];
   databases: any[];
   servers: any[];
-
-  logos: string[];
 
   /* domain selected from the list */
   selectedDomain: any;
@@ -85,6 +88,7 @@ export class DomainAdministrationComponent {
   selectedDatabaseServers: { [key: number]: any } = {};
   selectedElasticPools: { [key: number]: any } = {};
 
+  // Logo used to load to 'this.logo' after the user has selected a img file
   logoToAdd: any;
 
   /*
@@ -161,6 +165,7 @@ export class DomainAdministrationComponent {
     interne(256);
   }
 
+  /***************************************************************************************/
   /*
    * Get domains, servers and databases from the Databases.
    * Select the first occurence into the domain
@@ -173,7 +178,6 @@ export class DomainAdministrationComponent {
     this.http.get('http://localhost:5050/api/database').subscribe(
       (data: any) => {
         this.databases = data;
-        console.log('databases', this.databases);
       },
       (error) => {
         alert('Connection error: ' + error.message);
@@ -192,9 +196,17 @@ export class DomainAdministrationComponent {
     this.http.get('http://localhost:5050/api/domain').subscribe(
       (data: any) => {
         this.domains = data.mappedData;
-        this.logos = data.logos;
-        console.table(this.domains);
-        console.log('aaaaa: ', data.logos);
+        // Changing the logo format
+        this.domains.forEach((domain) => {
+          // Because for the 'WWBP5' domain, the logo encoded hasn't the same format
+          if (domain.name === 'WWBP5') {
+            domain.logo = 'data:image/png;base64,' + domain.logo;
+          } else {
+            domain.logo = atob(domain.logo);
+          }
+        });
+
+        // Add latency
         if (this.domains.length)
           setTimeout(() => {
             this.onSelect(this.domains[0]);
@@ -206,6 +218,7 @@ export class DomainAdministrationComponent {
     );
   }
 
+  /***************************************************************************************/
   /*
    * Disable the environment radio button if the selected domain is not link
    * to the environment
@@ -223,8 +236,6 @@ export class DomainAdministrationComponent {
 
   findDatabaseNameFromSelectedEnvironment(): void {
     if (this.selectedEnvironment) {
-      //console.log("qsnjdfnjqsd -> ", this.databases.length);
-      console.log('selectedEnvironment', this.selectedEnvironment);
       const databaseServer = this.databases.find(
         (db) => db.databaseId === this.selectedEnvironment.bpdatabaseId
       );
@@ -282,14 +293,17 @@ export class DomainAdministrationComponent {
     this.findServerNameFromSelectedEnvironment();
   }
 
+  /***************************************************************************************/
+  /**
+   * Display the logo of the domain
+   * @param encodingLogoPath the path of the logo encoded in base64
+   */
   displayLogo(encodingLogoPath: string): void {
-    console.log('this.logos[22] -> ' + this.logos[22]);
     const imagePreview = document.getElementById('printLogo') as HTMLDivElement;
-    imagePreview.innerHTML = `<img src="${
-      this.logos[22] && this.logos[22]
-    }" alt="Logo" style="max-width: 100%; max-height: 100%;">`;
+    imagePreview.innerHTML = `<img src="${encodingLogoPath}" alt="Logo" style="width: 10rem; height: 10rem;">`;
   }
 
+  /***************************************************************************************/
   startNewDomainMode(): void {
     this.resetBp5ServersAndDatabasesList();
     this.idEnvSelected = 2;
@@ -335,6 +349,10 @@ export class DomainAdministrationComponent {
     return selectedEnvironment;
   }
 
+  /***************************************************************************************/
+  /**
+   * Add a new domain into the database
+   */
   addDomain(): void {
     let selectedEnvironments: number[];
     selectedEnvironments = this.getServerOrDatabaseIsSelected();
@@ -362,9 +380,7 @@ export class DomainAdministrationComponent {
 
     console.log('environmentsModel: ', environmentsModel);
 
-    console.log('=============> this.logoToAdd: ', this.logoToAdd);
     this.logo = this.logoToAdd;
-    console.log('=============> this.logo: ', this.logo);
 
     const requestBody = {
       Name: this.name,
@@ -382,6 +398,17 @@ export class DomainAdministrationComponent {
     this.http.post('http://localhost:5050/api/domain', requestBody).subscribe({
       next: (data: any) => {
         this.domains = data.domains;
+        // Changing the logo format
+        this.domains.forEach((domain) => {
+          // Because for the 'WWBP5' domain, the logo encoded hasn't the same format
+          if (domain.name === 'WWBP5') {
+            domain.logo = 'data:image/png;base64,' + domain.logo;
+          } else {
+            domain.logo = atob(domain.logo);
+          }
+        });
+
+        // Setting the selected domain
         let newDomainId = data.newDomainId;
         let domain = this.domains.find((d) => d.domainId === newDomainId);
         this.onSelect(domain);
@@ -418,7 +445,7 @@ export class DomainAdministrationComponent {
 
       reader.onload = (e) => {
         const imagePreview = document.getElementById('imagePreview');
-        imagePreview.innerHTML = `<img src="${e.target.result}" alt="Preview" style="max-width: 10%; max-height: 10%;">`;
+        imagePreview.innerHTML = `<img src="${e.target.result}" alt="Preview" style="width: 10rem; height: 10rem;">`;
       };
 
       reader.addEventListener('load', () => {
@@ -536,3 +563,6 @@ export class DomainAdministrationComponent {
     }
   }
 }
+/***************************************************************************************/
+/***************************************************************************************/
+/***************************************************************************************/
