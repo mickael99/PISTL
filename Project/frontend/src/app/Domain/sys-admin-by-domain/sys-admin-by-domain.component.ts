@@ -45,7 +45,6 @@ export class SysAdminByDomainComponent {
 
     this.http.get('http://localhost:5050/api/sysadminbydomain/' + domain_id).subscribe(
       (data: any) => {
-        console.log(data);
         for (const domain of data.domains) {
           this.domains[domain.domainId] = domain;
         }
