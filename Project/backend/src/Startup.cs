@@ -4,19 +4,29 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Project.Interface;
+using Project.Repository;
+using Project.Models;
 using Microsoft.Extensions.Configuration;
 
 public class Startup
 {
-    public IConfiguration? Configuration { get; }
+    public IConfiguration Configuration { get; }
+
+    public Startup(IConfiguration configuration)
+    {
+        Configuration = configuration;
+    }
 
     public void ConfigureServices(IServiceCollection services)
     {
+
+
         services.AddControllers()
-            .AddJsonOptions(options =>
-            {
-                options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-            });
+                    .AddJsonOptions(options =>
+                    {
+                        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+                    });
 
         services.AddCors(options =>
         {
@@ -28,23 +38,27 @@ public class Startup
             });
         });
 
-        services.AddDbContext<DbContext>(options =>
+        services.AddDbContext<DatContext>(options =>
         {
             options.UseSqlServer(Configuration?.GetConnectionString("DAT_projectConnectionString"));
         });
-    }
 
+
+        services.AddScoped<IDatabaseRepository, DatabaseRepository>();
+        services.AddScoped<IServerRepository, ServerRepository>();
+        services.AddScoped<IServerParameterRepository, ServerParameterRepository>();
+    }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
+
+
         if (env.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
         }
 
         app.UseCors("AllowSpecificOrigin");
-
-        app.UseCors("AllowMyOrigin");
 
         app.UseStaticFiles();
 
@@ -58,3 +72,4 @@ public class Startup
         });
     }
 }
+

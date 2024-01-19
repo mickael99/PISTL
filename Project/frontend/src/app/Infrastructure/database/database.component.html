@@ -1,0 +1,365 @@
+<div class="container">
+  <h1 class="title">Database</h1>
+  <button
+    mat-raised-button
+    color="primary"
+    class="btn"
+    (click)="showFormCreateDatabase()"
+  >
+    New
+  </button>
+  <button
+    mat-raised-button
+    color="primary"
+    (click)="editEnable()"
+    [disabled]="!isClicked"
+    class="btn"
+  >
+    Edit
+  </button>
+  <button
+    mat-raised-button
+    color="primary"
+    (click)="openDeleteConfirmation()"
+    [disabled]="!isClicked"
+    class="btn"
+  >
+    Delete
+  </button>
+  <button
+    mat-raised-button
+    color="primary"
+    (click)="openCopyConfirmation()"
+    [disabled]="!isClicked"
+    class="btn"
+  >
+    Copy
+  </button>
+
+  <div class="listes">
+    <div class="table">
+      <hr />
+      <mat-card-content>
+        <table
+          matSort
+          mat-table
+          [dataSource]="dataSource"
+          class="custom-table"
+          #tableElement
+        >
+          <ng-container matColumnDef="Database ID">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+            <td
+              mat-cell
+              *matCellDef="let database"
+              (click)="getDatabase(database)"
+              (mouseenter)="onMouseEnter(database.databaseId)"
+              (mouseleave)="onMouseLeave()"
+              [ngClass]="{
+                'database--selected' : (database.databaseId == databaseSelected.databaseId),
+                '' : !(database.databaseId == databaseSelected.databaseId),
+                hovered: database.databaseId == databaseHovered ? isHovered : false,
+              }"
+            >
+              {{ database.databaseId }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="Name">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+            <td
+              mat-cell
+              *matCellDef="let database"
+              (click)="getDatabase(database)"
+              (mouseenter)="onMouseEnter(database.databaseId)"
+              (mouseleave)="onMouseLeave()"
+              [ngClass]="{
+                'database--selected' : (database.name == databaseSelected.name),
+                '' : !(database.name == databaseSelected.name),
+                hovered: database.databaseId == databaseHovered ? isHovered : false,
+              }"
+            >
+              {{ database.name }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="Server ID">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Server ID</th>
+            <td
+              mat-cell
+              *matCellDef="let database"
+              (click)="getDatabase(database)"
+              (mouseenter)="onMouseEnter(database.databaseId)"
+              (mouseleave)="onMouseLeave()"
+              [ngClass]="{
+                'database--selected' : (database.serverId == databaseSelected.serverId),
+                '' : !(database.serverId == databaseSelected.serverId),
+                hovered: database.databaseId == databaseHovered ? isHovered : false,
+              }"
+            >
+              {{ database.serverId }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="User Name">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>User Name</th>
+            <td
+              mat-cell
+              *matCellDef="let database"
+              (click)="getDatabase(database)"
+              (mouseenter)="onMouseEnter(database.databaseId)"
+              (mouseleave)="onMouseLeave()"
+              [ngClass]="{
+                'database--selected' : (database.userName == databaseSelected.userName),
+                '' : !(database.userName == databaseSelected.userName),
+                hovered: database.databaseId == databaseHovered ? isHovered : false,
+              }"
+            >
+              {{ database.userName }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="Context">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Context</th>
+            <td
+              mat-cell
+              *matCellDef="let database"
+              (click)="getDatabase(database)"
+              (mouseenter)="onMouseEnter(database.databaseId)"
+              (mouseleave)="onMouseLeave()"
+              [ngClass]="{
+                'database--selected' : (database.context == databaseSelected.context),
+                '' : !(database.context == databaseSelected.context),
+                hovered: database.databaseId == databaseHovered ? isHovered : false,
+              }"
+            >
+              {{ database.context || "N/A" }}
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let user; columns: displayedColumns"></tr>
+        </table>
+
+        <mat-paginator
+          [pageSizeOptions]="[10, 20]"
+          showFirstLastButtons
+          [length]="dataSource && dataSource.data.length"
+        ></mat-paginator>
+      </mat-card-content>
+    </div>
+
+    <div class="formCreate">
+      <ng-container *ngIf="showFormCreate">
+        <button
+          mat-raised-button
+          class="color-button margin--right"
+          (click)="newDatabaseFormDatabase()"
+        >
+          Save
+        </button>
+        <button
+          mat-raised-button
+          color="primary"
+          class="btn"
+          (click)="showFormCreateDatabase()"
+        >
+          Cancel
+        </button>
+        <form class="form--databases">
+          <mat-form-field class="example-full-width">
+            <mat-label>Name</mat-label>
+            <input
+              matInput
+              placeholder="Name"
+              required
+              [(ngModel)]="formDataCreate.Name"
+              name="name"
+            />
+          </mat-form-field>
+
+          <mat-form-field class="example-full-width">
+            <mat-label>UserName</mat-label>
+            <input
+              matInput
+              placeholder="UserName"
+              required
+              [(ngModel)]="formDataCreate.UserName"
+              name="userName"
+            />
+          </mat-form-field>
+
+          <mat-form-field class="example-full-width">
+            <mat-label>Password</mat-label>
+            <input
+              matInput
+              placeholder="Password"
+              required
+              [(ngModel)]="formDataCreate.Password"
+              name="password"
+            />
+          </mat-form-field>
+
+          <mat-form-field class="example-full-width">
+            <mat-label>Server</mat-label>
+            <mat-select [(ngModel)]="formDataCreate.Server" name="Server">
+              <mat-option *ngFor="let s of server" [value]="s">
+                {{ s.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field class="example-full-width">
+            <mat-label>Context</mat-label>
+            <input
+              matInput
+              placeholder="Context"
+              required
+              [(ngModel)]="formDataCreate.Context"
+              name="context"
+            />
+          </mat-form-field>
+        </form>
+      </ng-container>
+    </div>
+
+    <!-------------------------------- -->
+    <!-- Access an existing Sys Admin -->
+    <!-- Edit an existing Sys Admin   -->
+    <!-------------------------------- -->
+    <div class="formEdit">
+      <ng-container *ngIf="databaseSelected.DatabaseId">
+        <button
+          mat-raised-button
+          (click)="editDatabase()"
+          [ngClass]="{ 'color-button': editEnabled, 'margin--right': true }"
+          [disabled]="!editEnabled"
+        >
+          Save
+        </button>
+        <button
+          mat-raised-button
+          color="primary"
+          class="btn"
+          (click)="reinitaliseDatabaseSelectedForm()"
+        >
+          Cancel
+        </button>
+
+        <form class="form--databases">
+          <mat-form-field class="example-full-width">
+            <mat-label>ID</mat-label>
+            <input
+              matInput
+              placeholder="ID"
+              required
+              [(ngModel)]="databaseSelected.DatabaseId"
+              name="DatabaseId"
+              [disabled]="!editEnabled"
+            />
+          </mat-form-field>
+
+          <mat-form-field class="example-full-width">
+            <mat-label>Name</mat-label>
+            <input
+              matInput
+              placeholder="Name"
+              required
+              [(ngModel)]="databaseSelected.Name"
+              name="Name"
+              [disabled]="!editEnabled"
+            />
+          </mat-form-field>
+
+          <mat-form-field class="example-full-width">
+            <mat-label>UserName</mat-label>
+            <input
+              matInput
+              placeholder="UserName"
+              required
+              [(ngModel)]="databaseSelected.UserName"
+              name="UserName"
+              [disabled]="!editEnabled"
+            />
+          </mat-form-field>
+
+          <mat-form-field class="example-full-width">
+            <mat-label>Password</mat-label>
+            <input
+              matInput
+              placeholder="Password"
+              required
+              [(ngModel)]="databaseSelected.Password"
+              name="Password"
+              [disabled]="!editEnabled"
+            />
+          </mat-form-field>
+
+          <mat-form-field class="example-full-width">
+            <mat-label>Server</mat-label>
+            <mat-select
+              [(ngModel)]="databaseSelected.Server"
+              name="Server"
+              [disabled]="!editEnabled"
+            >
+              <mat-option *ngFor="let s of server" [value]="s">
+                {{ s.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field class="example-full-width">
+            <mat-label>Context</mat-label>
+            <input
+              matInput
+              placeholder="Context"
+              required
+              [(ngModel)]="databaseSelected.Context"
+              name="Context"
+              [disabled]="!editEnabled"
+            />
+          </mat-form-field>
+        </form>
+      </ng-container>
+    </div>
+
+    <!-- Error pop-up -->
+    <div>
+      <app-error-popup
+        *ngIf="showPopupError"
+        [errorMessage]="popupMessage"
+        (close)="closeErrorPopup()"
+      ></app-error-popup>
+    </div>
+
+    <!-- Inform pop-up -->
+    <div>
+      <app-inform-popup
+        *ngIf="showInformPopup"
+        [informationMessage]="popupMessage"
+        [passwordReseted]="passwordReseted"
+        (close)="close_inform_popup()"
+      ></app-inform-popup>
+    </div>
+
+    <!-- Delete confirmation -->
+    <div>
+      <app-confirm-popup
+        *ngIf="showDeleteConfirmation"
+        [confirmationMessage]="confirmationMessage"
+        (confirm)="onDeleteConfirm()"
+        (close)="onDeleteClose()"
+      ></app-confirm-popup>
+    </div>
+
+    <!-- Copy confirmation -->
+    <div>
+      <app-confirm-popup
+        *ngIf="showCopyConfirmation"
+        [confirmationMessage]="confirmationMessage"
+        (confirm)="onCopyConfirm()"
+        (close)="onCopyClose()"
+      ></app-confirm-popup>
+    </div>
+  </div>
+</div>

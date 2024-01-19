@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
@@ -11,6 +12,8 @@ import { DomainBySysAdminComponent } from './Domain/domain-by-sys-admin/domain-b
 import { AccountComponent } from './Account/account.component';
 import { TwoFAComponent } from './two-FA/two-fa.component';
 import { UsersComponent } from './users/users.component';
+import { DatabaseComponent } from './Infrastructure/database/database.component';
+import { ServerComponent } from './Infrastructure/server/server.component';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -26,6 +29,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatNativeDateModule } from '@angular/material/core';
 import { ErrorPopupComponent } from './utils/error-popup/error-popup.component';
 import { ConfirmPopupComponent } from './utils/confirm-popup/confirm-popup.component';
 import { InformPopupComponent } from './utils/inform-popup/inform-popup.component';
@@ -44,6 +48,8 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     ErrorPopupComponent,
     ConfirmPopupComponent,
     InformPopupComponent,
+    DatabaseComponent,
+    ServerComponent,
   ],
   imports: [
     BrowserModule,
@@ -66,7 +72,9 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     MatDividerModule,
     MatCheckboxModule,
     MatSlideToggleModule,
+    CommonModule,
   ],
+
   providers: [],
   bootstrap: [AppComponent],
 })
