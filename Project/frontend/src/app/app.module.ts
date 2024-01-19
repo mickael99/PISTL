@@ -25,7 +25,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatIconModule} from '@angular/material/icon';
 import { DatePipe } from '@angular/common';
-import { ServerParameterComponent } from './server-parameter/server-parameter.component';
+import { ServerParameterComponent } from './Infrastructure/server-parameter/server-parameter.component';
 
 @NgModule({
   declarations: [

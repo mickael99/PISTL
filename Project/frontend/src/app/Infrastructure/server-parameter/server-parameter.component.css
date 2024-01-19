@@ -36,6 +36,25 @@
   width: 700px;
 }
 
+.table-container table {
+  table-layout: fixed;
+  width: 100%;
+}
+
+.table-container table td, th {
+  border: #000 solid 1px;
+  width: 50%; /* Set the width of each column to 50% */
+}
+
+.table-container table th{
+  background-color: #898989;
+  color: black;
+}
+
+.table-container table tr:hover {
+  background-color: #b9b9b9;
+  color: black;
+}
 .sysadmin_form {
   left: 50px;
   background-color: rgb(255, 255, 255);
@@ -58,4 +77,31 @@ button{
 .button-container{
   display: flex;
   justify-content: left;
+}
+
+.clicked-cell {
+  background-color: #b9b9b9;
+  color: #000;
+}
+
+.form {
+  margin-left: 100px;
+}
+
+.form--users {
+  background-color: #6878a5;
+  margin-top: 1rem;
+  display: grid;
+  gap: 1rem;
+  width: 150%;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
+}
+
+.form--users h2 {
+  margin: 10%;
+}
+
+.form--users div {
+  margin-left: 10%;
+  margin-right: 10%;
 }

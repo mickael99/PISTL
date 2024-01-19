@@ -4,7 +4,7 @@ import { DomainAdministrationComponent } from './Domain/domain-administration/do
 import { DomainBySysAdminComponent } from './Domain/domain-by-sys-admin/domain-by-sys-admin.component';
 import { SysAdminByDomainComponent } from './Domain/sys-admin-by-domain/sys-admin-by-domain.component';
 import { MatDialogModule } from '@angular/material/dialog';
-import { ServerParameterComponent } from './server-parameter/server-parameter.component';
+import { ServerParameterComponent } from './Infrastructure/server-parameter/server-parameter.component';
 
 const routes: Routes = [
   { path: 'domain-administration', component: DomainAdministrationComponent },
