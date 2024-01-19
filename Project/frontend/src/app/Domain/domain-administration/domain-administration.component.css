@@ -1,23 +1,213 @@
-.centertest {
-  padding: 10px;
-  border-radius: 10px;
-  background-color: green;
-  font-weight: 900;
-  font-size: 2rem;
+.element {
+  width: 50%;
+  height: 50vh;
 }
 
-.centre {
+body {
+  background-color: #ececec; 
+  margin: 0; 
+  font-family: Arial, sans-serif; 
+}
+
+/* Partie superieur */
+
+.list {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  height: 100%;
+  padding: 10px;
+  font-size: 16px;
 }
 
-.add-domain {
-  margin-top: 3rem;
+.list > * {
+  margin-right: 20px;
+}
+
+.button {
+  margin-right: 10px;
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: 1px solid #4CAF50;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.button:hover {
+  transform: scale(1.1); 
+}
+
+.buttonCancel {
+  margin-right: 10px;
+  padding: 10px 20px;
+  background-color: blue;
+  color: white;
+  border: 1px solid blue;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.buttonCancel:hover {
+  transform: scale(1.1); 
+}
+
+.domainLogo img {
+  max-width: 100%;
+}
+
+.toggle-label {
+  width: 30px; 
+  height: 15px; 
+  display: inline-block;
+  position: relative;
+}
+
+
+.containerTexte {
   display: flex;
   flex-direction: column;
-  font-weight: 800;
-  gap: 1rem;
+  justify-content: space-between;
+  margin-left: 20px;
+}
+
+.containerTexte > div {
+  margin-bottom: 20px;
+}
+
+input[disabled] {
+  cursor: not-allowed;
+  user-select: text;
+}
+
+.label-container {
+  display: flex;
+  align-items: center; 
+}
+
+label {
+  display: inline-block;
+  width: 80px;
+  text-align: left;
+  margin-right: 10px;
+}
+
+/* Partie inferieur */
+
+input[type="radio"]:checked + label {
+  background-color: #fff;
+}
+
+.ongletName {
+  margin-top: 60px;
+  margin-left: 20px;
+  display: flex;
+}
+
+.ongletName input[type="radio"]:checked + label {
+  transform: scale(1.2); 
+  box-shadow: 0 0 10px rgba(52, 152, 219, 0.8);
+}
+
+.ongletName input[type="radio"]:disabled + label {
+  opacity: 0.2; 
+  cursor: not-allowed; 
+}
+
+.ongletName label {
+  display: inline-block;
+  padding: 10px 20px;
+  color: white;
+  border-radius: 5px 5px 0 0;
+  cursor: pointer;
+}
+
+.ongletName input[type="radio"] {
+  display: none;
+}
+
+.ongletName #dev:checked + label {
+  background-color: orange; 
+}
+
+.ongletName #dev:not(:checked) + label {
+  background-color: orange; 
+}
+
+.ongletName #preprod:not(:checked) + label {
+  background-color: purple; 
+}
+
+.ongletName #preprod:checked + label {
+  background-color: purple; 
+}
+
+.ongletName #prod:not(:checked) + label {
+  background-color: blue; 
+}
+
+.ongletName #prod:checked + label {
+  background-color: blue; 
+}
+
+.ongletName #test:not(:checked) + label {
+  background-color: green; 
+}
+
+.ongletName #test:checked + label {
+  background-color: green; 
+}
+
+.ongletName #prodcopy:not(:checked) + label {
+  background-color: maroon; 
+}
+
+.ongletName #prodcopy:checked + label {
+  background-color: maroon; 
+}
+
+.ongletName #staging:not(:checked) + label {
+  background-color: yellow;
+}
+
+.ongletName #staging:checked + label {
+  background-color: yellow; 
+}
+
+input[type="radio"]:checked + label + div {
+  display: block;
+}
+
+.ongletName .stagingColor {
+  color: black;
+  font-weight: 500;
+}
+
+.ongletName label:hover :enabled {
+  transform: scale(1.2); 
+}
+
+.ongletContent {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-left: 20px;
+}
+
+.ongletContent > div {
+  margin-bottom: 20px;
+}
+
+
+/** Ajouter un domaine */
+.headerAddDomain {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.grid-item {
+  /* Ajoutez des styles spécifiques à chaque élément si nécessaire */
 }
