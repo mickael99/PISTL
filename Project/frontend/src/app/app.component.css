@@ -6,6 +6,7 @@
   height: 100vh;
   max-width: 100%;
   background: linear-gradient(to bottom, white, #1f2d54);
+  overflow: auto;
 }
 
 .container--2 {

@@ -77,6 +77,7 @@ import { NgxCsvParserModule } from 'ngx-csv-parser';
     MatSlideToggleModule,
     CommonModule,
     NgxCsvParserModule,
+    MatNativeDateModule,
   ],
 
   providers: [],

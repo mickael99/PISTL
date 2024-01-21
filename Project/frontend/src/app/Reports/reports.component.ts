@@ -61,6 +61,9 @@ export class ReportsComponent {
   // Selected all users from the User Activity report
   checkAllUsers: boolean = false;
 
+  // Selected all domains from the SysAdmin By Domain History report
+  checkAllDomains: boolean = false;
+
   // Bool that allows or not to display the error popup
   showPopupError: boolean = false;
 
@@ -84,6 +87,12 @@ export class ReportsComponent {
 
   // Table used for domain data display
   dataSourceDomain: any;
+
+  // Start date for the reports
+  selectedStartDate: Date;
+
+  // End date for the reports
+  selectedEndDate: Date;
 
   /***************************************************************************************/
   /**
@@ -145,7 +154,6 @@ export class ReportsComponent {
   report_selection(event: any) {
     this.reinitialize_reports();
     this.selected_report = event.value;
-    console.log('report_selection: ', event.value);
   }
 
   /***************************************************************************************/
@@ -169,25 +177,23 @@ export class ReportsComponent {
   /***************************************************************************************/
   user_checked(event: any, user: any): void {
     if (event.checked) {
-      console.log('Checkbox checked for user:', user);
       user.checked = true;
-      console.log('==> ', user.checked);
     } else {
-      console.log('Checkbox unchecked for user:', user);
       user.checked = false;
-      console.log('==> ', user.checked);
     }
   }
 
   /***************************************************************************************/
+  /**
+   * Function used to select all the users from the User Activity report if checkbox checked.
+   * @param event - The event that triggered the checkbox selection.
+   */
   user_check_all(event: any): void {
     if (event.checked) {
-      console.log('Checkbox checked for all users');
       this.logins.forEach((user: any) => {
         user.checked = true;
       });
     } else {
-      console.log('Checkbox unchecked for all users');
       this.logins.forEach((user: any) => {
         user.checked = false;
       });
@@ -195,20 +201,47 @@ export class ReportsComponent {
   }
 
   /***************************************************************************************/
+  /**
+   * Sets the selected domain to the value selected by the user.
+   * @param event - The event that triggered the domain selection.
+   */
   domain_selection(event: any) {
     this.selected_domain = event.value;
-    console.log('domain_selection: ', event.value);
-    console.log('domains: ', this.domains);
   }
 
   /***************************************************************************************/
+  /**
+   * Function used to reinitialize the variables.
+   */
   reinitialize_reports() {
     this.selected_report = '';
     this.selected_domain = '';
     this.checkAllUsers = false;
+    this.checkAllDomains = false;
     this.logins.forEach((user: any) => {
       user.checked = false;
     });
+    this.domains.forEach((domain: any) => {
+      domain.checked = false;
+    });
+    this.selectedStartDate = undefined;
+    this.selectedEndDate = undefined;
+  }
+
+  /***************************************************************************************/
+  /**
+   * Used to export only information between the selected dates.
+   */
+  date_verification(date: Date): boolean {
+    if (
+      this.selectedStartDate === undefined ||
+      this.selectedEndDate === undefined
+    ) {
+      return true;
+    } else if (date >= this.selectedStartDate && date <= this.selectedEndDate) {
+      return true;
+    }
+    return false;
   }
 
   /***************************************************************************************/
@@ -239,10 +272,13 @@ export class ReportsComponent {
               let usersFilter = usersChecked.filter(
                 (userCh: any) => userCh.loginId === user.loginId // or userCh.email === user.email
               );
-              if (usersFilter.length > 0) {
+              if (
+                usersFilter.length > 0 &&
+                this.date_verification(new Date(user.logDate))
+              ) {
                 return {
                   login_date:
-                    user.lastLoginDate !== null
+                    user.logDate !== null
                       ? new Date(user.logDate).toDateString() +
                         ' ' +
                         new Date(user.logDate).toLocaleTimeString()
@@ -277,7 +313,6 @@ export class ReportsComponent {
               'LogAction',
             ],
           };
-          console.table('dataCsv: ', dataCsv);
           new ngxCsv(dataCsv, 'User_Activity_Report', optionsCsv);
         },
         (error) => {
@@ -287,27 +322,30 @@ export class ReportsComponent {
   }
 
   /***************************************************************************************/
+  /**
+   * Used to check the domain selected to be check.
+   * @param event - The event that triggered the checkbox selection.
+   * @param domain - The domain to be checked.
+   */
   domain_checked(event: any, domain: any): void {
     if (event.checked) {
-      console.log('Checkbox checked for domain:', domain);
       domain.checked = true;
-      console.log('==> ', domain.checked);
     } else {
-      console.log('Checkbox unchecked for domain:', domain);
       domain.checked = false;
-      console.log('==> ', domain.checked);
     }
   }
 
   /***************************************************************************************/
+  /**
+   * Function used to select all the domains from the SysAdmin By Domain History report if checkbox checked.
+   * @param event - The event that triggered the checkbox selection.
+   */
   domain_check_all(event: any): void {
     if (event.checked) {
-      console.log('Checkbox checked for all domains');
       this.domains.forEach((domain: any) => {
         domain.checked = true;
       });
     } else {
-      console.log('Checkbox unchecked for all domains');
       this.domains.forEach((domain: any) => {
         domain.checked = false;
       });
@@ -334,74 +372,80 @@ export class ReportsComponent {
       .get('http://localhost:5050/api/reports/sysAdmin', options)
       .subscribe(
         (data: any) => {
-          console.log('data: ', data.loginDomainUserLog);
           let usersChecked = this.logins.filter(
             (user: any) => user.checked === true
           );
           let domainsChecked = this.domains.filter(
             (domain: any) => domain.checked === true
           );
-          dataCsv = data.loginDomainUserLog.map((log: any) => {
-            usersChecked = usersChecked.filter(
-              (user: any) => user.loginId === log.loginId
-            );
-            console.log('usersChecked.filter: ', usersChecked);
-            domainsChecked = domainsChecked.filter(
-              (domain: any) => domain.domainId === log.domainId
-            );
-            console.log('domainsChecked.filter: ', domainsChecked);
+          dataCsv = data.loginDomainUserLog
+            .map((log: any) => {
+              usersChecked = usersChecked.filter(
+                (user: any) => user.loginId === log.loginId
+              );
+              domainsChecked = domainsChecked.filter(
+                (domain: any) => domain.domainId === log.domainId
+              );
 
-            if (usersChecked.length > 0 && domainsChecked.length > 0) {
-              return {
-                LoginDomainUser_LogID: log.loginDomainUserLogId,
-                LogAction: this.refActions[log.logAction],
-                LogDate:
-                  log.logDate == null
-                    ? 'N/A'
-                    : new Date(log.logDate).toDateString() +
-                      ' ' +
-                      new Date(log.logDate).toLocaleTimeString(),
-                LoginID: log.loginId,
-                DomainID: log.domainId,
-                UserID: log.userId,
-                Environment: this.refEnvironment[log.environment],
-                UserName: log.userName,
-                UserActive: log.userActive,
-                LoginEnabled: log.loginEnabled,
-                LoginTypeId: log.loginTypeId,
-                AnalyticsEnabled: log.analyticsEnabled,
-                IsLight: log.isLight,
-                SysAdmin: log.sysAdmin,
-                CreatedDate:
-                  log.createdDate == null
-                    ? 'N/A'
-                    : new Date(log.createdDate).toDateString() +
-                      ' ' +
-                      new Date(log.createdDate).toLocaleTimeString(),
-                sysAdminStartDate:
-                  log.sysAdminStartDate == null
-                    ? 'N/A'
-                    : new Date(log.sysAdminStartDate).toDateString() +
-                      ' ' +
-                      new Date(log.sysAdminStartDate).toLocaleTimeString(),
-                sysAdminEndDate:
-                  log.sysAdminEndDate == null
-                    ? 'N/A'
-                    : new Date(log.sysAdminEndDate).toDateString() +
-                      ' ' +
-                      new Date(log.sysAdminEndDate).toLocaleTimeString(),
-                Comment: log.comment,
-                CreatedBy: log.createdBy,
-                ModifiedDate:
-                  log.modifiedDate == null
-                    ? 'N/A'
-                    : new Date(log.modifiedDate).toDateString() +
-                      ' ' +
-                      new Date(log.modifiedDate).toLocaleTimeString(),
-                ModifiedBy: log.modifiedBy,
-              };
-            }
-          });
+              if (
+                (usersChecked.length > 0 &&
+                  domainsChecked.length > 0 &&
+                  this.date_verification(new Date(log.logDate))) ||
+                this.date_verification(new Date(log.createdDate)) ||
+                this.date_verification(new Date(log.modifiedDate))
+              ) {
+                return {
+                  LoginDomainUser_LogID: log.loginDomainUserLogId,
+                  LogAction: this.refActions[log.logAction],
+                  LogDate:
+                    log.logDate == null
+                      ? 'N/A'
+                      : new Date(log.logDate).toDateString() +
+                        ' ' +
+                        new Date(log.logDate).toLocaleTimeString(),
+                  LoginID: log.loginId,
+                  DomainID: log.domainId,
+                  UserID: log.userId,
+                  Environment: this.refEnvironment[log.environment],
+                  UserName: log.userName,
+                  UserActive: log.userActive,
+                  LoginEnabled: log.loginEnabled,
+                  LoginTypeId: log.loginTypeId,
+                  AnalyticsEnabled: log.analyticsEnabled,
+                  IsLight: log.isLight,
+                  SysAdmin: log.sysAdmin,
+                  CreatedDate:
+                    log.createdDate == null
+                      ? 'N/A'
+                      : new Date(log.createdDate).toDateString() +
+                        ' ' +
+                        new Date(log.createdDate).toLocaleTimeString(),
+                  sysAdminStartDate:
+                    log.sysAdminStartDate == null
+                      ? 'N/A'
+                      : new Date(log.sysAdminStartDate).toDateString() +
+                        ' ' +
+                        new Date(log.sysAdminStartDate).toLocaleTimeString(),
+                  sysAdminEndDate:
+                    log.sysAdminEndDate == null
+                      ? 'N/A'
+                      : new Date(log.sysAdminEndDate).toDateString() +
+                        ' ' +
+                        new Date(log.sysAdminEndDate).toLocaleTimeString(),
+                  Comment: log.comment,
+                  CreatedBy: log.createdBy,
+                  ModifiedDate:
+                    log.modifiedDate == null
+                      ? 'N/A'
+                      : new Date(log.modifiedDate).toDateString() +
+                        ' ' +
+                        new Date(log.modifiedDate).toLocaleTimeString(),
+                  ModifiedBy: log.modifiedBy,
+                };
+              }
+            })
+            .filter((item: any) => item !== undefined);
+
           var optionsCsv = {
             filedSeparator: ',',
             quoteStrings: '"',
@@ -432,7 +476,6 @@ export class ReportsComponent {
               'ModifiedBy',
             ],
           };
-          console.table('dataCsv: ', dataCsv);
           new ngxCsv(dataCsv, 'SysAdmin_by_Domain_History_Report', optionsCsv);
         },
         (error) => {
@@ -461,31 +504,36 @@ export class ReportsComponent {
       .get('http://localhost:5050/api/reports/domainLog', options)
       .subscribe(
         (data: any) => {
-          console.log('data: ', data.domainLog);
-          console.log('data.domainLog.domainId: ', data.domainLog.domainLogId);
-          dataCsv = data.domainLog.map((log: any) => {
-            return {
-              DomainID: log.domainLogId,
-              Name: log.name,
-              Edition: log.edition,
-              IsSsoEnabled: log.isSsoEnabled,
-              Coment: log.comment,
-              CreatedDate:
-                log.createdDate == null
-                  ? 'N/A'
-                  : new Date(log.createdDate).toDateString() +
-                    ' ' +
-                    new Date(log.createdDate).toLocaleTimeString(),
-              CreatedBy: log.createdBy,
-              ModifiedDate:
-                log.modifiedDate == null
-                  ? 'N/A'
-                  : new Date(log.modifiedDate).toDateString() +
-                    ' ' +
-                    new Date(log.modifiedDate).toLocaleTimeString(),
-              ModifiedBy: log.modifiedBy,
-            };
-          });
+          dataCsv = data.domainLog
+            .map((log: any) => {
+              if (
+                this.date_verification(new Date(log.modifiedDate)) ||
+                this.date_verification(new Date(log.createdDate))
+              ) {
+                return {
+                  DomainID: log.domainLogId,
+                  Name: log.name,
+                  Edition: log.edition,
+                  IsSsoEnabled: log.isSsoEnabled,
+                  Coment: log.comment,
+                  CreatedDate:
+                    log.createdDate == null
+                      ? 'N/A'
+                      : new Date(log.createdDate).toDateString() +
+                        ' ' +
+                        new Date(log.createdDate).toLocaleTimeString(),
+                  CreatedBy: log.createdBy,
+                  ModifiedDate:
+                    log.modifiedDate == null
+                      ? 'N/A'
+                      : new Date(log.modifiedDate).toDateString() +
+                        ' ' +
+                        new Date(log.modifiedDate).toLocaleTimeString(),
+                  ModifiedBy: log.modifiedBy,
+                };
+              }
+            })
+            .filter((item: any) => item !== undefined);
 
           var optionsCsv = {
             filedSeparator: ',',
@@ -505,7 +553,6 @@ export class ReportsComponent {
               'ModifiedBy',
             ],
           };
-          console.table('dataCsv: ', dataCsv);
           new ngxCsv(
             dataCsv,
             'Domain_Administration_History_Report',
