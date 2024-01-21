@@ -47,13 +47,13 @@
                 <a
                   routerLink="sys-admin-by-domain"
                   ngbDropdownItem
-                  class="btn--2 btn--margin-right btn--in-progress"
+                  class="btn--2 btn--margin-right btn--completed"
                   >SysAdmin by Domain</a
                 >
                 <a
                   routerLink="domain-by-sys-admin"
                   ngbDropdownItem
-                  class="btn--2 btn--margin-right btn--in-progress"
+                  class="btn--2 btn--margin-right btn--completed"
                   >Domain by SysAdmin</a
                 >
               </div>
@@ -79,16 +79,25 @@
                   class="btn--2 btn--in-progress"
                   >Database</a
                 >
-                <a ngbDropdownItem routerLink="server" class="btn--2">Server</a>
-                <a ngbDropdownItem class="btn--2">Server Parameter</a>
+                <a
+                  ngbDropdownItem
+                  routerLink="server"
+                  class="btn--2 btn--in-progress"
+                  >Server</a
+                >
+                <a
+                  ngbDropdownItem
+                  class="btn--2 btn--margin-right btn--completed"
+                  >Server Parameter</a
+                >
               </div>
             </div>
           </li>
           <li>
-            <a routerLink="/users" class="btn--1 btn--in-progress">Users</a>
+            <a routerLink="/users" class="btn--1 btn--completed">Users</a>
           </li>
           <li>
-            <a class="btn--1" href="#">Reports</a>
+            <a routerLink="/reports" class="btn--1 btn--in-progress">Reports</a>
           </li>
           <li>
             <p class="text nav-end">

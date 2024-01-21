@@ -51,12 +51,6 @@ export class UsersComponent {
     locked: false,
   };
 
-  // Bool that allows or not to display the error popup
-  showPopupError: boolean = false;
-
-  // Error message to display in the popup
-  popupMessage: string = '';
-
   // User selected in the table
   userSelected = {
     name: '',
@@ -101,6 +95,12 @@ export class UsersComponent {
 
   // Bool used to display the information popup
   showInformPopup: boolean = false;
+
+  // Bool that allows or not to display the error popup
+  showPopupError: boolean = false;
+
+  // Error message to display in the popup
+  popupMessage: string = '';
 
   /***************************************************************************************/
   /**

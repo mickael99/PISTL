@@ -1,0 +1,172 @@
+<div class="container">
+  <div class="header">
+    <h1 class="title">Reports</h1>
+
+    <div class="dropdown-container">
+      <mat-form-field class="dropdown">
+        <mat-label>Select report</mat-label>
+        <mat-select
+          [(value)]="selected_report"
+          (selectionChange)="report_selection($event)"
+        >
+          <mat-option
+            *ngFor="let report of reportsList | keyvalue"
+            [value]="report.value"
+          >
+            <span>{{ report.value }} </span>
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <button
+        mat-raised-button
+        color="primary"
+        [disabled]="!isToExport"
+        (click)="export_reports()"
+        class="btn margin--top color-button"
+      >
+        Export
+      </button>
+    </div>
+  </div>
+
+  <!-- Report selected = "User Activity" or "SysAdmin By Domain History'"-->
+  <ng-container
+    *ngIf="
+      selected_report === reportsList[0] || selected_report === reportsList[1]
+    "
+  >
+    <hr />
+    <div class="container--tables">
+      <div class="table">
+        <div class="check--all">
+          <mat-checkbox
+            class="checkbox"
+            color="primary"
+            (change)="user_check_all($event)"
+          ></mat-checkbox>
+        </div>
+
+        <mat-card-content>
+          <table
+            matSort
+            mat-table
+            [dataSource]="dataSourceLogin"
+            class="custom-table"
+            #tableElement
+          >
+            <ng-container matColumnDef="email">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Logins</th>
+              <td mat-cell *matCellDef="let user">
+                <div class="checkbox--user">
+                  <p>
+                    {{ user.email }}
+                  </p>
+                  <mat-checkbox
+                    [(ngModel)]="user.checked"
+                    (change)="user_checked($event, user)"
+                    color="primary"
+                  ></mat-checkbox>
+                </div>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedLoginColumns"></tr>
+            <tr
+              mat-row
+              *matRowDef="let user; columns: displayedLoginColumns"
+            ></tr>
+          </table>
+
+          <mat-paginator
+            [pageSizeOptions]="[5, 10]"
+            showFirstLastButtons
+            [length]="dataSourceLogin && dataSourceLogin.data.length"
+          ></mat-paginator>
+        </mat-card-content>
+      </div>
+
+      <!-- Report selected = "User Activity""-->
+      <ng-container *ngIf="selected_report === reportsList[0]">
+        <div>
+          <mat-form-field class="dropdown">
+            <mat-label>Select Domain</mat-label>
+            <mat-select
+              [(value)]="selected_domain"
+              (selectionChange)="domain_selection($event)"
+            >
+              <mat-option
+                *ngFor="let domain of domains | keyvalue"
+                [value]="domain.value.name"
+              >
+                <span
+                  >{{ domain.value.name + " [" + domain.value.domainId + "]" }}
+                </span>
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </ng-container>
+
+      <!-- Report selected = "SysAdmin By Domain History" -->
+      <ng-container *ngIf="selected_report === reportsList[1]">
+        <div class="table">
+          <div class="check--all">
+            <mat-checkbox
+              class="checkbox"
+              color="primary"
+              (change)="domain_check_all($event)"
+            ></mat-checkbox>
+          </div>
+
+          <mat-card-content>
+            <table
+              matSort
+              mat-table
+              [dataSource]="dataSourceDomain"
+              class="custom-table"
+              #tableElement
+            >
+              <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                  Domains
+                </th>
+                <td mat-cell *matCellDef="let domain">
+                  <div class="checkbox--user">
+                    <p>
+                      {{ domain.name + " [" + domain.domainId + "]" }}
+                    </p>
+                    <mat-checkbox
+                      [(ngModel)]="domain.checked"
+                      (change)="domain_checked($event, domain)"
+                      color="primary"
+                    ></mat-checkbox>
+                  </div>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedDomainColumns"></tr>
+              <tr
+                mat-row
+                *matRowDef="let domain; columns: displayedDomainColumns"
+              ></tr>
+            </table>
+
+            <mat-paginator
+              [pageSizeOptions]="[5, 10]"
+              showFirstLastButtons
+              [length]="dataSourceDomain && dataSourceDomain.data.length"
+            ></mat-paginator>
+          </mat-card-content></div
+      ></ng-container>
+    </div>
+  </ng-container>
+
+  <!-- Error pop-up -->
+  <div>
+    <app-error-popup
+      *ngIf="showPopupError"
+      [errorMessage]="popupMessage"
+      (close)="closeErrorPopup()"
+    ></app-error-popup>
+  </div>
+</div>

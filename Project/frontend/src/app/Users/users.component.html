@@ -102,7 +102,7 @@
         </table>
 
         <mat-paginator
-          [pageSizeOptions]="[10, 20]"
+          [pageSizeOptions]="[5, 10]"
           showFirstLastButtons
           [length]="dataSource && dataSource.data.length"
         ></mat-paginator>
@@ -375,6 +375,7 @@
           </form>
         </ng-container>
       </div>
+
       <!-- Error pop-up -->
       <div>
         <app-error-popup

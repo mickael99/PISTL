@@ -1,8 +1,6 @@
 using Project.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Text;
-using System.Security.Claims;
-using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Cryptography;
 using Project.Controllers.Login;
@@ -16,7 +14,7 @@ public class UsersPageController : ControllerBase // TODO change name
 {
   /*************************************************************************************/
   /// <summary>
-  ///  This method is used to GET all users from the DataBase.
+  ///  This method is used to GET all users from the Login table.
   /// </summary>
   /// <param name="authorizationHeader"></param>
   /// <returns></returns>

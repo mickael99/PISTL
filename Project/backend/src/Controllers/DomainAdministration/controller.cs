@@ -42,6 +42,7 @@ public class DomainAdministrationController : ControllerBase
                 (domain, environments) => new DomainModel
                 {
                     Name = domain.Name,
+                    DomainId = domain.DomainId,
                     Logo = domain.Logo,
                     Edition = domain.Edition,
                     IsSsoEnabled = domain.IsSsoEnabled,
@@ -203,6 +204,7 @@ public class DomainAdministrationController : ControllerBase
     public class DomainModel
     {
         public required string Name { get; set; }
+        public int? DomainId { get; set; }
         public byte[]? Logo { get; set; }
         public string? PathLogo { get; set; }
         public string? Edition { get; set; }

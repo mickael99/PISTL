@@ -11,9 +11,10 @@ import { SysAdminByDomainComponent } from './Domain/sys-admin-by-domain/sys-admi
 import { DomainBySysAdminComponent } from './Domain/domain-by-sys-admin/domain-by-sys-admin.component';
 import { AccountComponent } from './Account/account.component';
 import { TwoFAComponent } from './two-FA/two-fa.component';
-import { UsersComponent } from './users/users.component';
+import { UsersComponent } from './Users/users.component';
 import { DatabaseComponent } from './Infrastructure/database/database.component';
 import { ServerComponent } from './Infrastructure/server/server.component';
+import { ReportsComponent } from './Reports/reports.component';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -34,6 +35,7 @@ import { ErrorPopupComponent } from './utils/error-popup/error-popup.component';
 import { ConfirmPopupComponent } from './utils/confirm-popup/confirm-popup.component';
 import { InformPopupComponent } from './utils/inform-popup/inform-popup.component';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { NgxCsvParserModule } from 'ngx-csv-parser';
 
 @NgModule({
   declarations: [
@@ -50,6 +52,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     InformPopupComponent,
     DatabaseComponent,
     ServerComponent,
+    ReportsComponent,
   ],
   imports: [
     BrowserModule,
@@ -73,6 +76,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     MatCheckboxModule,
     MatSlideToggleModule,
     CommonModule,
+    NgxCsvParserModule,
   ],
 
   providers: [],
