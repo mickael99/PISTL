@@ -74,7 +74,7 @@ export class ServerComponent {
   isHovered: boolean = false;
 
   // Server hovered in the table
-  serverHovered: string = '';
+  serverHovered: number = 0;
 
   // Bool used to activate the 'Edit' button
   editEnabled: boolean = false;
@@ -136,9 +136,21 @@ export class ServerComponent {
               case 'Server ID':
                 console.log('Server ID: ', item);
                 return item.serverId;
+                case 'Name':
+                  console.log('Name: ', item);
+                  return item.name;
+                case 'Address':
+                  console.log('Address: ', item);
+                  return item.address;
+                case 'Context':
+                  console.log('Context: ', item);
+                  return item.context;
+                case 'Type':
+                  console.log('Type: ', item);
+                  return item.type;
               default:
                 return item[property];
-            
+
           }
         };
         this.dataSource.sort = this.sort;
@@ -284,7 +296,7 @@ export class ServerComponent {
   /**
    * Function used to activate the hover.
    */
-  onMouseEnter(serverHovered: string) {
+  onMouseEnter(serverHovered: number) {
     this.isHovered = true;
     this.serverHovered = serverHovered;
   }
@@ -295,7 +307,7 @@ export class ServerComponent {
    */
   onMouseLeave() {
     this.isHovered = false;
-    this.serverHovered = '';
+    this.serverHovered = 0;
   }
 
   /***************************************************************************************/

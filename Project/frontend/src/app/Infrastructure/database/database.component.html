@@ -65,7 +65,7 @@
             </td>
           </ng-container>
 
-          <ng-container matColumnDef="Name">
+          <ng-container matColumnDef="name">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
             <td
               mat-cell
@@ -83,7 +83,7 @@
             </td>
           </ng-container>
 
-          <ng-container matColumnDef="Server ID">
+          <ng-container matColumnDef="serverId">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Server ID</th>
             <td
               mat-cell
@@ -101,7 +101,7 @@
             </td>
           </ng-container>
 
-          <ng-container matColumnDef="User Name">
+          <ng-container matColumnDef="userName">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>User Name</th>
             <td
               mat-cell
@@ -119,7 +119,7 @@
             </td> 
           </ng-container>
 
-          <ng-container matColumnDef="Context">
+          <ng-container matColumnDef="context">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>
               Context
             </th>
@@ -286,16 +286,16 @@
               matInput
               placeholder="Password"
               required
-              [(ngModel)]="databaseSelected.Password"
+              [(ngModel)]="databaseSelected.PasswordModified"
               name="Password"
               [disabled]="!editEnabled"
             />
           </mat-form-field>
 
           <mat-form-field class="example-full-width">
-            <mat-label>Server</mat-label>
+            <mat-label>Server ID</mat-label>
             <mat-select
-              [(ngModel)]="databaseSelected.Server"
+              [(ngModel)]="databaseSelected.SeverName"
               name="Server"
               [disabled]="!editEnabled"
             >

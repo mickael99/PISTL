@@ -46,6 +46,7 @@ export class DatabaseComponent {
     Name: '',
     UserName: '',
     Password: '',
+    PasswordModified: '',
     Server: null,
     DatabaseId: 0,
     CreatedBy: '',
@@ -70,7 +71,7 @@ export class DatabaseComponent {
   isClicked: boolean = false;
 
   // Columns names in the table
-  displayedColumns: string[] = ['databaseId','Name', 'Server ID', 'User Name', 'Context'];
+  displayedColumns: string[] = ['databaseId','name', 'serverId', 'userName', 'context'];
 
   // Bool that allows or not to display the error popup
   showPopup: boolean = false;
@@ -114,6 +115,12 @@ export class DatabaseComponent {
   // Sort used for the table
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
+  // Sort used for the table
+  @ViewChild(MatSort, { static: true }) sortName: MatSort;
+
+  // Sort used for the table
+  @ViewChild(MatSort, { static: true }) sortServerId: MatSort;
+
   constructor(
     private renderer: Renderer2,
     private http: HttpClient,
@@ -135,15 +142,28 @@ export class DatabaseComponent {
         this.dataSource.paginator = this.paginator;
         this.dataSource.sortingDataAccessor = (item, property) => {
           switch (property) {
-              case 'databaseId':
-                console.log('databaseId: ', item);
-                return item.databaseId;
-              default:
-                return item[property];
-            
+            case 'databaseId':
+              console.log('databaseId: ', item.databaseId);
+              return item.databaseId;
+            case 'name': // Add case for Name column
+              console.log('name: ', item.name);
+              return item.name;
+            case 'serverId': 
+              console.log('serverId: ', item.serverId);
+              return item.serverId;
+            case 'userName':
+              console.log('userName: ', item.userName);
+              return item.userName;
+            case 'context':
+              console.log('context: ', item.context);
+              return item.context;
+            default:
+              return item[property];
           }
         };
         this.dataSource.sort = this.sort;
+        // this.dataSource.sortName = this.sortName;
+        this.dataSource.sortServerId = this.sortServerId;
       },
       (error) => {
         this.showErrorPopup(error.error);
@@ -233,12 +253,23 @@ export class DatabaseComponent {
           this.dataSource.paginator = this.paginator;
           this.dataSource.sortingDataAccessor = (item, property) => {
             switch (property) {
-                case 'databaseId':
-                  console.log('databaseId: ', item.databaseId);
-                  return item.databaseId 
-                default:
-                  return item[property];
-              
+              case 'databaseId':
+                console.log('databaseId: ', item.databaseId);
+                return item.databaseId;
+              case 'name': // Add case for Name column
+                console.log('name: ', item.name);
+                return item.name;
+              case 'serverId': 
+                console.log('serverId: ', item.serverId);
+                return item.serverId;
+              case 'userName':
+                console.log('userName: ', item.userName);
+                return item.userName;
+              case 'context':
+                console.log('context: ', item.context);
+                return item.context;
+              default:
+                return item[property];
             }
           };
           this.dataSource.sort = this.sort;
@@ -279,12 +310,23 @@ export class DatabaseComponent {
           this.dataSource.paginator = this.paginator;
           this.dataSource.sortingDataAccessor = (item, property) => {
             switch (property) {
-                case 'databaseId':
-                  console.log('databaseId: ', item.databaseId);
-                  return item.databaseId 
-                default:
-                  return item[property];
-              
+              case 'databaseId':
+                console.log('databaseId: ', item.databaseId);
+                return item.databaseId;
+              case 'name': // Add case for Name column
+                console.log('name: ', item.name);
+                return item.name;
+              case 'serverId': 
+                console.log('serverId: ', item.serverId);
+                return item.serverId;
+              case 'userName':
+                console.log('userName: ', item.userName);
+                return item.userName;
+              case 'context':
+                console.log('context: ', item.context);
+                return item.context;
+              default:
+                return item[property];
             }
           };
           this.dataSource.sort = this.sort;
@@ -338,11 +380,23 @@ export class DatabaseComponent {
           this.dataSource.paginator = this.paginator;
           this.dataSource.sortingDataAccessor = (item, property) => {
             switch (property) {
-                case 'databaseId':
-                  console.log('databaseId: ', item.databaseId);
-                  return item.databaseId
-                default:
-                  return item[property];
+              case 'databaseId':
+                console.log('databaseId: ', item.databaseId);
+                return item.databaseId;
+              case 'name': // Add case for Name column
+                console.log('name: ', item.name);
+                return item.name;
+              case 'serverId': 
+                console.log('serverId: ', item.serverId);
+                return item.serverId;
+              case 'userName':
+                console.log('userName: ', item.userName);
+                return item.userName;
+              case 'context':
+                console.log('context: ', item.context);
+                return item.context;
+              default:
+                return item[property];
             }
           };
           this.dataSource.sort = this.sort;
@@ -361,14 +415,19 @@ export class DatabaseComponent {
   editDatabase() {
 
     console.log('Edit database:', this.databaseSelected.DatabaseId);
+    
+    // Find the server with the same name as ServerName
+    // const server = this.server.find(s => s.ServerName === this.databaseSelected.ServerName);
 
+    // Store the found server in databaseSelected.Server
+    // this.databaseSelected.Server = server;
+    
     this.databaseSelected.ServerId = this.databaseSelected.Server.serverId;
 
     //check if the user has changed something
     if (
       this.databaseSelected.Name == this.databaseSelectedCopy.Name &&
       this.databaseSelected.UserName == this.databaseSelectedCopy.UserName &&
-      this.databaseSelected.Password == this.databaseSelectedCopy.Password &&
       this.databaseSelected.ServerId == this.databaseSelectedCopy.ServerId &&
       this.databaseSelected.Context == this.databaseSelectedCopy.Context
     ) {
@@ -376,6 +435,16 @@ export class DatabaseComponent {
       this.showErrorPopup('Please do some changes before Save.');
       console.log("showerrorpopup:" + this.showPopup);
       return;
+    }
+
+    var passwordToModified;
+
+    if(this.databaseSelected.PasswordModified == ''){
+      console.log("keep same");
+      passwordToModified = this.databaseSelected.Password;
+    } else {
+      console.log("change");
+      passwordToModified = this.databaseSelected.PasswordModified;
     }
 
     let JWTToken = localStorage.getItem('token');
@@ -396,10 +465,12 @@ export class DatabaseComponent {
       Server: this.databaseSelected.Server,
       Name: this.databaseSelected.Name,
       UserName: this.databaseSelected.UserName,
-      Password: this.databaseSelected.Password,
+      Password: passwordToModified,
       ModifiedBy: localStorage.getItem('email'),
       Context: this.databaseSelected.Context,
     };
+
+
 
     console.log('requestBody: ', requestBody);
 
@@ -414,11 +485,23 @@ export class DatabaseComponent {
           this.editEnabled = false;
           this.dataSource.sortingDataAccessor = (item, property) => {
             switch (property) {
-                case 'databaseId':
-                  console.log('databaseId: ', item.databaseId);
-                  return item.databaseId
-                default:
-                  return item[property];
+              case 'databaseId':
+                console.log('databaseId: ', item.databaseId);
+                return item.databaseId;
+              case 'name': // Add case for Name column
+                console.log('name: ', item.name);
+                return item.name;
+              case 'serverId': 
+                console.log('serverId: ', item.serverId);
+                return item.serverId;
+              case 'userName':
+                console.log('userName: ', item.userName);
+                return item.userName;
+              case 'context':
+                console.log('context: ', item.context);
+                return item.context;
+              default:
+                return item[property];
             }
           };
           this.dataSource.sort = this.sort;
@@ -460,6 +543,7 @@ export class DatabaseComponent {
     this.databaseSelected.Name = database.name;
     this.databaseSelected.UserName = database.userName;
     this.databaseSelected.Password = database.password;
+    this.databaseSelected.PasswordModified = '';
     this.databaseSelected.Server = database.server;
     console.log('databaseSelected.Server: ', this.server);
     this.databaseSelected.ServerId = database.serverId;
@@ -489,6 +573,7 @@ export class DatabaseComponent {
       Name: '',
       UserName : '',
       Password: '',
+      PasswordModified: '',
       ServerId: 0,
       Server: null,
       CreatedBy: '',

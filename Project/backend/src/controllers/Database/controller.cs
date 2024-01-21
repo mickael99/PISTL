@@ -59,6 +59,9 @@ public class DatabaseController : Controller
     public IActionResult CreateDatabase([FromBody] Database databaseCreate){
         Console.WriteLine("-------->Create Database");
 
+        string passwordSalt = _databaseRepository.GetSalt(24);
+        string passwordHash = _databaseRepository.EncryptPassword(databaseCreate.Password, passwordSalt);
+
         Console.WriteLine("-------->databaseCreateServer: " + databaseCreate.ServerId);
 
         var newId = _databaseRepository.GetUnusedMinDatabaseId();
@@ -87,7 +90,7 @@ public class DatabaseController : Controller
                 DatabaseId = newId,
                 Name = databaseCreate.Name,
                 UserName = databaseCreate.UserName,
-                Password = databaseCreate.Password,
+                Password = passwordHash,
                 ServerId = databaseCreate.ServerId,
                 Server = server,
                 ModifiedBy = databaseCreate.ModifiedBy,

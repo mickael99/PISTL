@@ -13,6 +13,7 @@
     <SourceRoot Include="C:\Users\Yukhoi\.nuget\packages\" />
   </ItemGroup>
   <ImportGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
+    <Import Project="$(NuGetPackageRoot)nunit\4.0.1\build\NUnit.props" Condition="Exists('$(NuGetPackageRoot)nunit\4.0.1\build\NUnit.props')" />
     <Import Project="$(NuGetPackageRoot)microsoft.entityframeworkcore\8.0.0\buildTransitive\net8.0\Microsoft.EntityFrameworkCore.props" Condition="Exists('$(NuGetPackageRoot)microsoft.entityframeworkcore\8.0.0\buildTransitive\net8.0\Microsoft.EntityFrameworkCore.props')" />
     <Import Project="$(NuGetPackageRoot)microsoft.entityframeworkcore.design\8.0.0\build\net8.0\Microsoft.EntityFrameworkCore.Design.props" Condition="Exists('$(NuGetPackageRoot)microsoft.entityframeworkcore.design\8.0.0\build\net8.0\Microsoft.EntityFrameworkCore.Design.props')" />
     <Import Project="$(NuGetPackageRoot)microsoft.aspnetcore.razor.design\2.2.0\build\netstandard2.0\Microsoft.AspNetCore.Razor.Design.props" Condition="Exists('$(NuGetPackageRoot)microsoft.aspnetcore.razor.design\2.2.0\build\netstandard2.0\Microsoft.AspNetCore.Razor.Design.props')" />

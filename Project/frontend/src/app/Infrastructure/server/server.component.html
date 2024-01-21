@@ -27,17 +27,6 @@
     Delete
   </button>
 
-  <button
-  mat-raised-button
-  color="primary"
-  (click)="openCopyConfirmation()"
-  [disabled]="!isClicked"
-  class="btn"
->
-  Copy
-</button>
-
-
   <div class="listes">
     <div class="table">
       <hr />
@@ -73,12 +62,12 @@
               mat-cell
               *matCellDef="let server"
               (click)="getServer(server)"
-              (mouseenter)="onMouseEnter(server.name)"
+              (mouseenter)="onMouseEnter(server.serverId)"
               (mouseleave)="onMouseLeave()"
               [ngClass]="{
                 'server--selected' : (server.name == serverSelected.name),
                 '' : !(server.name == serverSelected.name),
-                hovered: server.name == serverHovered ? isHovered : false,
+                hovered: server.serverId == serverHovered ? isHovered : false,
               }"
             >
               {{ server.name }}
@@ -91,12 +80,12 @@
               mat-cell
               *matCellDef="let server"
               (click)="getServer(server)"
-              (mouseenter)="onMouseEnter(server.address)"
+              (mouseenter)="onMouseEnter(server.serverId)"
               (mouseleave)="onMouseLeave()"
               [ngClass]="{
                 'server--selected' : (server.address == serverSelected.address),
                 '' : !(server.address == serverSelected.address),
-                hovered: server.address == serverHovered ? isHovered : false,
+                hovered: server.serverId == serverHovered ? isHovered : false,
               }"
             >
               {{ server.address }}
@@ -111,12 +100,12 @@
               mat-cell
               *matCellDef="let server"
               (click)="getServer(server)"
-              (mouseenter)="onMouseEnter(server.context)"
+              (mouseenter)="onMouseEnter(server.serverId)"
               (mouseleave)="onMouseLeave()"
               [ngClass]="{
                 'server--selected' : (server.context == serverSelected.context),
                 '' : !(server.context == serverSelected.context),
-                hovered: server.context == serverHovered ? isHovered : false,
+                hovered: server.serverId == serverHovered ? isHovered : false,
               }"
             >
               {{ server.context }}
@@ -131,12 +120,12 @@
               mat-cell
               *matCellDef="let server"
               (click)="getServer(server)"
-              (mouseenter)="onMouseEnter(server.type)"
+              (mouseenter)="onMouseEnter(server.serverId)"
               (mouseleave)="onMouseLeave()"
               [ngClass]="{
                 'server--selected' : (server.type == serverSelected.type),
                 '' : !(server.type == serverSelected.type),
-                hovered: server.type == serverHovered ? isHovered : false,
+                hovered: server.serverId == serverHovered ? isHovered : false,
               }"
             >
               {{ server.type }}

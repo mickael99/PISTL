@@ -27,6 +27,11 @@ public class ServerController : Controller
         _logger = logger; 
     }
 
+
+    /// <summary>
+    /// Retrieves a list of servers.
+    /// </summary>
+    /// <returns>An IActionResult representing the HTTP response.</returns>
     [HttpGet]
     [ProducesResponseType(200, Type = (typeof(IEnumerable<Server>)))]
     [ProducesResponseType(400)]

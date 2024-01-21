@@ -732,3 +732,6 @@ D:\M2\PISTL\Project\backend\obj\Debug\net8.0\refint\Project.dll
 D:\M2\PISTL\Project\backend\obj\Debug\net8.0\Project.pdb
 D:\M2\PISTL\Project\backend\obj\Debug\net8.0\Project.genruntimeconfig.cache
 D:\M2\PISTL\Project\backend\obj\Debug\net8.0\ref\Project.dll
+D:\M2\PISTL\Project\backend\bin\Debug\net8.0\Newtonsoft.Json.dll
+D:\M2\PISTL\Project\backend\bin\Debug\net8.0\nunit.framework.dll
+D:\M2\PISTL\Project\backend\bin\Debug\net8.0\nunit.framework.legacy.dll

@@ -22,5 +22,10 @@ namespace Project.Interface
         public int GetDatabaseCount();
 
         public int GetUnusedMinDatabaseId();
+
+        public string GetSalt(int size);
+
+        public string EncryptPassword(string input, string salt);
+
     }
 }

@@ -1,6 +1,9 @@
 using System.Data.Common;
 using Project.Models;
 using Project.Interface;
+using System.Security.Cryptography;
+using System.Text;
+
 
 namespace Project.Repository
 {
@@ -58,6 +61,32 @@ namespace Project.Repository
                 minDatabaseId++;
             }
             return minDatabaseId;
+        }
+
+        /***************************************************************************************/
+        /// <summary>
+        /// Generates a random salt.
+        /// </summary>
+        /// <param name="size">The size of the salt.</param>
+        /// <returns>The generated salt.</returns>
+        public string GetSalt(int size)
+        {
+            return Convert.ToBase64String(RandomNumberGenerator.GetBytes(size));
+        }
+
+        /***************************************************************************************/
+        /// <summary>
+        /// Encrypts the password using SHA512 algorithm. // TODO change to PBKDF2
+        /// </summary>
+        /// <param name="password">The password to be encrypted.</param>
+        /// <param name="salt">The salt to be used.</param>
+        /// <returns>The encrypted password.</returns>
+        public string EncryptPassword(string password, string salt)
+        {
+            // if (!string.IsNullOrWhiteSpace(salt)) salt += SECRET; // TODO pourquoi utiliser la variable SECRET?
+            var bytes = Encoding.UTF8.GetBytes(password + salt);
+            var encryptedBytes = SHA512.HashData(bytes);
+            return BitConverter.ToString(encryptedBytes).Replace("-", "");
         }
     }
 }
