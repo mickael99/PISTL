@@ -18,7 +18,6 @@ export class ServerParameterComponent {
 
   show_new_form: boolean = false;
   show_edit_form: boolean = false;
-  selected_parameter: any;
   show_error: boolean = false;
   edit_enabled: boolean = false;
 
@@ -31,6 +30,37 @@ export class ServerParameterComponent {
   show_edit: boolean;
 
 
+  selected_parameter = {
+    parameterKey: '',
+    parameterValue: '',
+    serverId: ''
+  }
+
+
+  // Hover the two columns in the table
+  isHovered: boolean = false;
+
+  // User hovered in the table
+  userHovered: string = '';
+
+  // Bool used to display the delete confirmation popup
+  showDeleteConfirmation: boolean = false;
+
+  // Bool used to display the reset password confirmation popup
+  showResetPasswordConfirmation: boolean = false;
+
+  // Password reseted
+  passwordReseted: string = '';
+
+  // Bool used to display the information popup
+  showInformPopup: boolean = false;
+
+  // Bool that allows or not to display the error popup
+  showPopupError: boolean = false;
+
+  // Error message to display in the popup
+  popupMessage: string = '';
+
   constructor(private http: HttpClient) {
     this.getServerParameterByServer(227);
   }
@@ -41,15 +71,12 @@ export class ServerParameterComponent {
 
     this.http.get('http://localhost:5050/api/serverparameter/' + server_id).subscribe(
       (data: any) => {
-        console.log(data);
 
         for(const server of data.servers) {
           this.servers[server.serverId] = server;
         }
-        console.log("servers: ", this.servers);
         
         this.selected_server = this.servers[server_id];
-        console.log("selected_server: ", this.selected_server);
 
         for(const parameter of data.server_parameters) {
           this.server_parameters.push(parameter);
@@ -59,8 +86,6 @@ export class ServerParameterComponent {
         for(const parameter of this.server_parameters) {
           this.data_server_table.push([parameter.parameterKey, parameter.parameterValue]);
         }
-
-        console.log("data_server_table: ", this.data_server_table);
 
         this.data_source = new MatTableDataSource(this.data_server_table);
         this.data_source.paginator = this.paginator;
@@ -110,7 +135,30 @@ export class ServerParameterComponent {
       serverId: this.selected_server.serverId
     }).subscribe(
       (data: any) => {
-        console.log(data);
+        this.server_parameters = [];
+        for(const parameter of data) {
+          this.server_parameters.push(parameter);
+        }
+        this.data_server_table = [];
+        for(const parameter of this.server_parameters) {
+          this.data_server_table.push([parameter.parameterKey, parameter.parameterValue]);
+        }
+        this.data_source = new MatTableDataSource(this.data_server_table);
+        this.data_source.paginator = this.paginator;
+        this.data_source.sort = this.sort;
+
+        this.reinitaliseParameterSelectedForm();
+      },
+      (error: any) => {
+        console.log(error);
+        this.show_error = true;
+      }
+    );
+  }
+
+  delete() {
+    this.http.delete('http://localhost:5050/api/serverparameter/' + this.selected_server.serverId + "/" + this.selected_parameter[0]).subscribe(
+      (data: any) => {
         this.server_parameters = [];
         for(const parameter of data) {
           this.server_parameters.push(parameter);
@@ -153,8 +201,7 @@ export class ServerParameterComponent {
       this.selected_parameter[0] == '' ||
       this.selected_parameter[1] == ''
     ) {
-      this.showError('Please fill all the fields.');
-      console.log(this.error_message);
+      this.showErrorPopup('Please fill all the fields.');
       return;
     }
     this.http.post('http://localhost:5050/api/serverparameter', {
@@ -163,7 +210,6 @@ export class ServerParameterComponent {
       serverId: this.selected_server.serverId
     }).subscribe(
       (data: any) => {
-        console.log(data);
 
         this.reinitaliseParameterSelectedForm(data);
       },
@@ -180,8 +226,7 @@ export class ServerParameterComponent {
       this.selected_parameter[0] == this.selected_parameter_copy[0] &&
       this.selected_parameter[1] == this.selected_parameter_copy[1]
     ) {
-      this.showError('Please do some changes before Save.');
-      console.log(this.error_message);
+      this.showErrorPopup('Please do some changes before Save.');
       return;
     }
     this.http.put('http://localhost:5050/api/serverparameter', {
@@ -190,7 +235,6 @@ export class ServerParameterComponent {
       serverId: this.selected_server.serverId
     }).subscribe(
       (data: any) => {
-        console.log(data);
 
         this.reinitaliseParameterSelectedForm(data);
       },
@@ -234,8 +278,67 @@ export class ServerParameterComponent {
     this.data_source.sort = this.sort;
   }
 
-  showError(message: string) {
-    this.show_error = true;
-    this.error_message = message;
+  /***************************************************************************************/
+  /**
+   * Function used to activate the hover.
+   */
+  onMouseEnter(userHovered: string) {
+    this.isHovered = true;
+    this.userHovered = userHovered;
+  }
+
+  /***************************************************************************************/
+  /**
+   * Function used to deactivate the hover.
+   */
+  onMouseLeave() {
+    this.isHovered = false;
+    this.userHovered = '';
+  }
+
+    /***************************************************************************************/
+  /**
+   * Function used to display activate the error popup.
+   * @param message - Error message.
+   */
+  showErrorPopup(message: string) {
+    this.showPopupError = true;
+    this.popupMessage = message;
+  }
+
+  /***************************************************************************************/
+  /**
+   * Function used to close the error popup.
+   */
+  closeErrorPopup() {
+    this.showPopupError = false;
+  }
+
+  /***************************************************************************************/
+  /**
+   * Function used to close the Reset Password confirmation popup.
+   */
+  onResetPasswordClose() {
+    this.showResetPasswordConfirmation = false;
+  }
+
+  /***************************************************************************************/
+  /**
+   * Function used to display activate the inform popup.
+   * @param message - Error message.
+   */
+  show_inform_popup(message: string) {
+    this.popupMessage = message;
+    this.showInformPopup = true;
+  }
+
+  /***************************************************************************************/
+  /**
+   * Function used to close the inform popup.
+   */
+  close_inform_popup() {
+    this.showInformPopup = false;
+    this.popupMessage = '';
+    this.passwordReseted = '';
   }
 }

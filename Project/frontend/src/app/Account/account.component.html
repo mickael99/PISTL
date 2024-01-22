@@ -1,0 +1,8 @@
+<div class="container--2FA">
+  <p>Account works!</p>
+  <ng-container *ngIf="!hidden2FA">
+    <img src="{{ qrCodeUrl }}" alt="2FA QR Code" />
+    <p>Code: {{ manualEntryKey }}</p>
+    <button class="btn--added2FA" (click)="added2FA()">2FA added</button>
+  </ng-container>
+</div>

@@ -1,0 +1,76 @@
+/**********************************************************************/
+/**********************************************************************/
+/**********************************************************************/
+
+@import "@angular/material/prebuilt-themes/indigo-pink.css";
+
+.container {
+  margin: 0 0 0 2rem;
+  width: 70%;
+}
+
+.title {
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: #3d59a7;
+}
+
+.dropdown {
+  width: 30rem;
+}
+
+.dropdown-container {
+  display: flex;
+  gap: 5rem;
+}
+
+.mat-mdc-raised-button.color-button {
+  background-color: #3d59a7;
+  color: #fff;
+  font-size: 1.2rem;
+}
+
+.table {
+  width: 50%;
+  position: relative;
+}
+
+.checkbox--user {
+  display: flex;
+  justify-content: space-between;
+}
+
+.check--all {
+  position: absolute;
+  top: 0.5rem;
+  right: 1rem;
+  z-index: 1;
+}
+
+.checkbox::before {
+  content: "Check all";
+  white-space: nowrap;
+  position: absolute;
+  top: 1.4rem;
+  right: 4rem;
+}
+
+.container--tables {
+  display: flex;
+  gap: 5rem;
+  justify-content: space-between;
+}
+
+.margin--top {
+  margin-top: 1rem;
+}
+
+.all--forms {
+  display: flex;
+  gap: 5rem;
+  justify-content: space-between;
+}
+
+/**********************************************************************/
+/**********************************************************************/
+/**********************************************************************/

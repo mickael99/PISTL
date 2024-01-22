@@ -11,11 +11,8 @@ import { Component, EventEmitter, Output, Renderer2 } from '@angular/core';
 })
 /***************************************************************************************/
 export class LoginComponent {
-  /** Event emitter for hiding the login form.              */
-  @Output() hideForm = new EventEmitter<void>();
-
-  /** Indicates whether to show an error message or not.    */
-  showError: boolean = false;
+  // Message shown to the user if the login fails.
+  showErrorMessage: string = '';
 
   /** The email entered by the user.                        */
   email: string = '';
@@ -26,8 +23,13 @@ export class LoginComponent {
   /** Event emitter for passing the login data.             */
   @Output() loginData = new EventEmitter<{
     email: string;
-    motDePasse: string;
   }>();
+
+  /** Event emitter for hiding the login form.              */
+  @Output() hideForm = new EventEmitter<void>();
+
+  /** Event emitter to show the 2FA form.                */
+  @Output() allow2FA = new EventEmitter<void>();
 
   /***************************************************************************************/
   /**
@@ -49,32 +51,31 @@ export class LoginComponent {
       .post('http://localhost:5050/api/auth', { email, password })
       .subscribe(
         (data: any) => {
-          if (data.token) {
+          if (data.exist) {
+            console.log('data.exist === true');
+            this.allow2FA.emit();
+            localStorage.setItem('2FA', 'exists');
+            localStorage.setItem('email', this.email); // TODO voir si bonne methode
+          } else {
             // storage the jwt token in the local storage
             localStorage.setItem('token', data.token);
             localStorage.setItem('email', this.email); // TODO voir si bonne methode
-
-            this.hideLoginForm();
+            this.hideForm.emit();
             this.loginData.emit({
               email: this.email,
-              motDePasse: this.motDePasse,
             });
-          } else {
-            this.showError = true;
           }
         },
         (error) => {
-          this.showError = true;
+          if (error.error.message === 'User not found.') {
+            this.showErrorMessage = 'Incorrect email or password!';
+          } else if (
+            error.error.message === 'User blocked, invalid attempts cout = 3.'
+          ) {
+            this.showErrorMessage = 'User blocked, 3 invalid attempts made!';
+          }
         }
       );
-  }
-
-  /***************************************************************************************/
-  /**
-   * Hides the login form.
-   */
-  hideLoginForm() {
-    this.hideForm.emit();
   }
 
   /***************************************************************************************/

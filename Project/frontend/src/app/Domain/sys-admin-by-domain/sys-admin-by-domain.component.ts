@@ -13,6 +13,10 @@ import { forkJoin } from 'rxjs';
   templateUrl: './sys-admin-by-domain.component.html',
   styleUrls: ['./sys-admin-by-domain.component.css'],
 })
+
+/**
+ * Component for managing system administrators by domain.
+ */
 export class SysAdminByDomainComponent {
   domains:  { [domain_id: number]: any } = {};
   logins: any[] = [];

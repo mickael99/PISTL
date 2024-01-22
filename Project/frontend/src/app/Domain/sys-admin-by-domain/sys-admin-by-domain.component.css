@@ -1,8 +1,13 @@
 @import '~@angular/material/prebuilt-themes/indigo-pink.css';
 
 .title {
-  margin: 20px;
+  font-size: 2.4rem;
+  font-weight: 700;
   color: #3d59a7;
+}
+
+.container {
+  margin: 0 0 0 2rem;
 }
 
 .body {
@@ -35,8 +40,9 @@
   background-color: rgb(255, 255, 255);
   font-weight: 700;
   font-size: 2rem;
+  margin-left: 2.7rem;
   padding: 8px;
-  width: 1000px;
+  width: 1100px;
 }
 
 .sysadmin_form {

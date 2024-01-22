@@ -1,14 +1,23 @@
 <div class="container">
-  <ng-container *ngIf="showForm; else formHidden">
+  <ng-container *ngIf="showForm && !show2FA">
     <app-login
       [showForm]="showForm"
       (hideForm)="hideLoginForm()"
       (loginData)="onLoginData($event)"
+      (allow2FA)="allow2FA()"
     ></app-login>
   </ng-container>
-  <ng-template #formHidden>
+
+  <ng-container *ngIf="show2FA && !showForm">
+    <app-two-fa
+      (hide2FA)="hide2FA()"
+      (loginData)="onLoginData($event)"
+    ></app-two-fa>
+  </ng-container>
+
+  <ng-container *ngIf="!show2FA && !showForm">
     <header>
-      <a href="#">
+      <a routerLink="/account">
         <picture>
           <img src="../assets/logo.png" class="logo" alt="Logo DAT UpClear" />
         </picture>
@@ -17,7 +26,11 @@
         <ul class="main-nav-list">
           <li class="list">
             <div ngbDropdown class="d-inline-block dropdown">
-              <a class="btn--1" id="dropdownBasic1" ngbDropdownToggle>
+              <a
+                class="btn--1 btn--in-progress"
+                id="dropdownBasic1"
+                ngbDropdownToggle
+              >
                 Domain
               </a>
               <div
@@ -28,19 +41,19 @@
                 <a
                   routerLink="/domain-administration"
                   ngbDropdownItem
-                  class="btn--2"
+                  class="btn--2 btn--margin-right btn--in-progress"
                   >Domain Administration</a
                 >
                 <a
                   routerLink="sys-admin-by-domain"
                   ngbDropdownItem
-                  class="btn--2"
+                  class="btn--2 btn--margin-right btn--completed"
                   >SysAdmin by Domain</a
                 >
                 <a
                   routerLink="domain-by-sys-admin"
                   ngbDropdownItem
-                  class="btn--2"
+                  class="btn--2 btn--margin-right btn--completed"
                   >Domain by SysAdmin</a
                 >
               </div>
@@ -48,7 +61,11 @@
           </li>
           <li>
             <div ngbDropdown class="d-inline-block dropdown">
-              <a class="btn--1" id="dropdownBasic1" ngbDropdownToggle>
+              <a
+                class="btn--1 btn--in-progress"
+                id="dropdownBasic1"
+                ngbDropdownToggle
+              >
                 Infrastructure
               </a>
               <div
@@ -56,20 +73,32 @@
                 aria-labelledby="dropdownBasic1"
                 class="dropdown-menu"
               >
-                <a ngbDropdownItem class="btn--2">Database</a>
-                <a ngbDropdownItem class="btn--2">Server</a>
-                <a 
+                <a
+                  ngbDropdownItem
+                  routerLink="database"
+                  class="btn--2 btn--in-progress"
+                  >Database</a
+                >
+                <a
+                  ngbDropdownItem
+                  routerLink="server"
+                  class="btn--2 btn--in-progress"
+                  >Server</a
+                >
+                <a
+                  ngbDropdownItem
                   routerLink="server-parameter"
-                  ngbDropdownItem class="btn--2">Server Parameter
-                </a>
+                  class="btn--2 btn--margin-right btn--completed"
+                  >Server Parameter</a
+                >
               </div>
             </div>
           </li>
           <li>
-            <a class="btn--1" href="#">Users</a>
+            <a routerLink="/users" class="btn--1 btn--completed">Users</a>
           </li>
           <li>
-            <a class="btn--1" href="#">Reports</a>
+            <a routerLink="/reports" class="btn--1 btn--completed">Reports</a>
           </li>
           <li>
             <p class="text nav-end">
@@ -86,5 +115,5 @@
       </nav>
     </header>
     <router-outlet></router-outlet>
-  </ng-template>
+  </ng-container>
 </div>

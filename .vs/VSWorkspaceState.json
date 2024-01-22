@@ -1,0 +1,16 @@
+{
+  "ExpandedNodes": [
+<<<<<<< HEAD
+    ""
+  ],
+=======
+    "",
+    "\\DB",
+    "\\Project",
+    "\\Project\\backend",
+    "\\Project\\backend\\Interfaces"
+  ],
+  "SelectedNode": "\\Project\\backend\\Interfaces\\IDatabasseRepository.cs",
+>>>>>>> origin/database
+  "PreviewInSolutionExplorer": false
+}

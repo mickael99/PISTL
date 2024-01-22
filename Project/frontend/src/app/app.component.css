@@ -6,6 +6,7 @@
   height: 100vh;
   max-width: 100%;
   background: linear-gradient(to bottom, white, #1f2d54);
+  overflow: auto;
 }
 
 .container--2 {
@@ -60,7 +61,7 @@ header {
 
 .btn--1:hover {
   color: #2b3e75;
-  cursor: default;
+  cursor: pointer;
 }
 
 .btn--1::after {
@@ -99,6 +100,18 @@ header {
   font-size: 1.2rem;
 
   right: 2%;
+}
+
+.btn--in-progress::after {
+  content: "In Progress";
+  white-space: nowrap;
+  background-color: orange;
+}
+
+.btn--completed::after {
+  content: "Completed";
+  white-space: nowrap;
+  background-color: #3bc9db;
 }
 
 .list {
@@ -143,6 +156,13 @@ header {
   font-size: 1.8rem;
   font-weight: 500;
   color: #3d59a7;
+}
+
+/***********************************************************************************/
+/******************************* HELPER ********************************************/
+/***********************************************************************************/
+.btn--margin-right {
+  margin-right: 6rem;
 }
 
 /***********************************************************************************/
