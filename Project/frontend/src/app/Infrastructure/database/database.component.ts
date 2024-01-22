@@ -53,7 +53,7 @@ export class DatabaseComponent {
     ModifiedBy: '',
     CreatedDate: '',
     ModifiedDate: '',
-    Context: 0
+    Context: null
   };
 
   // Copy of the user selected in the table (for the 'Save' button)
@@ -64,7 +64,7 @@ export class DatabaseComponent {
     Password: '',
     ServerId: 0,
     Server: null,
-    Context: 0
+    Context: null
   };
 
   // Bool used for the 'Edit', 'Delete', 'Reset Password' and 'Unlock' buttons
@@ -417,12 +417,12 @@ export class DatabaseComponent {
     console.log('Edit database:', this.databaseSelected.DatabaseId);
     
     // Find the server with the same name as ServerName
-    // const server = this.server.find(s => s.ServerName === this.databaseSelected.ServerName);
+    const serverToUpdate = this.server.find(s => s.serverId === this.databaseSelected.ServerId);
 
     // Store the found server in databaseSelected.Server
-    // this.databaseSelected.Server = server;
-    
-    this.databaseSelected.ServerId = this.databaseSelected.Server.serverId;
+    this.databaseSelected.Server = serverToUpdate;
+
+    console.log('Edit database:', this.databaseSelected.Server);
 
     //check if the user has changed something
     if (
@@ -544,7 +544,7 @@ export class DatabaseComponent {
     this.databaseSelected.UserName = database.userName;
     this.databaseSelected.Password = database.password;
     this.databaseSelected.PasswordModified = '';
-    this.databaseSelected.Server = database.server;
+    this.databaseSelected.Server = database.Server;
     console.log('databaseSelected.Server: ', this.server);
     this.databaseSelected.ServerId = database.serverId;
     this.databaseSelected.CreatedBy = database.createdBy;

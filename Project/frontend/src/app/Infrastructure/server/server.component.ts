@@ -44,6 +44,9 @@ export class ServerComponent {
   // Columns names in the table
   displayedColumns: string[] = ['Server ID','Name', 'Address', 'Context', 'Type'];
 
+  //Types of servers
+  types: string[] = ['EAI', 'EAI2', 'EAI3'];
+
   // Bool that allows or not to display the error popup
   showPopup: boolean = false;
 
@@ -52,7 +55,7 @@ export class ServerComponent {
     ServerId: 0,
     Name: '',
     Address: '',
-    Context: '',
+    Context: null,
     Type: '',
     CreatedBy: '',
     ModifiedBy: '',
@@ -276,7 +279,7 @@ export class ServerComponent {
     this.serverSelected.ServerId = server.serverId;
     this.serverSelected.Name = server.name;
     this.serverSelected.Address = server.address;
-    this.serverSelected.Context = server.context;
+    this.serverSelected.Context = server.context
     this.serverSelected.Type = server.type;
     this.serverSelected.CreatedBy = server.createdBy;
     this.serverSelected.ModifiedBy = server.modifiedBy;
