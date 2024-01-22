@@ -182,10 +182,12 @@ namespace Project.Controllers
                 if(user == null)
                 {
                     //Console.WriteLine("Posted user "+userDTO.UserId+ ": "+userDTO.LoginId+" | "+userDTO.DomainId+" | "+userDTO.Environment+" | "+userDTO.SysAdmin);
+                    
                     user = new LoginDomainUser
                     {
                         LoginId = userDTO.LoginId,
                         DomainId = userDTO.DomainId,
+                        UserName = userDTO.UserName,
                         UserId = userDTO.UserId,
                         Environment = userDTO.Environment,
                         SysAdmin = userDTO.SysAdmin,
@@ -199,6 +201,7 @@ namespace Project.Controllers
                         Login = context.Logins.Where(u => u.LoginId == userDTO.LoginId).Single<Models.Login>(),
                         Domain = context.Domains.Where(d => d.DomainId == userDTO.DomainId).Single<Models.Domain>()
                     };
+
                     context.LoginDomainUsers.Add(user);
                 }
                 else
@@ -207,6 +210,7 @@ namespace Project.Controllers
                         return Ok(userDTO);
                     }
                     //Console.WriteLine("Modified user "+user.UserId+ ": "+userDTO.LoginId+" | "+user.DomainId+" | "+user.Environment+" | "+user.SysAdmin);
+                    
                     user.SysAdmin = userDTO.SysAdmin;
                     user.SysAdminStartDate = userDTO.SysAdminStartDate;
                     user.SysAdminEndDate = userDTO.SysAdminEndDate;
@@ -215,7 +219,9 @@ namespace Project.Controllers
                     
                     context.Entry(user).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
                 }
+
                 context.SaveChanges();
+                
                 return Ok(userDTO);
             }
             catch (Exception ex)
@@ -256,7 +262,7 @@ namespace Project.Controllers
                 else
                 {
                     // Console.WriteLine("Unable to delete "+userID+ ": "+loginID+" | "+domainID+" | "+env);
-                    var response = "Unable to find user "+userID+ ": "+loginID+" | "+domainID+" | "+env;
+                    
                     return Ok();
                 }
             }

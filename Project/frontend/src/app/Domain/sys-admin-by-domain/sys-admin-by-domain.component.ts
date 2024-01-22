@@ -66,9 +66,6 @@ export class SysAdminByDomainComponent {
 
         this.loadDomainUsers(all);
         this.updateOneChecked();
-
-        console.log("Login_users: ", this.login_users);
-        console.log("DataDomainTable: ", this.data_domain_table);
       },
       (error) => {
         alert('Connection error: ' + error.message);
@@ -149,7 +146,6 @@ export class SysAdminByDomainComponent {
     dialogConfig.autoFocus = true;
     
     if(this.login_users[loginId][2][env]){
-      console.log("User found");
 
       dialogConfig.data = {user: this.login_users[loginId][2][env], name: this.login_users[loginId][0]};
 
@@ -159,7 +155,6 @@ export class SysAdminByDomainComponent {
       // Subscribe to the dialog's afterClosed event to handle the result
       dialogRef.afterClosed().subscribe(result => {
         if(result.from === null && result.to === null && result.comment === null){
-          console.log("User not added");
           this.login_users[loginId][1][env] = false;
           this.show_add = true;
           this.loadDomainUsers(false);
@@ -185,12 +180,12 @@ export class SysAdminByDomainComponent {
     } 
 
     else {
-      console.log("User not found");
 
       var new_user = {
         loginId: loginId,
         domainId: this.selected_domain.domainId, 
         userId: "99999999-9999-9999-9999-999999999999", 
+        userName: "SYSADMIN",
         environment: env
       };
 
@@ -202,7 +197,6 @@ export class SysAdminByDomainComponent {
       // Subscribe to the dialog's afterClosed event to handle the result
       dialogRef.afterClosed().subscribe(result => {
         if(result.from === null && result.to === null && result.comment === null){
-          console.log("User not added");
           this.login_users[loginId][1][env] = false;
           this.show_add = true;
           this.loadDomainUsers(false);
@@ -213,6 +207,7 @@ export class SysAdminByDomainComponent {
             loginId: loginId,
             domainId: this.selected_domain.domainId, 
             userId: "99999999-9999-9999-9999-999999999999", 
+            userName: "SYSADMIN",
             environment: env,
             sysAdmin: true,
             sysAdminStartDate: result.from,
@@ -232,7 +227,6 @@ export class SysAdminByDomainComponent {
         }
       });
     }
-    console.log("Login_users: ", this.login_users);
   }
 
   uncheck(loginId: any, env: any): void {
@@ -241,8 +235,6 @@ export class SysAdminByDomainComponent {
 
     this.show_calendar[loginId][env] = false;
     this.show_add = false;
-
-    console.log("Login_users: ", this.login_users);
   }
 
 
@@ -350,9 +342,6 @@ export class SysAdminByDomainComponent {
       }
     }
 
-    //console.log("Login_users: ", this.login_users);
-    //console.log("DataDomainTable: ", this.data_domain_table);
-
     this.data_source = new MatTableDataSource(this.data_domain_table);
     this.data_source.paginator = this.paginator;
     this.data_source.sort = this.sort;
@@ -374,6 +363,7 @@ export class SysAdminByDomainComponent {
           loginId: loginId,
           domainId: this.selected_domain.domainId, 
           userId: "99999999-9999-9999-9999-999999999999", 
+          userName: "SYSADMIN",
           environment: env,
           sysAdmin: true,
           sysAdminStartDate: this.datepipe.transform(currentDate, 'yyyy-MM-dd'),
@@ -397,9 +387,6 @@ export class SysAdminByDomainComponent {
         this.data_domain_table.push(line);
       }
     }
-    
-    //console.log("Login_users: ", this.login_users);
-    //console.log("DataDomainTable: ", this.data_domain_table);
 
     this.data_source = new MatTableDataSource(this.data_domain_table);
     this.data_source.paginator = this.paginator;
