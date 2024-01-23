@@ -27,17 +27,6 @@
     Delete
   </button>
 
-  <button
-  mat-raised-button
-  color="primary"
-  (click)="openCopyConfirmation()"
-  [disabled]="!isClicked"
-  class="btn"
->
-  Copy
-</button>
-
-
   <div class="listes">
     <div class="table">
       <hr />
@@ -73,12 +62,12 @@
               mat-cell
               *matCellDef="let server"
               (click)="getServer(server)"
-              (mouseenter)="onMouseEnter(server.name)"
+              (mouseenter)="onMouseEnter(server.serverId)"
               (mouseleave)="onMouseLeave()"
               [ngClass]="{
                 'server--selected' : (server.name == serverSelected.name),
                 '' : !(server.name == serverSelected.name),
-                hovered: server.name == serverHovered ? isHovered : false,
+                hovered: server.serverId == serverHovered ? isHovered : false,
               }"
             >
               {{ server.name }}
@@ -91,12 +80,12 @@
               mat-cell
               *matCellDef="let server"
               (click)="getServer(server)"
-              (mouseenter)="onMouseEnter(server.address)"
+              (mouseenter)="onMouseEnter(server.serverId)"
               (mouseleave)="onMouseLeave()"
               [ngClass]="{
                 'server--selected' : (server.address == serverSelected.address),
                 '' : !(server.address == serverSelected.address),
-                hovered: server.address == serverHovered ? isHovered : false,
+                hovered: server.serverId == serverHovered ? isHovered : false,
               }"
             >
               {{ server.address }}
@@ -111,16 +100,31 @@
               mat-cell
               *matCellDef="let server"
               (click)="getServer(server)"
-              (mouseenter)="onMouseEnter(server.context)"
+              (mouseenter)="onMouseEnter(server.serverId)"
               (mouseleave)="onMouseLeave()"
               [ngClass]="{
                 'server--selected' : (server.context == serverSelected.context),
                 '' : !(server.context == serverSelected.context),
-                hovered: server.context == serverHovered ? isHovered : false,
+                hovered: server.serverId == serverHovered ? isHovered : false,
               }"
             >
-              {{ server.context }}
-            </td>
+              <span [ngStyle]="{
+                'background-color': server.context == '1' ? '#f5a82a' :
+                                    server.context == '2' ? '#c125f2' :
+                                    server.context == '3' ? '#4557a2' :
+                                    server.context == '4' ? '#50c63e' :
+                                    server.context == '5' ? '#956248' :
+                                    server.context == '6' ? '#f5f334' : '',
+                'color': '#FFFFFF'
+              }">
+                {{ server.context == '1' ? 'Dev' :
+                    server.context == '2' ? 'Preprod' :
+                    server.context == '3' ? 'Prod' :
+                    server.context == '4' ? 'Test' :
+                    server.context == '5' ? 'ProdCopy' :
+                    server.context == '6' ? 'Staging' : '' }}
+              </span>
+              </td>
           </ng-container>
 
           <ng-container matColumnDef="Type">
@@ -131,12 +135,12 @@
               mat-cell
               *matCellDef="let server"
               (click)="getServer(server)"
-              (mouseenter)="onMouseEnter(server.type)"
+              (mouseenter)="onMouseEnter(server.serverId)"
               (mouseleave)="onMouseLeave()"
               [ngClass]="{
                 'server--selected' : (server.type == serverSelected.type),
                 '' : !(server.type == serverSelected.type),
-                hovered: server.type == serverHovered ? isHovered : false,
+                hovered: server.serverId == serverHovered ? isHovered : false,
               }"
             >
               {{ server.type }}
@@ -198,24 +202,38 @@
 
           <mat-form-field class="example-full-width">
             <mat-label>Context</mat-label>
-            <input
-              matInput
-              placeholder="Context"
-              required
-              [(ngModel)]="formDataCreate.Context"
-              name="context"
-            />
+            <mat-select [(Value)]="formDataCreate.Context" name="Context" >
+              <mat-option value=1>
+                <span style="background-color: #f5a82a; color: #FFFFFF;">Dev</span>
+              </mat-option>
+              <mat-option value=2>
+                <span style="background-color: #c125f2; color: #FFFFFF;">Preprod</span>
+              </mat-option>
+              <mat-option value=3>
+                <span style="background-color: #4557a2; color: #FFFFFF;">Prod</span>
+              </mat-option>
+              <mat-option value=4>
+                <span style="background-color: #50c63e; color: #FFFFFF;">Test</span>
+              </mat-option>
+              <mat-option value=5>
+                <span style="background-color: #956248; color: #FFFFFF;">ProdCopy</span>
+              </mat-option>
+              <mat-option value=6>
+                <span style="background-color: #f5f334; color: #FFFFFF;">Staging</span>
+              </mat-option>
+            </mat-select>
           </mat-form-field>
 
           <mat-form-field class="example-full-width">
             <mat-label>Type</mat-label>
-            <input
-              matInput
-              placeholder="Type"
-              required
+            <mat-select
               [(ngModel)]="formDataCreate.Type"
-              name="type"
-            />
+              name="Type"
+            >
+              <mat-option *ngFor="let t of types" [value]="t">
+                {{ t }}
+              </mat-option>
+            </mat-select>
           </mat-form-field>
         </form>
       </ng-container>
@@ -271,26 +289,39 @@
 
           <mat-form-field class="example-full-width">
             <mat-label>Context</mat-label>
-            <input
-              matInput
-              placeholder="Context"
-              required
-              [(ngModel)]="serverSelected.Context"
-              name="Context"
-              [disabled]="!editEnabled"
-            />
+              <mat-select [(ngModel)]="serverSelected.Context" name="Context" [disabled]="!editEnabled" value = "serverSelected.Context">
+                <mat-option value=1>
+                  <span style="background-color: #f5a82a; color: #FFFFFF;">Dev</span>
+                </mat-option>
+                <mat-option value=2>
+                  <span style="background-color: #c125f2; color: #FFFFFF;">Preprod</span>
+                </mat-option>
+                <mat-option value=3>
+                  <span style="background-color: #4557a2; color: #FFFFFF;">Prod</span>
+                </mat-option>
+                <mat-option value=4>
+                  <span style="background-color: #50c63e; color: #FFFFFF;">Test</span>
+                </mat-option>
+                <mat-option value=5>
+                  <span style="background-color: #956248; color: #FFFFFF;">ProdCopy</span>
+                </mat-option>
+                <mat-option value=6>
+                  <span style="background-color: #f5f334; color: #FFFFFF;">Staging</span>
+                </mat-option>
+              </mat-select>
           </mat-form-field>
 
           <mat-form-field class="example-full-width">
             <mat-label>Type</mat-label>
-            <input
-              matInput
-              placeholder="Type"
-              required
+            <mat-select
               [(ngModel)]="serverSelected.Type"
               name="Type"
               [disabled]="!editEnabled"
-            />
+            >
+              <mat-option *ngFor="let t of types" [value]="t">
+                {{ t }}
+              </mat-option>
+            </mat-select>
           </mat-form-field>
 
         </form>

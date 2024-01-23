@@ -185,10 +185,7 @@ namespace Project.Controllers
                 else
                 { 
                     Console.WriteLine("Found user "+user.UserId+ ": "+userDTO.LoginId+" | "+user.DomainId+" | "+user.Environment+" | "+user.SysAdmin);
-                    user.LoginId = userDTO.LoginId;
-                    user.DomainId = userDTO.DomainId;
-                    user.UserId = userDTO.UserId;
-                    user.Environment = userDTO.Environment;
+
                     user.SysAdmin = userDTO.SysAdmin;
                     user.SysAdminStartDate = userDTO.SysAdminStartDate;
                     user.SysAdminEndDate = userDTO.SysAdminEndDate;

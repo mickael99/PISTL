@@ -21,6 +21,7 @@ export class SysAdminByDomainComponent {
   domains:  { [domain_id: number]: any } = {};
   logins: any[] = [];
   users: any[] = [];
+  connectedUser: string | null = localStorage.getItem('email') || null;
 
   // dictionnary key is loginId and value is an triplet (login.email, array of sysAdmin rights by env, array of admin users)
   login_users: { [login_id: number]: any } = {};
@@ -39,6 +40,7 @@ export class SysAdminByDomainComponent {
   datepipe: DatePipe = new DatePipe('en-US');
 
   constructor(private http: HttpClient, private dialog: MatDialog) {
+    console.log('connectedUser', this.connectedUser);
     this.getSysAdminByDomain(351, false);
   }
 
@@ -165,7 +167,7 @@ export class SysAdminByDomainComponent {
           this.login_users[loginId][2][env].sysAdminStartDate = result.from;
           this.login_users[loginId][2][env].sysAdminEndDate = result.to || null;
           this.login_users[loginId][2][env].comment = result.comment || "";
-          this.login_users[loginId][2][env].modifiedBy = 'admin'; // TODO: Replace with the actual login
+          this.login_users[loginId][2][env].modifiedBy = this.connectedUser; // TODO: Replace with the actual login
 
           this.login_users[loginId][1][env] = true;
     
@@ -213,7 +215,7 @@ export class SysAdminByDomainComponent {
             sysAdminStartDate: result.from,
             sysAdminEndDate: result.to || null,
             comment: result.comment || "",
-            modifiedBy: 'admin' // TODO: Replace with the actual login
+            modifiedBy: this.connectedUser // TODO: Replace with the actual login
           }
     
           this.login_users[loginId][1][env] = true;
@@ -369,7 +371,7 @@ export class SysAdminByDomainComponent {
           sysAdminStartDate: this.datepipe.transform(currentDate, 'yyyy-MM-dd'),
           sysAdminEndDate: null,
           comment: "given all users in this environment sys admin rights",
-          modifiedBy: 'admin'
+          modifiedBy: this.connectedUser
         };
         
         this.login_users[loginId][1][env] = true;

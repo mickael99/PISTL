@@ -1,0 +1,6 @@
+/home/walter/Desktop/MASTER/PISTL/PISTL/Project/backend.Tests/obj/Debug/net8.0/backend.Tests.csproj.AssemblyReference.cache
+/home/walter/Desktop/MASTER/PISTL/PISTL/Project/backend.Tests/obj/Debug/net8.0/backend.Tests.GeneratedMSBuildEditorConfig.editorconfig
+/home/walter/Desktop/MASTER/PISTL/PISTL/Project/backend.Tests/obj/Debug/net8.0/backend.Tests.AssemblyInfoInputs.cache
+/home/walter/Desktop/MASTER/PISTL/PISTL/Project/backend.Tests/obj/Debug/net8.0/backend.Tests.AssemblyInfo.cs
+/home/walter/Desktop/MASTER/PISTL/PISTL/Project/backend.Tests/obj/Debug/net8.0/backend.Tests.csproj.CoreCompileInputs.cache
+/home/walter/Desktop/MASTER/PISTL/PISTL/Project/backend.Tests/obj/Debug/net8.0/backend.Tests.sourcelink.json

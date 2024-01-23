@@ -65,8 +65,6 @@ header {
 }
 
 .btn--1::after {
-  content: "Soon";
-  background-color: green;
   color: #fff;
   padding: 0.25rem 0.5rem;
   border-radius: 11px;
