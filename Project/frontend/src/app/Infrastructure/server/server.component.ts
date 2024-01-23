@@ -45,7 +45,7 @@ export class ServerComponent {
   displayedColumns: string[] = ['Server ID','Name', 'Address', 'Context', 'Type'];
 
   //Types of servers
-  types: string[] = ['EAI', 'EAI2', 'EAI3'];
+  types: string[] = ['EAI', 'TABLEAU', 'WEB', 'DB', 'SSRS', 'OTHER'];
 
   // Bool that allows or not to display the error popup
   showPopup: boolean = false;
@@ -260,9 +260,21 @@ export class ServerComponent {
                 case 'Server ID':
                   console.log('Server ID: ', item);
                   return item.serverId;
+                  case 'Name':
+                    console.log('Name: ', item);
+                    return item.name;
+                  case 'Address':
+                    console.log('Address: ', item);
+                    return item.address;
+                  case 'Context':
+                    console.log('Context: ', item);
+                    return item.context;
+                  case 'Type':
+                    console.log('Type: ', item);
+                    return item.type;
                 default:
                   return item[property];
-              
+  
             }
           };
           this.dataSource.sort = this.sort;
@@ -421,9 +433,21 @@ export class ServerComponent {
                 case 'Server ID':
                   console.log('Server ID: ', item);
                   return item.serverId;
+                  case 'Name':
+                    console.log('Name: ', item);
+                    return item.name;
+                  case 'Address':
+                    console.log('Address: ', item);
+                    return item.address;
+                  case 'Context':
+                    console.log('Context: ', item);
+                    return item.context;
+                  case 'Type':
+                    console.log('Type: ', item);
+                    return item.type;
                 default:
                   return item[property];
-              
+  
             }
           };
           this.dataSource.sort = this.sort;
@@ -488,9 +512,21 @@ export class ServerComponent {
                 case 'Server ID':
                   console.log('Server ID: ', item);
                   return item.serverId;
+                  case 'Name':
+                    console.log('Name: ', item);
+                    return item.name;
+                  case 'Address':
+                    console.log('Address: ', item);
+                    return item.address;
+                  case 'Context':
+                    console.log('Context: ', item);
+                    return item.context;
+                  case 'Type':
+                    console.log('Type: ', item);
+                    return item.type;
                 default:
                   return item[property];
-              
+  
             }
           };
           this.dataSource.sort = this.sort;
@@ -565,9 +601,21 @@ export class ServerComponent {
                 case 'Server ID':
                   console.log('Server ID: ', item);
                   return item.serverId;
+                  case 'Name':
+                    console.log('Name: ', item);
+                    return item.name;
+                  case 'Address':
+                    console.log('Address: ', item);
+                    return item.address;
+                  case 'Context':
+                    console.log('Context: ', item);
+                    return item.context;
+                  case 'Type':
+                    console.log('Type: ', item);
+                    return item.type;
                 default:
                   return item[property];
-              
+  
             }
           };
           this.dataSource.sort = this.sort;

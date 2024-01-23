@@ -37,7 +37,8 @@ export class DatabaseComponent {
     Server: null,
     ServerId: 0,
     CreatedBy: '',
-    ModifiedBy: ''
+    ModifiedBy: '',
+    Context: null
   };
 
   // User selected in the table
@@ -530,7 +531,8 @@ export class DatabaseComponent {
       Server: null,
       ServerId: 0,
       CreatedBy: '',
-      ModifiedBy: ''
+      ModifiedBy: '',
+      Context: null
     };
 
     this.reinitaliseDatabaseSelectedForm();
@@ -605,7 +607,8 @@ export class DatabaseComponent {
       Server: null,
       ServerId: 0,
       CreatedBy: '',
-      ModifiedBy: ''
+      ModifiedBy: '',
+      Context: null
     };
   };
 
