@@ -18,6 +18,7 @@ export class DomainBySysAdminComponent {
   users:  any[] = [];
   logins: {[login_id: number]: any} = {};
   data_login_table: any[] = [];
+  connectedUser = localStorage.getItem('email');
   
   selected_login: any;
   domain_users: {[domainId: number]: any} = {};
@@ -170,7 +171,7 @@ export class DomainBySysAdminComponent {
           this.domain_users[domainId][2][env].sysAdminStartDate = result.from;
           this.domain_users[domainId][2][env].sysAdminEndDate = result.to || null;
           this.domain_users[domainId][2][env].comment = result.comment || "";
-          this.domain_users[domainId][2][env].modifiedBy = 'admin';
+          this.domain_users[domainId][2][env].modifiedBy = this.connectedUser;
 
           this.domain_users[domainId][1][env] = true;
 
@@ -218,7 +219,7 @@ export class DomainBySysAdminComponent {
             sysAdminStartDate: result.from,
             sysAdminEndDate: result.to || null,
             comment: result.comment || "",
-            modifiedBy: 'admin'
+            modifiedBy: this.connectedUser
           };
 
           this.domain_users[domainId][1][env] = true;
@@ -372,7 +373,7 @@ export class DomainBySysAdminComponent {
           sysAdminStartDate: this.datepipe.transform(currentDate, 'yyyy-MM-dd'),
           sysAdminEndDate: null,
           comment: "given all users in this environment sys admin rights",
-          modifiedBy: 'admin'
+          modifiedBy: this.connectedUser
         };
         
         this.domain_users[domainId][1][env] = true;
