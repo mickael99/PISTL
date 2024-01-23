@@ -14,14 +14,12 @@ import { ChangeDetectorRef } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 
-
 @Component({
   selector: 'app-server',
   templateUrl: './server.component.html',
-  styleUrls: ['./server.component.css']
+  styleUrls: ['./server.component.css'],
 })
 export class ServerComponent {
-
   // Servers form the DB
   server: any;
 
@@ -42,10 +40,16 @@ export class ServerComponent {
   isClicked: boolean = false;
 
   // Columns names in the table
-  displayedColumns: string[] = ['Server ID','Name', 'Address', 'Context', 'Type'];
+  displayedColumns: string[] = [
+    'Server ID',
+    'Address',
+    'Name',
+    'Context',
+    'Type',
+  ];
 
   //Types of servers
-  types: string[] = ['EAI', 'EAI2', 'EAI3'];
+  types: string[] = ['EAI', 'TABLEAU', 'WEB', 'DB', 'SSRS', 'OTHER'];
 
   // Bool that allows or not to display the error popup
   showPopup: boolean = false;
@@ -136,24 +140,23 @@ export class ServerComponent {
         this.dataSource.paginator = this.paginator;
         this.dataSource.sortingDataAccessor = (item, property) => {
           switch (property) {
-              case 'Server ID':
-                console.log('Server ID: ', item);
-                return item.serverId;
-                case 'Name':
-                  console.log('Name: ', item);
-                  return item.name;
-                case 'Address':
-                  console.log('Address: ', item);
-                  return item.address;
-                case 'Context':
-                  console.log('Context: ', item);
-                  return item.context;
-                case 'Type':
-                  console.log('Type: ', item);
-                  return item.type;
-              default:
-                return item[property];
-
+            case 'Server ID':
+              console.log('Server ID: ', item);
+              return item.serverId;
+            case 'Name':
+              console.log('Name: ', item);
+              return item.name;
+            case 'Address':
+              console.log('Address: ', item);
+              return item.address;
+            case 'Context':
+              console.log('Context: ', item);
+              return item.context;
+            case 'Type':
+              console.log('Type: ', item);
+              return item.type;
+            default:
+              return item[property];
           }
         };
         this.dataSource.sort = this.sort;
@@ -232,23 +235,22 @@ export class ServerComponent {
       }),
     };
 
-    
-    this.formDataCreate.ServerId = parseInt(this.formDataCreate.ServerId.toString());
+    this.formDataCreate.ServerId = parseInt(
+      this.formDataCreate.ServerId.toString()
+    );
     console.log(typeof this.formDataCreate.ServerId);
 
     console.log('requestBody: ', this.formDataCreate);
 
     this.http
-      .post(
-        'http://localhost:5050/api/server',
-        {        
-          ServerId: this.formDataCreate.ServerId,
-          Name: this.formDataCreate.Name,
-          Address: this.formDataCreate.Address,
-          Context: this.formDataCreate.Context,
-          Type: this.formDataCreate.Type,
-          CreatedBy: this.formDataCreate.CreatedBy,
-        })
+      .post('http://localhost:5050/api/server', {
+        ServerId: this.formDataCreate.ServerId,
+        Name: this.formDataCreate.Name,
+        Address: this.formDataCreate.Address,
+        Context: this.formDataCreate.Context,
+        Type: this.formDataCreate.Type,
+        CreatedBy: this.formDataCreate.CreatedBy,
+      })
       .subscribe({
         next: (data: any) => {
           this.showFormCreate = false;
@@ -257,18 +259,17 @@ export class ServerComponent {
           this.dataSource.paginator = this.paginator;
           this.dataSource.sortingDataAccessor = (item, property) => {
             switch (property) {
-                case 'Server ID':
-                  console.log('Server ID: ', item);
-                  return item.serverId;
-                default:
-                  return item[property];
-              
+              case 'Server ID':
+                console.log('Server ID: ', item);
+                return item.serverId;
+              default:
+                return item[property];
             }
           };
           this.dataSource.sort = this.sort;
+          this.reinitaliseServerCreatedForm();
         },
         error: (error: any) => {
-          console.error(error.error.message);
           this.showErrorPopup(error.error.message);
         },
       });
@@ -279,7 +280,7 @@ export class ServerComponent {
     this.serverSelected.ServerId = server.serverId;
     this.serverSelected.Name = server.name;
     this.serverSelected.Address = server.address;
-    this.serverSelected.Context = server.context
+    this.serverSelected.Context = server.context;
     this.serverSelected.Type = server.type;
     this.serverSelected.CreatedBy = server.createdBy;
     this.serverSelected.ModifiedBy = server.modifiedBy;
@@ -292,7 +293,7 @@ export class ServerComponent {
     // Activate the 'Edit', 'Delete', 'Reset Password' and 'Unlock' buttons
     this.isClicked = true;
 
-    console.table(this.serverSelected);
+    console.table('serverSelected: ' + this.serverSelected.ServerId);
   }
 
   /***************************************************************************************/
@@ -328,7 +329,7 @@ export class ServerComponent {
       CreatedBy: '',
       ModifiedBy: '',
       CreatedDate: '',
-      ModifiedDate: '', 
+      ModifiedDate: '',
       Databases: null,
     };
 
@@ -354,7 +355,7 @@ export class ServerComponent {
       Type: '',
       CreatedBy: '',
     };
-  };
+  }
 
   /***************************************************************************************/
   /**
@@ -369,7 +370,6 @@ export class ServerComponent {
     this.serverSelectedCopy.Address = this.serverSelected.Address;
     this.serverSelectedCopy.Context = this.serverSelected.Context;
     this.serverSelectedCopy.Type = this.serverSelected.Type;
-    
   }
 
   /***************************************************************************************/
@@ -378,7 +378,6 @@ export class ServerComponent {
    */
   editServer() {
     if (
-
       this.serverSelected.Name == this.serverSelectedCopy.Name &&
       this.serverSelected.ServerId == this.serverSelectedCopy.ServerId &&
       this.serverSelected.Address == this.serverSelectedCopy.Address &&
@@ -409,7 +408,10 @@ export class ServerComponent {
     console.log('requestBody: ', requestBody);
 
     this.http
-      .put('http://localhost:5050/api/server/' + requestBody.ServerId, requestBody)
+      .put(
+        'http://localhost:5050/api/server/' + requestBody.ServerId,
+        requestBody
+      )
       .subscribe({
         next: (data: any) => {
           this.server = data.servers;
@@ -418,12 +420,11 @@ export class ServerComponent {
           this.dataSource.paginator = this.paginator;
           this.dataSource.sortingDataAccessor = (item, property) => {
             switch (property) {
-                case 'Server ID':
-                  console.log('Server ID: ', item);
-                  return item.serverId;
-                default:
-                  return item[property];
-              
+              case 'Server ID':
+                console.log('Server ID: ', item);
+                return item.serverId;
+              default:
+                return item[property];
             }
           };
           this.dataSource.sort = this.sort;
@@ -445,7 +446,6 @@ export class ServerComponent {
       '?';
     console.log('confirmationMessage: ', this.confirmationMessage);
     this.changeDetectorRef.detectChanges();
-
   }
 
   /***************************************************************************************/
@@ -476,7 +476,9 @@ export class ServerComponent {
     console.log('Delete server:', this.serverSelected.ServerId);
 
     this.http
-      .delete(`http://localhost:5050/api/server/${this.serverSelected.ServerId}`)
+      .delete(
+        `http://localhost:5050/api/server/${this.serverSelected.ServerId}`
+      )
       .subscribe({
         next: (data: any) => {
           this.server = data.servers;
@@ -485,12 +487,11 @@ export class ServerComponent {
           this.dataSource.paginator = this.paginator;
           this.dataSource.sortingDataAccessor = (item, property) => {
             switch (property) {
-                case 'Server ID':
-                  console.log('Server ID: ', item);
-                  return item.serverId;
-                default:
-                  return item[property];
-              
+              case 'Server ID':
+                console.log('Server ID: ', item);
+                return item.serverId;
+              default:
+                return item[property];
             }
           };
           this.dataSource.sort = this.sort;
@@ -521,8 +522,8 @@ export class ServerComponent {
   onCopyClose() {
     this.showCopyConfirmation = false;
   }
-  
-    /***************************************************************************************/
+
+  /***************************************************************************************/
   /**
    * Function used to call the POST request to delete the database.
    */
@@ -552,31 +553,27 @@ export class ServerComponent {
 
     console.log('requestBody: ', requestBody);
 
-    this.http
-      .post('http://localhost:5050/api/server', requestBody)
-      .subscribe({
-        next: (data: any) => {
-          this.server = data.servers;
-          this.dataSource = new MatTableDataSource(this.server);
-          this.reinitaliseServerSelectedForm();
-          this.dataSource.paginator = this.paginator;
-          this.dataSource.sortingDataAccessor = (item, property) => {
-            switch (property) {
-                case 'Server ID':
-                  console.log('Server ID: ', item);
-                  return item.serverId;
-                default:
-                  return item[property];
-              
-            }
-          };
-          this.dataSource.sort = this.sort;
-        },
-        error: (error: any) => {
-          console.error(error.error.message);
-          this.showErrorPopup(error.error.message);
-        },
-      });
+    this.http.post('http://localhost:5050/api/server', requestBody).subscribe({
+      next: (data: any) => {
+        this.server = data.servers;
+        this.dataSource = new MatTableDataSource(this.server);
+        this.reinitaliseServerSelectedForm();
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sortingDataAccessor = (item, property) => {
+          switch (property) {
+            case 'Server ID':
+              console.log('Server ID: ', item);
+              return item.serverId;
+            default:
+              return item[property];
+          }
+        };
+        this.dataSource.sort = this.sort;
+      },
+      error: (error: any) => {
+        console.error(error.error.message);
+        this.showErrorPopup(error.error.message);
+      },
+    });
   }
-  
 }

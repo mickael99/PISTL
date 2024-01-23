@@ -12,8 +12,13 @@
     mat-raised-button
     color="primary"
     (click)="editEnable()"
-    [disabled]="!isClicked || showPopupError || showInformPopup || showDeleteConfirmation || showResetPasswordConfirmation"
-                
+    [disabled]="
+      !isClicked ||
+      showPopupError ||
+      showInformPopup ||
+      showDeleteConfirmation ||
+      showResetPasswordConfirmation
+    "
     class="btn"
   >
     Edit
@@ -22,7 +27,13 @@
     mat-raised-button
     color="primary"
     (click)="openDeleteConfirmation()"
-    [disabled]="!isClicked || showPopupError || showInformPopup || showDeleteConfirmation || showResetPasswordConfirmation"
+    [disabled]="
+      !isClicked ||
+      showPopupError ||
+      showInformPopup ||
+      showDeleteConfirmation ||
+      showResetPasswordConfirmation
+    "
     class="btn"
   >
     Delete
@@ -31,7 +42,13 @@
     mat-raised-button
     color="primary"
     (click)="openResetPasswordConfirmation()"
-    [disabled]="!isClicked || showPopupError || showInformPopup || showDeleteConfirmation || showResetPasswordConfirmation"
+    [disabled]="
+      !isClicked ||
+      showPopupError ||
+      showInformPopup ||
+      showDeleteConfirmation ||
+      showResetPasswordConfirmation
+    "
     class="btn"
   >
     Reset Password
@@ -40,7 +57,13 @@
     mat-raised-button
     color="primary"
     (click)="check_if_user_blocked()"
-    [disabled]="!isClicked || showPopupError || showInformPopup || showDeleteConfirmation || showResetPasswordConfirmation"
+    [disabled]="
+      !isClicked ||
+      showPopupError ||
+      showInformPopup ||
+      showDeleteConfirmation ||
+      showResetPasswordConfirmation
+    "
     class="btn"
   >
     Unlock

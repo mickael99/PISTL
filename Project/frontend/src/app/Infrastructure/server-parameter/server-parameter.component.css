@@ -1,6 +1,6 @@
-@import '~@angular/material/prebuilt-themes/indigo-pink.css';
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
 
-.body{
+.body {
   margin-left: 5rem;
 }
 
@@ -55,12 +55,13 @@
   width: 100%;
 }
 
-.table-container table td, th {
+.table-container table td,
+th {
   border: #000 solid 1px;
   width: 50%; /* Set the width of each column to 50% */
 }
 
-.table-container table th{
+.table-container table th {
   background-color: #abb9cc;
   color: black;
 }
@@ -68,6 +69,7 @@
 .table-container table tr:hover {
   background-color: #b9b9b9;
   color: black;
+  cursor: pointer;
 }
 .sysadmin_form {
   left: 50px;
@@ -113,7 +115,6 @@
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
 }
 
-
 /**********************************************************************/
 /************************ ACCESS A USER *******************************/
 /**********************************************************************/
@@ -128,7 +129,6 @@
   background-color: #ddd;
   font-weight: 900;
 }
-
 
 /**********************************************************************/
 /************************** HELPERS ***********************************/

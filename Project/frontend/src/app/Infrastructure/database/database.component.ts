@@ -8,7 +8,6 @@ import { ChangeDetectorRef } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 
-
 @Component({
   selector: 'app-database',
   templateUrl: './database.component.html',
@@ -46,7 +45,7 @@ export class DatabaseComponent {
     ModifiedBy: '',
     CreatedDate: '',
     ModifiedDate: '',
-    Context: null
+    Context: null,
   };
 
   // Copy of the user selected in the table (for the 'Save' button)
@@ -57,14 +56,20 @@ export class DatabaseComponent {
     Password: '',
     ServerId: 0,
     Server: null,
-    Context: null
+    Context: null,
   };
 
   // Bool used for the 'Edit', 'Delete', 'Reset Password' and 'Unlock' buttons
   isClicked: boolean = false;
 
   // Columns names in the table
-  displayedColumns: string[] = ['databaseId','name', 'serverId', 'userName', 'context'];
+  displayedColumns: string[] = [
+    'databaseId',
+    'name',
+    'userName',
+    'context',
+    'serverId',
+  ];
 
   // Bool that allows or not to display the error popup
   showPopup: boolean = false;
@@ -140,7 +145,7 @@ export class DatabaseComponent {
             case 'name': // Add case for Name column
               console.log('name: ', item.name);
               return item.name;
-            case 'serverId': 
+            case 'serverId':
               console.log('serverId: ', item.serverId);
               return item.serverId;
             case 'userName':
@@ -168,12 +173,11 @@ export class DatabaseComponent {
         this.dataSource.paginator = this.paginator;
         this.dataSource.sortingDataAccessor = (item, property) => {
           switch (property) {
-              case 'databaseId':
-                console.log('databaseId: ', item.databaseId);
-                return item.databaseId;
-              default:
-                return item[property];
-            
+            case 'databaseId':
+              console.log('databaseId: ', item.databaseId);
+              return item.databaseId;
+            default:
+              return item[property];
           }
         };
         this.dataSource.sort = this.sort;
@@ -250,7 +254,7 @@ export class DatabaseComponent {
               case 'name': // Add case for Name column
                 console.log('name: ', item.name);
                 return item.name;
-              case 'serverId': 
+              case 'serverId':
                 console.log('serverId: ', item.serverId);
                 return item.serverId;
               case 'userName':
@@ -309,7 +313,7 @@ export class DatabaseComponent {
               case 'name': // Add case for Name column
                 console.log('name: ', item.name);
                 return item.name;
-              case 'serverId': 
+              case 'serverId':
                 console.log('serverId: ', item.serverId);
                 return item.serverId;
               case 'userName':
@@ -379,7 +383,7 @@ export class DatabaseComponent {
               case 'name': // Add case for Name column
                 console.log('name: ', item.name);
                 return item.name;
-              case 'serverId': 
+              case 'serverId':
                 console.log('serverId: ', item.serverId);
                 return item.serverId;
               case 'userName':
@@ -407,9 +411,11 @@ export class DatabaseComponent {
    */
   editDatabase() {
     console.log('Edit database:', this.databaseSelected.DatabaseId);
-    
+
     // Find the server with the same name as ServerName
-    const serverToUpdate = this.server.find(s => s.serverId === this.databaseSelected.ServerId);
+    const serverToUpdate = this.server.find(
+      (s) => s.serverId === this.databaseSelected.ServerId
+    );
 
     // Store the found server in databaseSelected.Server
     this.databaseSelected.Server = serverToUpdate;
@@ -431,11 +437,11 @@ export class DatabaseComponent {
 
     var passwordToModified;
 
-    if(this.databaseSelected.PasswordModified == ''){
-      console.log("keep same");
+    if (this.databaseSelected.PasswordModified == '') {
+      console.log('keep same');
       passwordToModified = this.databaseSelected.Password;
     } else {
-      console.log("change");
+      console.log('change');
       passwordToModified = this.databaseSelected.PasswordModified;
     }
 
@@ -462,8 +468,6 @@ export class DatabaseComponent {
       Context: this.databaseSelected.Context,
     };
 
-
-
     console.log('requestBody: ', requestBody);
 
     // Call the PUT request
@@ -486,7 +490,7 @@ export class DatabaseComponent {
               case 'name': // Add case for Name column
                 console.log('name: ', item.name);
                 return item.name;
-              case 'serverId': 
+              case 'serverId':
                 console.log('serverId: ', item.serverId);
                 return item.serverId;
               case 'userName':

@@ -87,20 +87,26 @@ public class DatabaseController : Controller
         Console.WriteLine("start creating");
         try
         {
-
-            context.Databases.Add(new Database
+            if (context.Databases.FirstOrDefault(s => s.Name == databaseCreate.Name) == null)
             {
-                DatabaseId = newId,
-                Name = databaseCreate.Name,
-                UserName = databaseCreate.UserName,
-                Password = databaseCreate.Password,
-                ServerId = databaseCreate.ServerId,
-                Server = server,
-                ModifiedBy = databaseCreate.ModifiedBy,
-                CreatedBy = databaseCreate.CreatedBy,
-                CreatedDate = DateTime.Now,
-                ModifiedDate = DateTime.Now,
-            });
+                context.Databases.Add(new Database
+                {
+                    DatabaseId = newId,
+                    Name = databaseCreate.Name,
+                    UserName = databaseCreate.UserName,
+                    Password = databaseCreate.Password,
+                    ServerId = databaseCreate.ServerId,
+                    Server = server,
+                    ModifiedBy = databaseCreate.ModifiedBy,
+                    CreatedBy = databaseCreate.CreatedBy,
+                    CreatedDate = DateTime.Now,
+                    ModifiedDate = DateTime.Now,
+                });
+            }
+            else
+            {
+                return BadRequest(new { message = "Database already exists" });
+            }
 
             Console.WriteLine("data enter finish");
 

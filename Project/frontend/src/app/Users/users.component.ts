@@ -129,7 +129,6 @@ export class UsersComponent {
         this.dataSource.sortingDataAccessor = (item, property) => {
           switch (property) {
             case 'DAT':
-              console.log('DAT: ', item.datenabled);
               return item.datenabled ? true : false;
             default:
               return item[property];
@@ -188,8 +187,6 @@ export class UsersComponent {
       }),
     };
 
-    console.log('requestBody: ', this.formDataCreate);
-
     this.http
       .post(
         'http://localhost:5050/api/users/create',
@@ -204,7 +201,6 @@ export class UsersComponent {
           this.dataSource.sortingDataAccessor = (item, property) => {
             switch (property) {
               case 'DAT':
-                console.log('DAT: ', item.datenabled);
                 return item.datenabled ? true : false;
               default:
                 return item[property];
@@ -214,7 +210,6 @@ export class UsersComponent {
           this.showFormCreateUser();
         },
         error: (error: any) => {
-          console.error(error.error.message);
           this.showErrorPopup(error.error.message);
         },
       });
@@ -255,8 +250,6 @@ export class UsersComponent {
 
     // Activate the 'Edit', 'Delete', 'Reset Password' and 'Unlock' buttons
     this.isClicked = true;
-
-    console.table(this.userSelected);
   }
 
   /***************************************************************************************/
@@ -363,8 +356,6 @@ export class UsersComponent {
       termsAccepted: this.userSelected.locked,
     };
 
-    console.log('requestBody: ', requestBody);
-
     this.http
       .post('http://localhost:5050/api/users/edit', requestBody, options)
       .subscribe({
@@ -376,7 +367,6 @@ export class UsersComponent {
           this.dataSource.sortingDataAccessor = (item, property) => {
             switch (property) {
               case 'DAT':
-                console.log('DAT: ', item.datenabled);
                 return item.datenabled ? true : false;
               default:
                 return item[property];
@@ -385,7 +375,6 @@ export class UsersComponent {
           this.dataSource.sort = this.sort;
         },
         error: (error: any) => {
-          console.error(error.error.message);
           this.showErrorPopup(error.error.message);
         },
       });
@@ -431,8 +420,6 @@ export class UsersComponent {
       termsAccepted: this.userSelected.locked, // Not used
     };
 
-    console.log('requestBody: ', requestBody);
-
     this.http
       .post('http://localhost:5050/api/users/delete', requestBody, options)
       .subscribe({
@@ -443,7 +430,6 @@ export class UsersComponent {
           this.dataSource.sortingDataAccessor = (item, property) => {
             switch (property) {
               case 'DAT':
-                console.log('DAT: ', item.datenabled);
                 return item.datenabled ? true : false;
               default:
                 return item[property];
@@ -453,7 +439,6 @@ export class UsersComponent {
           this.reinitaliseUserSelectedForm();
         },
         error: (error: any) => {
-          console.error(error.error.message);
           this.showErrorPopup(error.error.message);
         },
       });
@@ -503,8 +488,6 @@ export class UsersComponent {
       modifiedBy: localStorage.getItem('email'),
     };
 
-    console.log('requestBody: ', requestBody);
-
     this.http
       .post(
         'http://localhost:5050/api/users/reset-password',
@@ -524,7 +507,6 @@ export class UsersComponent {
           this.dataSource.sortingDataAccessor = (item, property) => {
             switch (property) {
               case 'DAT':
-                console.log('DAT: ', item.datenabled);
                 return item.datenabled ? true : false;
               default:
                 return item[property];
@@ -535,7 +517,6 @@ export class UsersComponent {
           this.show_inform_popup(this.confirmationMessage);
         },
         error: (error: any) => {
-          console.error(error.error.message);
           this.showErrorPopup(error.error.message);
         },
       });
@@ -588,8 +569,6 @@ export class UsersComponent {
       modifiedBy: localStorage.getItem('email'),
     };
 
-    console.log('requestBody: ', requestBody);
-
     this.http
       .post('http://localhost:5050/api/users/unlock-user', requestBody, options)
       .subscribe({
@@ -600,7 +579,6 @@ export class UsersComponent {
           this.dataSource.sortingDataAccessor = (item, property) => {
             switch (property) {
               case 'DAT':
-                console.log('DAT: ', item.datenabled);
                 return item.datenabled ? true : false;
               default:
                 return item[property];
@@ -613,7 +591,6 @@ export class UsersComponent {
           this.show_inform_popup(this.confirmationMessage);
         },
         error: (error: any) => {
-          console.error(error.error.message);
           this.showErrorPopup(error.error.message);
         },
       });

@@ -3,162 +3,315 @@
 </div>
 <mat-card class="table-container">
   <div class="dropdown-container">
-    <mat-form-field appearance="fill" style="width: 500px;">
+    <mat-form-field appearance="fill" style="width: 500px">
       <mat-label>Select user</mat-label>
-      <mat-select [(value)]="selected_login" (selectionChange)="onChange($event)">
-        <mat-option *ngFor="let login of logins | keyvalue" [value]="login.value">
+      <mat-select
+        [(value)]="selected_login"
+        (selectionChange)="onChange($event)"
+      >
+        <mat-option
+          *ngFor="let login of logins | keyvalue"
+          [value]="login.value"
+        >
           <span>{{ login.value.email }} [{{ login.value.loginId }}] </span>
         </mat-option>
       </mat-select>
     </mat-form-field>
   </div>
-  
-  <div style="margin: 0%;">
-    <mat-card-content >
-      <table matSort mat-table [dataSource]="dataSource">
 
+  <div style="margin: 0%">
+    <mat-card-content>
+      <table matSort mat-table [dataSource]="dataSource">
         <ng-container matColumnDef="name">
           <th mat-header-cell *matHeaderCellDef>
             <div *ngIf="show_add">
-              <button mat-raised-button color="primary" (click)="addDomain(element)" style="margin: 8px 8px 8px 0;">Add</button>
+              <button
+                mat-raised-button
+                color="primary"
+                (click)="addDomain(element)"
+                style="margin: 8px 8px 8px 0"
+              >
+                Add
+              </button>
             </div>
             <div *ngIf="!show_add">
-              <button mat-raised-button class="color-button" (click)="saveDomain()" style="margin: 8px 8px 8px 0;">Save</button>
-              <button mat-raised-button color="primary" (click)="cancelDomain()" style="margin: 8px 8px 8px 0;">Cancel</button>
+              <button
+                mat-raised-button
+                class="color-button"
+                (click)="saveDomain()"
+                style="margin: 8px 8px 8px 0"
+              >
+                Save
+              </button>
+              <button
+                mat-raised-button
+                color="primary"
+                (click)="cancelDomain()"
+                style="margin: 8px 8px 8px 0"
+              >
+                Cancel
+              </button>
             </div>
           </th>
-          <td mat-cell *matCellDef="let element"> {{element[1]}} </td>
+          <td mat-cell *matCellDef="let element">{{ element[1] }}</td>
         </ng-container>
 
         <ng-container matColumnDef="dev">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>
-            <input type="checkbox" [(ngModel)]="one_checked[1]" (change)="one_checked[1] ? checkAll(1) : uncheckAll(1)">
-            <div style="margin: 5px; background-color: #f5a82a; color: white; padding: 3px;">Dev</div>
+            <input
+              type="checkbox"
+              [(ngModel)]="one_checked[1]"
+              (change)="one_checked[1] ? checkAll(1) : uncheckAll(1)"
+            />
+            <div
+              style="
+                margin: 5px;
+                background-color: #f5a82a;
+                color: white;
+                padding: 3px;
+              "
+            >
+              Dev
+            </div>
           </th>
-          <td mat-cell *matCellDef="let element" style="text-align: center;"> 
+          <td mat-cell *matCellDef="let element" style="text-align: center">
             <ng-container *ngIf="element[2]">
-              <ng-container *ngIf="isModified(element[0],1)">
-                <mat-button color="primary" (click)="check(element[0],1)">
+              <ng-container *ngIf="isModified(element[0], 1)">
+                <mat-button color="primary" (click)="check(element[0], 1)">
                   <mat-icon>calendar_month</mat-icon>
                 </mat-button>
               </ng-container>
-              <input type="checkbox" [(ngModel)]="element[2]" (change)="uncheck(element[0],1)">
+              <input
+                type="checkbox"
+                [(ngModel)]="element[2]"
+                (change)="uncheck(element[0], 1)"
+              />
             </ng-container>
             <ng-container *ngIf="!element[2]">
-              <input type="checkbox" [(ngModel)]="element[2]" (change)="check(element[0],1)">
-            </ng-container>   
+              <input
+                type="checkbox"
+                [(ngModel)]="element[2]"
+                (change)="check(element[0], 1)"
+              />
+            </ng-container>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="preprod">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> 
-            <input type="checkbox" [(ngModel)]="one_checked[2]" (change)="one_checked[2] ? checkAll(2) : uncheckAll(2)">
-            <div style="margin: 5px; background-color: #c125f2; color: white; padding: 3px;">Preprod</div>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <input
+              type="checkbox"
+              [(ngModel)]="one_checked[2]"
+              (change)="one_checked[2] ? checkAll(2) : uncheckAll(2)"
+            />
+            <div
+              style="
+                margin: 5px;
+                background-color: #c125f2;
+                color: white;
+                padding: 3px;
+              "
+            >
+              Preprod
+            </div>
           </th>
-          <td mat-cell *matCellDef="let element" style="text-align: center;"> 
+          <td mat-cell *matCellDef="let element" style="text-align: center">
             <ng-container *ngIf="element[3]">
-              <ng-container *ngIf="isModified(element[0],2)">
-                <mat-button color="primary" (click)="check(element[0],2)">
+              <ng-container *ngIf="isModified(element[0], 2)">
+                <mat-button color="primary" (click)="check(element[0], 2)">
                   <mat-icon>calendar_month</mat-icon>
                 </mat-button>
               </ng-container>
-              <input type="checkbox" [(ngModel)]="element[3]" (change)="uncheck(element[0],2)">
+              <input
+                type="checkbox"
+                [(ngModel)]="element[3]"
+                (change)="uncheck(element[0], 2)"
+              />
             </ng-container>
             <ng-container *ngIf="!element[3]">
-              <input type="checkbox" [(ngModel)]="element[3]" (change)="check(element[0],2)">   
-            </ng-container>  
+              <input
+                type="checkbox"
+                [(ngModel)]="element[3]"
+                (change)="check(element[0], 2)"
+              />
+            </ng-container>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="prod">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>
-            <input type="checkbox" [(ngModel)]="one_checked[3]" (change)="one_checked[3] ? checkAll(3) : uncheckAll(3)">
-            <div style="margin: 5px; background-color: #4557a2; color: white; padding: 3px;">Prod</div>
+            <input
+              type="checkbox"
+              [(ngModel)]="one_checked[3]"
+              (change)="one_checked[3] ? checkAll(3) : uncheckAll(3)"
+            />
+            <div
+              style="
+                margin: 5px;
+                background-color: #4557a2;
+                color: white;
+                padding: 3px;
+              "
+            >
+              Prod
+            </div>
           </th>
-          <td mat-cell *matCellDef="let element" style="text-align: center;"> 
+          <td mat-cell *matCellDef="let element" style="text-align: center">
             <ng-container *ngIf="element[4]">
-              <ng-container *ngIf="isModified(element[0],3)">
-                <mat-button color="primary" (click)="check(element[0],3)">
+              <ng-container *ngIf="isModified(element[0], 3)">
+                <mat-button color="primary" (click)="check(element[0], 3)">
                   <mat-icon>calendar_month</mat-icon>
                 </mat-button>
               </ng-container>
-              <input type="checkbox" [(ngModel)]="element[4]" (change)="uncheck(element[0],3)">
+              <input
+                type="checkbox"
+                [(ngModel)]="element[4]"
+                (change)="uncheck(element[0], 3)"
+              />
             </ng-container>
             <ng-container *ngIf="!element[4]">
-              <input type="checkbox" [(ngModel)]="element[4]" (change)="check(element[0],3)">   
+              <input
+                type="checkbox"
+                [(ngModel)]="element[4]"
+                (change)="check(element[0], 3)"
+              />
             </ng-container>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="test">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>
-            <input type="checkbox" [(ngModel)]="one_checked[4]" (change)="one_checked[4] ? checkAll(4) : uncheckAll(4)">
-            <div style="margin: 5px; background-color: #50c63e; color: white; padding: 3px;">Test</div>
+            <input
+              type="checkbox"
+              [(ngModel)]="one_checked[4]"
+              (change)="one_checked[4] ? checkAll(4) : uncheckAll(4)"
+            />
+            <div
+              style="
+                margin: 5px;
+                background-color: #50c63e;
+                color: white;
+                padding: 3px;
+              "
+            >
+              Test
+            </div>
           </th>
-          <td mat-cell *matCellDef="let element" style="text-align: center;"> 
+          <td mat-cell *matCellDef="let element" style="text-align: center">
             <ng-container *ngIf="element[5]">
-              <ng-container *ngIf="isModified(element[0],4)">
-                <mat-button color="primary" (click)="check(element[0],4)">
+              <ng-container *ngIf="isModified(element[0], 4)">
+                <mat-button color="primary" (click)="check(element[0], 4)">
                   <mat-icon>calendar_month</mat-icon>
                 </mat-button>
               </ng-container>
-              <input type="checkbox" [(ngModel)]="element[5]" (change)="uncheck(element[0],4)">
+              <input
+                type="checkbox"
+                [(ngModel)]="element[5]"
+                (change)="uncheck(element[0], 4)"
+              />
             </ng-container>
             <ng-container *ngIf="!element[5]">
-              <input type="checkbox" [(ngModel)]="element[5]" (change)="check(element[0],4)">   
-            </ng-container>    
+              <input
+                type="checkbox"
+                [(ngModel)]="element[5]"
+                (change)="check(element[0], 4)"
+              />
+            </ng-container>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="prodCopy">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>
-            <input type="checkbox" [(ngModel)]="one_checked[5]" (change)="one_checked[5] ? checkAll(5) : uncheckAll(5)">
-            <div style="margin: 5px; background-color: #956248; color: white; padding: 3px;">ProdCopy</div>
+            <input
+              type="checkbox"
+              [(ngModel)]="one_checked[5]"
+              (change)="one_checked[5] ? checkAll(5) : uncheckAll(5)"
+            />
+            <div
+              style="
+                margin: 5px;
+                background-color: #956248;
+                color: white;
+                padding: 3px;
+              "
+            >
+              ProdCopy
+            </div>
           </th>
-          <td mat-cell *matCellDef="let element" style="text-align: center;"> 
+          <td mat-cell *matCellDef="let element" style="text-align: center">
             <ng-container *ngIf="element[6]">
-              <ng-container *ngIf="isModified(element[0],5)">
-                <mat-button color="primary" (click)="check(element[0],5)">
+              <ng-container *ngIf="isModified(element[0], 5)">
+                <mat-button color="primary" (click)="check(element[0], 5)">
                   <mat-icon>calendar_month</mat-icon>
                 </mat-button>
               </ng-container>
-              <input type="checkbox" [(ngModel)]="element[6]" (change)="uncheck(element[0],5)">
+              <input
+                type="checkbox"
+                [(ngModel)]="element[6]"
+                (change)="uncheck(element[0], 5)"
+              />
             </ng-container>
             <ng-container *ngIf="!element[6]">
-              <input type="checkbox" [(ngModel)]="element[6]" (change)="check(element[0],5)">   
-            </ng-container>   
+              <input
+                type="checkbox"
+                [(ngModel)]="element[6]"
+                (change)="check(element[0], 5)"
+              />
+            </ng-container>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="staging">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>
-            <input type="checkbox" [(ngModel)]="one_checked[6]" (change)="one_checked[6] ? checkAll(6) : uncheckAll(6)">
-            <div style="margin: 5px; background-color: #f5f334; color: white; padding: 3px;">Staging</div>
+            <input
+              type="checkbox"
+              [(ngModel)]="one_checked[6]"
+              (change)="one_checked[6] ? checkAll(6) : uncheckAll(6)"
+            />
+            <div
+              style="
+                margin: 5px;
+                background-color: #f5f334;
+                color: white;
+                padding: 3px;
+              "
+            >
+              Staging
+            </div>
           </th>
-          <td mat-cell *matCellDef="let element" style="text-align: center;"> 
+          <td mat-cell *matCellDef="let element" style="text-align: center">
             <ng-container *ngIf="element[7]">
-              <ng-container *ngIf="isModified(element[0],6)">
-              <mat-button color="primary" (click)="check(element[0],6)">
-                <mat-icon>calendar_month</mat-icon>
-              </mat-button>
-            </ng-container>
-              <input type="checkbox" [(ngModel)]="element[7]" (change)="uncheck(element[0],6)">
+              <ng-container *ngIf="isModified(element[0], 6)">
+                <mat-button color="primary" (click)="check(element[0], 6)">
+                  <mat-icon>calendar_month</mat-icon>
+                </mat-button>
+              </ng-container>
+              <input
+                type="checkbox"
+                [(ngModel)]="element[7]"
+                (change)="uncheck(element[0], 6)"
+              />
             </ng-container>
             <ng-container *ngIf="!element[7]">
-              <input type="checkbox" [(ngModel)]="element[7]" (change)="check(element[0],6)">   
-            </ng-container>    
+              <input
+                type="checkbox"
+                [(ngModel)]="element[7]"
+                (change)="check(element[0], 6)"
+              />
+            </ng-container>
           </td>
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
       </table>
-
     </mat-card-content>
-    <br>
+    <br />
     <mat-card-footer>
-        <mat-paginator [pageSizeOptions]="[10,20]" showFirstLastButtons></mat-paginator>
+      <mat-paginator
+        [pageSizeOptions]="[5, 10]"
+        showFirstLastButtons
+      ></mat-paginator>
     </mat-card-footer>
   </div>
 </mat-card>

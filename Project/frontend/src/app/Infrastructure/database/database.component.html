@@ -47,7 +47,7 @@
           class="custom-table"
           #tableElement
         >
-          <ng-container matColumnDef ="databaseId">
+          <ng-container matColumnDef="databaseId">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
             <td
               mat-cell
@@ -83,24 +83,6 @@
             </td>
           </ng-container>
 
-          <ng-container matColumnDef="serverId">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Server ID</th>
-            <td
-              mat-cell
-              *matCellDef="let database"
-              (click)="getDatabase(database)"
-              (mouseenter)="onMouseEnter(database.databaseId)"
-              (mouseleave)="onMouseLeave()"
-              [ngClass]="{
-                'database--selected' : (database.serverId == databaseSelected.serverId),
-                '' : !(database.serverId == databaseSelected.serverId),
-                hovered: database.databaseId == databaseHovered ? isHovered : false,
-              }"
-            >
-              {{ database.serverId }}
-            </td>
-          </ng-container>
-
           <ng-container matColumnDef="userName">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>User Name</th>
             <td
@@ -120,9 +102,7 @@
           </ng-container>
 
           <ng-container matColumnDef="context">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>
-              Context
-            </th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Context</th>
             <td
               mat-cell
               *matCellDef="let database"
@@ -135,22 +115,59 @@
                 hovered: database.databaseId == databaseHovered ? isHovered : false,
               }"
             >
-              <span [ngStyle]="{
-                'background-color': database.context == '1' ? '#f5a82a' :
-                                    database.context == '2' ? '#c125f2' :
-                                    database.context == '3' ? '#4557a2' :
-                                    database.context == '4' ? '#50c63e' :
-                                    database.context == '5' ? '#956248' :
-                                    database.context == '6' ? '#f5f334' : '',
-                'color': '#FFFFFF'
-              }">
-                {{ database.context == '1' ? 'Dev' :
-                database.context == '2' ? 'Preprod' :
-                database.context == '3' ? 'Prod' :
-                database.context == '4' ? 'Test' :
-                database.context == '5' ? 'ProdCopy' :
-                database.context == '6' ? 'Staging' : '' }}
+              <span
+                [ngStyle]="{
+                  'background-color':
+                    database.context == '1'
+                      ? '#f5a82a'
+                      : database.context == '2'
+                      ? '#c125f2'
+                      : database.context == '3'
+                      ? '#4557a2'
+                      : database.context == '4'
+                      ? '#50c63e'
+                      : database.context == '5'
+                      ? '#956248'
+                      : database.context == '6'
+                      ? '#f5f334'
+                      : '',
+                  color: '#FFFFFF'
+                }"
+              >
+                {{
+                  database.context == "1"
+                    ? "Dev"
+                    : database.context == "2"
+                    ? "Preprod"
+                    : database.context == "3"
+                    ? "Prod"
+                    : database.context == "4"
+                    ? "Test"
+                    : database.context == "5"
+                    ? "ProdCopy"
+                    : database.context == "6"
+                    ? "Staging"
+                    : ""
+                }}
               </span>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="serverId">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Server ID</th>
+            <td
+              mat-cell
+              *matCellDef="let database"
+              (click)="getDatabase(database)"
+              (mouseenter)="onMouseEnter(database.databaseId)"
+              (mouseleave)="onMouseLeave()"
+              [ngClass]="{
+                'database--selected' : (database.serverId == databaseSelected.serverId),
+                '' : !(database.serverId == databaseSelected.serverId),
+                hovered: database.databaseId == databaseHovered ? isHovered : false,
+              }"
+            >
+              {{ database.serverId }}
             </td>
           </ng-container>
 
@@ -214,11 +231,12 @@
               required
               [(ngModel)]="formDataCreate.Password"
               name="password"
+              type="password"
             />
           </mat-form-field>
 
           <mat-form-field class="example-full-width">
-            <mat-label>Server</mat-label>
+            <mat-label>Server ID</mat-label>
             <mat-select [(ngModel)]="formDataCreate.Server" name="Server">
               <mat-option *ngFor="let s of server" [value]="s">
                 {{ s.name }}
@@ -228,24 +246,36 @@
 
           <mat-form-field class="example-full-width">
             <mat-label>Context</mat-label>
-            <mat-select [(Value)]="formDataCreate.Context" name="Context" >
-              <mat-option value=1>
-                <span style="background-color: #f5a82a; color: #FFFFFF;">Dev</span>
+            <mat-select [(Value)]="formDataCreate.Context" name="Context">
+              <mat-option value="1">
+                <span style="background-color: #f5a82a; color: #ffffff"
+                  >Dev</span
+                >
               </mat-option>
-              <mat-option value=2>
-                <span style="background-color: #c125f2; color: #FFFFFF;">Preprod</span>
+              <mat-option value="2">
+                <span style="background-color: #c125f2; color: #ffffff"
+                  >Preprod</span
+                >
               </mat-option>
-              <mat-option value=3>
-                <span style="background-color: #4557a2; color: #FFFFFF;">Prod</span>
+              <mat-option value="3">
+                <span style="background-color: #4557a2; color: #ffffff"
+                  >Prod</span
+                >
               </mat-option>
-              <mat-option value=4>
-                <span style="background-color: #50c63e; color: #FFFFFF;">Test</span>
+              <mat-option value="4">
+                <span style="background-color: #50c63e; color: #ffffff"
+                  >Test</span
+                >
               </mat-option>
-              <mat-option value=5>
-                <span style="background-color: #956248; color: #FFFFFF;">ProdCopy</span>
+              <mat-option value="5">
+                <span style="background-color: #956248; color: #ffffff"
+                  >ProdCopy</span
+                >
               </mat-option>
-              <mat-option value=6>
-                <span style="background-color: #f5f334; color: #FFFFFF;">Staging</span>
+              <mat-option value="6">
+                <span style="background-color: #f5f334; color: #ffffff"
+                  >Staging</span
+                >
               </mat-option>
             </mat-select>
           </mat-form-field>
@@ -316,29 +346,44 @@
 
           <mat-form-field class="example-full-width">
             <mat-label>Context</mat-label>
-            <mat-select [(ngModel)]="databaseSelected.Context" name="Context" [disabled]="!editEnabled" >
-              <mat-option value=1>
-                <span style="background-color: #f5a82a; color: #FFFFFF;">Dev</span>
+            <mat-select
+              [(ngModel)]="databaseSelected.Context"
+              name="Context"
+              [disabled]="!editEnabled"
+            >
+              <mat-option value="1">
+                <span style="background-color: #f5a82a; color: #ffffff"
+                  >Dev</span
+                >
               </mat-option>
-              <mat-option value=2>
-                <span style="background-color: #c125f2; color: #FFFFFF;">Preprod</span>
+              <mat-option value="2">
+                <span style="background-color: #c125f2; color: #ffffff"
+                  >Preprod</span
+                >
               </mat-option>
-              <mat-option value=3>
-                <span style="background-color: #4557a2; color: #FFFFFF;">Prod</span>
+              <mat-option value="3">
+                <span style="background-color: #4557a2; color: #ffffff"
+                  >Prod</span
+                >
               </mat-option>
-              <mat-option value=4>
-                <span style="background-color: #50c63e; color: #FFFFFF;">Test</span>
+              <mat-option value="4">
+                <span style="background-color: #50c63e; color: #ffffff"
+                  >Test</span
+                >
               </mat-option>
-              <mat-option value=5>
-                <span style="background-color: #956248; color: #FFFFFF;">ProdCopy</span>
+              <mat-option value="5">
+                <span style="background-color: #956248; color: #ffffff"
+                  >ProdCopy</span
+                >
               </mat-option>
-              <mat-option value=6>
-                <span style="background-color: #f5f334; color: #FFFFFF;">Staging</span>
+              <mat-option value="6">
+                <span style="background-color: #f5f334; color: #ffffff"
+                  >Staging</span
+                >
               </mat-option>
             </mat-select>
           </mat-form-field>
 
-          
           <mat-form-field class="example-full-width">
             <mat-label>Password</mat-label>
             <input
@@ -349,7 +394,9 @@
               name="Password"
               [disabled]="!editEnabled"
             />
-            <mat-hint>Leave it blank if you don't want to change the password</mat-hint>
+            <mat-hint
+              >Leave it blank if you don't want to change the password</mat-hint
+            >
           </mat-form-field>
         </form>
       </ng-container>

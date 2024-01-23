@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Project.Repository;
 using System.Net;
 using Microsoft.Extensions.Logging;
+using Microsoft.DotNet.Scaffolding.Shared.Messaging;
 
 
 [Route("api/server")]
@@ -79,18 +80,26 @@ public class ServerController : Controller
 
         try
         {
-            context.Servers.Add(new Server
+            if (context.Servers.FirstOrDefault(s => s.Name == serverCreate.Name || s.Address == serverCreate.Address) == null)
             {
-                ServerId = _serverRepository.GetUnusedMinServerId(),
-                Name = serverCreate.Name,
-                Address = serverCreate.Address,
-                Context = serverCreate.Context,
-                Type = serverCreate.Type,
-                ModifiedBy = serverCreate.ModifiedBy,
-                CreatedBy = serverCreate.CreatedBy,
-                CreatedDate = DateTime.Now,
-                ModifiedDate = DateTime.Now,
-            });
+
+                context.Servers.Add(new Server
+                {
+                    ServerId = _serverRepository.GetUnusedMinServerId(),
+                    Name = serverCreate.Name,
+                    Address = serverCreate.Address,
+                    Context = serverCreate.Context,
+                    Type = serverCreate.Type,
+                    ModifiedBy = serverCreate.ModifiedBy,
+                    CreatedBy = serverCreate.CreatedBy,
+                    CreatedDate = DateTime.Now,
+                    ModifiedDate = DateTime.Now,
+                });
+            }
+            else
+            {
+                return BadRequest(new { message = "Server already exists" });
+            }
 
             _logger.LogInformation("---------->data enter finish");
 

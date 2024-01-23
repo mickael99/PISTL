@@ -375,24 +375,25 @@ export class ReportsComponent {
           let usersChecked = this.logins.filter(
             (user: any) => user.checked === true
           );
+          console.log('usersChecked', usersChecked);
           let domainsChecked = this.domains.filter(
             (domain: any) => domain.checked === true
           );
           dataCsv = data.loginDomainUserLog
             .map((log: any) => {
-              usersChecked = usersChecked.filter(
+              let usersFiltered = usersChecked.filter(
                 (user: any) => user.loginId === log.loginId
               );
-              domainsChecked = domainsChecked.filter(
+              let domainsFiltered = domainsChecked.filter(
                 (domain: any) => domain.domainId === log.domainId
               );
 
               if (
-                (usersChecked.length > 0 &&
-                  domainsChecked.length > 0 &&
-                  this.date_verification(new Date(log.logDate))) ||
-                this.date_verification(new Date(log.createdDate)) ||
-                this.date_verification(new Date(log.modifiedDate))
+                usersFiltered.length > 0 &&
+                domainsFiltered.length > 0 &&
+                (this.date_verification(new Date(log.logDate)) ||
+                  this.date_verification(new Date(log.createdDate)) ||
+                  this.date_verification(new Date(log.modifiedDate)))
               ) {
                 return {
                   LoginDomainUser_LogID: log.loginDomainUserLogId,
