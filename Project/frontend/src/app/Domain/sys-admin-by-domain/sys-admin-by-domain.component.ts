@@ -138,6 +138,7 @@ export class SysAdminByDomainComponent {
 
   onChange(event: any): void {
     this.selected_domain = event.value;
+    this.show_calendar = {};
     this.getSysAdminByDomain(this.selected_domain.domainId, false);
   }
 
