@@ -30,7 +30,7 @@ export class SysAdminByDomainComponent {
   selected_domain: any;
   one_checked: {[env: number]: boolean} = {1: false, 2: false, 3: false, 4: false, 5: false, 6: false};
 
-  show_add = true;
+  show_add: boolean = true;
   show_calendar: { [login_id: number]: any } = {};
 
   data_source: any;
@@ -160,10 +160,11 @@ export class SysAdminByDomainComponent {
         if(result.from === null && result.to === null && result.comment === null){
           this.login_users[loginId][1][env] = false;
           this.show_add = true;
+          localStorage.setItem('show_add_sysadmin', 'true');
           this.loadDomainUsers(false);
         }
         else if(result.from != "") {
-          
+          console.log("here: ", result);
           this.login_users[loginId][2][env].sysAdmin = true;
           this.login_users[loginId][2][env].sysAdminStartDate = result.from;
           this.login_users[loginId][2][env].sysAdminEndDate = result.to || null;
@@ -178,6 +179,7 @@ export class SysAdminByDomainComponent {
               this.show_calendar[loginId][env] = false;
 
           this.show_add = false;
+          localStorage.setItem('show_add_sysadmin', 'false');
         }
       });
     } 
@@ -202,6 +204,7 @@ export class SysAdminByDomainComponent {
         if(result.from === null && result.to === null && result.comment === null){
           this.login_users[loginId][1][env] = false;
           this.show_add = true;
+          localStorage.setItem('show_add_sysadmin', 'true');
           this.loadDomainUsers(false);
         }
         else if(result.from != "") {
@@ -216,7 +219,7 @@ export class SysAdminByDomainComponent {
             sysAdminStartDate: result.from,
             sysAdminEndDate: result.to || null,
             comment: result.comment || "",
-            modifiedBy: this.connectedUser // TODO: Replace with the actual login
+            modifiedBy: this.connectedUser
           }
     
           this.login_users[loginId][1][env] = true;
@@ -227,6 +230,7 @@ export class SysAdminByDomainComponent {
               this.show_calendar[loginId][env] = false;
 
           this.show_add = false;
+          localStorage.setItem('show_add_sysadmin', 'false');
         }
       });
     }
@@ -238,6 +242,7 @@ export class SysAdminByDomainComponent {
 
     this.show_calendar[loginId][env] = false;
     this.show_add = false;
+    localStorage.setItem('show_add_sysadmin', 'false');
   }
 
 
@@ -245,11 +250,13 @@ export class SysAdminByDomainComponent {
   // TODO: Open form to add a new sys admin to current domain
   addSysAdmin(): void {
     this.show_add = false;
+    localStorage.setItem('show_add_sysadmin', 'false');
     this.getSysAdminByDomain(this.selected_domain.domainId, true);
   }
 
   saveSysAdmin(): void {
     this.show_add = true;
+    localStorage.setItem('show_add_sysadmin', 'true');
     
     // TODO : send request to backend to save all users in context
     const requests = [];
@@ -258,6 +265,7 @@ export class SysAdminByDomainComponent {
       if(this.login_users[loginId].length > 0){
         for(const env of Object.keys(this.login_users[loginId][2])){
           if(this.login_users[loginId][2][env].userId === "99999999-9999-9999-9999-999999999999" && this.login_users[loginId][2][env].sysAdmin === true){
+            console.log(this.login_users[loginId][2][env]);
             const request = this.http.put('http://localhost:5050/api/sysadminbydomain', this.login_users[loginId][2][env]);
 
             requests.push(request);
@@ -285,6 +293,7 @@ export class SysAdminByDomainComponent {
 
   cancelSysAdmin(): void {
     this.show_add = true;
+    localStorage.setItem('show_add_sysadmin', 'true');
 
     this.getSysAdminByDomain(this.selected_domain.domainId, false);
   }
@@ -325,6 +334,7 @@ export class SysAdminByDomainComponent {
    */
   uncheckAll(env: any): void {
     this.show_add = false;
+    localStorage.setItem('show_add_sysadmin', 'false');
     for (const loginId of Object.keys(this.login_users)) {
       if (this.login_users[loginId].length > 0) {
         if (this.login_users[loginId][1][env]) {
@@ -356,6 +366,7 @@ export class SysAdminByDomainComponent {
    */
   checkAll(env: any): void {
     this.show_add = false; 
+    localStorage.setItem('show_add_sysadmin', 'false');
     // TODO : ask if it is all users or only the users that are shown in the table
 
     for (const loginId of Object.keys(this.login_users)) {
@@ -403,6 +414,9 @@ export class SysAdminByDomainComponent {
    * @returns True if the user has been given sys admin rights for the given environment, false otherwise.
    */
   isModified(loginId: any, env: any): boolean {
-    return this.show_calendar[loginId][env];
+    if(Object.keys(this.show_calendar).length > 0){
+      return this.show_calendar[loginId][env];
+    }
+    return false;
   }
 }

@@ -63,7 +63,7 @@ public class UsersPageController : ControllerBase // TODO change name
 
       if (string.IsNullOrEmpty(token))
       {
-        return BadRequest("Token JWT missing in the Header.");
+        return BadRequest(new {message = "Token JWT missing in the Header."});
       }
 
       var handler = new JwtSecurityTokenHandler();

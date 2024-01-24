@@ -22,6 +22,7 @@ namespace Project.Controllers
                     LoginId = l.LoginId,
                     Email = l.Email
                 }).ToList();
+                
                 var users = context.LoginDomainUsers.Where(u => u.LoginId == loginId && u.UserId == "99999999-9999-9999-9999-999999999999")
                                                     .Select(u => new LoginDomainUserDTO
                 {

@@ -1,17 +1,18 @@
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using NUnit.Framework.Legacy;
 using Project.Controllers;
 using Project.Models;
 using Project.Models.DTO;
+using NUnit.Framework; // Add missing using statement
 
 namespace backend.Tests;
+
 public class TestServerParameter
 {
     public class ServerParameterResponse
     {
-        public required List<ServerDTO> servers { get; set; }
-        public required List<ServerParameterDTO> server_parameters { get; set; }
+        public List<ServerDTO> servers { get; set; } // Remove unnecessary "required" keyword
+        public List<ServerParameterDTO> server_parameters { get; set; } // Remove unnecessary "required" keyword
     }
 
     [Test]
@@ -22,18 +23,18 @@ public class TestServerParameter
 
         // Act
         var response = controller.GetServerParametersByServer(1) as OkObjectResult;
-        ClassicAssert.IsNotNull(response);
+        Assert.IsNotNull(response);
 
         var json = JsonConvert.SerializeObject(response.Value);
         var values = JsonConvert.DeserializeObject<ServerParameterResponse>(json);
-        ClassicAssert.IsNotNull(values);
+        Assert.IsNotNull(values);
 
         Assert.Multiple(() =>
         {
-            ClassicAssert.IsNotNull(values.servers);
-            ClassicAssert.IsInstanceOf<List<ServerDTO>>(values.servers, "Wrong type");
-            ClassicAssert.IsNotNull(values.server_parameters);
-            ClassicAssert.IsInstanceOf<List<ServerParameterDTO>>(values.server_parameters, "Wrong type");
+            Assert.IsNotNull(values.servers);
+            Assert.IsInstanceOf<List<ServerDTO>>(values.servers, "Wrong type");
+            Assert.IsNotNull(values.server_parameters);
+            Assert.IsInstanceOf<List<ServerParameterDTO>>(values.server_parameters, "Wrong type");
         });
     }
 
@@ -55,14 +56,14 @@ public class TestServerParameter
         // Assert
         Assert.Multiple(() =>
         {
-            ClassicAssert.IsNotNull(response);
+            Assert.IsNotNull(response);
 
             var json = JsonConvert.SerializeObject(response.Value);
             var values = JsonConvert.DeserializeObject<List<ServerParameterDTO>>(json);
-            ClassicAssert.IsNotNull(values);
-            ClassicAssert.IsInstanceOf<List<ServerParameterDTO>>(values, "Wrong type");
-            ClassicAssert.IsNotNull(values.FirstOrDefault(p => p.ParameterKey == "test"), "Server parameter not found");
-            ClassicAssert.IsNotNull(values.FirstOrDefault(p => p.ParameterValue == "test_value"), "Server parameter not found"); 
+            Assert.IsNotNull(values);
+            Assert.IsInstanceOf<List<ServerParameterDTO>>(values, "Wrong type");
+            Assert.IsNotNull(values.FirstOrDefault(p => p.ParameterKey == "test"), "Server parameter not found");
+            Assert.IsNotNull(values.FirstOrDefault(p => p.ParameterValue == "test_value"), "Server parameter not found"); 
         });
     }
 
@@ -84,15 +85,15 @@ public class TestServerParameter
         // Assert
         Assert.Multiple(() =>
         {
-            ClassicAssert.IsNotNull(response);
+            Assert.IsNotNull(response);
 
             var json = JsonConvert.SerializeObject(response.Value);
             var values = JsonConvert.DeserializeObject<List<ServerParameterDTO>>(json);
-            ClassicAssert.IsNotNull(values);
+            Assert.IsNotNull(values);
 
-            ClassicAssert.IsInstanceOf<List<ServerParameterDTO>>(values, "Wrong type");
-            ClassicAssert.IsNotNull(values.FirstOrDefault(p => p.ParameterKey == "test"), "Server parameter not deleted");
-            ClassicAssert.IsNotNull(values.FirstOrDefault(p => p.ParameterValue == "test_value"), "Server parameter not deleted"); 
+            Assert.IsInstanceOf<List<ServerParameterDTO>>(values, "Wrong type");
+            Assert.IsNotNull(values.FirstOrDefault(p => p.ParameterKey == "test"), "Server parameter not deleted");
+            Assert.IsNotNull(values.FirstOrDefault(p => p.ParameterValue == "test_value"), "Server parameter not deleted"); 
         });
     }
 }

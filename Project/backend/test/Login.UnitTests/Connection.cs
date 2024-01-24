@@ -5,11 +5,12 @@ using System.IdentityModel.Tokens.Jwt;
 using System;
 using Newtonsoft.Json;
 
+namespace backend.Tests;
 
 /****************************************************************************************/
 /****************************************************************************************/
 /****************************************************************************************/
-[TestFixture]
+
 public class ConnectionTests
 {
   // ClassName_MethodName_ExpectedResult

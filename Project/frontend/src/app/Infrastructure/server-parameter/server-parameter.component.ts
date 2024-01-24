@@ -296,7 +296,7 @@ export class ServerParameterComponent {
     this.userHovered = '';
   }
 
-    /***************************************************************************************/
+  /***************************************************************************************/
   /**
    * Function used to display activate the error popup.
    * @param message - Error message.

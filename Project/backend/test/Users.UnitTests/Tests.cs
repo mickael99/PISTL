@@ -6,11 +6,12 @@ using System;
 using Newtonsoft.Json;
 using Project.Models;
 
+namespace backend.Tests;
 
 /****************************************************************************************/
 /****************************************************************************************/
 /****************************************************************************************/
-[TestFixture]
+
 public class UsersTests
 {
   // ClassName_MethodName_ExpectedResult
@@ -179,7 +180,7 @@ public class UsersTests
     var authorizationHeader = UsersController.create_token("test@test.com");
     var model = new UsersPageController.FormDataCreateModel
     {
-      Email = "test@example.com",
+      Email = "test2@example.com",
       Name = "Test User",
       Locked = true,
       DATEnabled = true,

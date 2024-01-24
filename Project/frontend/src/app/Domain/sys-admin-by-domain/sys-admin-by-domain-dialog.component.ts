@@ -4,6 +4,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DatePipe } from '@angular/common';
 import { MatDatepicker } from '@angular/material/datepicker';
 import { NativeDateAdapter, DateAdapter } from '@angular/material/core';
+import { from } from 'rxjs';
 
 @Component({
   selector: 'app-sys-admin-by-domain-dialog',
@@ -31,24 +32,23 @@ import { NativeDateAdapter, DateAdapter } from '@angular/material/core';
             <textarea matInput type="textarea" formControlName="comment"></textarea>
           </mat-form-field>
         </div>
+        <div *ngIf="newAdminForm.controls.from.value !== '' && newAdminForm.controls.from.value < from_copy" style="color: red;">
+          Please enter a valid 'from' date.
+        </div>
         <div *ngIf="newAdminForm.controls.to.value !== '' && newAdminForm.controls.to.value < newAdminForm.controls.from.value" style="color: red;">
-          Please enter a valid date.
+          Please enter a valid 'to' date.
         </div>
         <div mat-dialog-actions>
           <button mat-raised-button color="primary" (click)="onCancel()">Cancel</button>
-          <ng-container *ngIf="newAdminForm.controls.to; else submitButtonEnabled">
-            <ng-container *ngIf="newAdminForm.controls.to.value !== '' &&
-                         newAdminForm.controls.to.value < newAdminForm.controls.from.value; else submitButtonEnabled">
-              <div style="color: red;">
-                <button mat-raised-button color="disabled" type="submit" [disabled]="true">Submit</button>
-              </div>
-            </ng-container>
-          </ng-container>
-          <ng-template #submitButtonEnabled>
-            <div>
-              <button mat-raised-button class="color-button" type="submit">Submit</button>
-            </div>
-          </ng-template>
+          <button mat-raised-button 
+                  class="color-button"
+                  type="submit" 
+                  [disabled]="newAdminForm.controls.to.value !== '' &&
+                            newAdminForm.controls.from.value !== '' &&
+                            (newAdminForm.controls.to.value < newAdminForm.controls.from.value ||
+                            newAdminForm.controls.from.value < from_copy)">
+                    Submit
+          </button>
         </div>
       </form>
     </mat-dialog-content>
@@ -56,6 +56,7 @@ import { NativeDateAdapter, DateAdapter } from '@angular/material/core';
 })
 export class SysAdminByDomainDialog {
   newAdminForm: FormGroup;
+  from_copy: string;
 
   constructor(
     private dialogRef: MatDialogRef<SysAdminByDomainDialog>,
@@ -65,6 +66,7 @@ export class SysAdminByDomainDialog {
   ) {
     // Set the default value for "from" to the current date
     const currentDate = new Date();
+    this.from_copy = this.datepipe.transform(data.user.sysAdminStartDate, 'yyyy-MM-dd');
     const fromDate =
       this.datepipe.transform(data.user.sysAdminStartDate, 'yyyy-MM-dd') ||
       this.datepipe.transform(currentDate, 'yyyy-MM-dd');

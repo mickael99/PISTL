@@ -1,39 +1,43 @@
 
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using NUnit.Framework; // Add missing using statement
 using Project.Controllers;
 using Project.Models;
 using Project.Models.DTO;
-using NUnit.Framework.Legacy;
+using System;
+using System.Collections.Generic;
 
 namespace backend.Tests;
+
 public class TestSysAdmin
 {
     public class SysAdminResponse
     {
-        public required List<DomainDTO> domains { get; set; }
-        public required List<LoginDomainUserDTO> users { get; set; }
-        public required List<LoginDTO> logins { get; set; }
+        public List<DomainDTO> domains { get; set; } // Remove 'required' keyword
+        public List<LoginDomainUserDTO> users { get; set; } // Remove 'required' keyword
+        public List<LoginDTO> logins { get; set; } // Remove 'required' keyword
     }
+    
     [Test]
     public void TestGetSysAdmin()
     {
         var controller = new SysAdminByDomainController();
         var response = controller.GetSysAdmin() as OkObjectResult;
-        ClassicAssert.IsNotNull(response);
+        Assert.AreNotEqual(response, null); // Add missing reference to Assert class
 
         var json = JsonConvert.SerializeObject(response.Value);
         var values = JsonConvert.DeserializeObject<SysAdminResponse>(json);
-        ClassicAssert.IsNotNull(values);
+        Assert.AreNotEqual(values, null); // Add missing reference to Assert class
 
         Assert.Multiple(() =>
         {
-            ClassicAssert.IsNotNull(values.domains);
-            ClassicAssert.IsInstanceOf<List<DomainDTO>>(values.domains, "Wrong type");
-            ClassicAssert.IsNotNull(values.users);
-            ClassicAssert.IsInstanceOf<List<LoginDomainUserDTO>>(values.users, "Wrong type");
-            ClassicAssert.IsNotNull(values.logins);
-            ClassicAssert.IsInstanceOf<List<LoginDTO>>(values.logins, "Wrong type");
+            Assert.AreNotEqual(values.domains, null);
+            Assert.IsInstanceOf<List<DomainDTO>>(values.domains, "Wrong type");
+            Assert.AreNotEqual(values.users, null);
+            Assert.IsInstanceOf<List<LoginDomainUserDTO>>(values.users, "Wrong type");
+            Assert.AreNotEqual(values.logins, null);
+            Assert.IsInstanceOf<List<LoginDTO>>(values.logins, "Wrong type");
         });
     } 
         
@@ -62,17 +66,17 @@ public class TestSysAdmin
         // Assert
         Assert.Multiple(() =>
         {
-            ClassicAssert.IsNotNull(response);
+            Assert.AreNotEqual(response, null);
             Assert.That(response.StatusCode, Is.EqualTo(200));
 
             var json = JsonConvert.SerializeObject(response.Value);
-            ClassicAssert.IsNotNull(json);
+            Assert.AreNotEqual(json, null);
             
-            ClassicAssert.IsInstanceOf<LoginDomainUserDTO>(response.Value, "Wrong type");
+            Assert.IsInstanceOf<LoginDomainUserDTO>(response.Value, "Wrong type");
             var values = JsonConvert.DeserializeObject<LoginDomainUser>(json);
 
             // Assert that the object is not null
-            ClassicAssert.IsNotNull(values);
+            Assert.AreNotEqual(values, null);
             
             // Assert that the types are valid
             Assert.That(values.ModifiedBy, Is.TypeOf(typeof(string)));
@@ -120,7 +124,7 @@ public class TestSysAdmin
         // Assert 
         Assert.Multiple(() =>
         {
-            ClassicAssert.IsNotNull(response);
+            Assert.AreNotEqual(response, null);
             Assert.That(response.StatusCode, Is.EqualTo(200));
             Assert.That(response.Value, Is.EqualTo("Deleted user "+user.UserId+ ": "+user.LoginId+" | "+user.DomainId+" | "+user.Environment));
         });
@@ -155,7 +159,7 @@ public class TestSysAdmin
         // Assert 
         Assert.Multiple(() =>
         {
-            ClassicAssert.IsNotNull(response);
+            Assert.AreNotEqual(response, null);
             Assert.That(response.StatusCode, Is.EqualTo(200));
             Assert.That(response.Value, Is.EqualTo("Unable to find user "+user.UserId+ ": "+user.LoginId+" | "+user.DomainId+" | "+user.Environment));
         });

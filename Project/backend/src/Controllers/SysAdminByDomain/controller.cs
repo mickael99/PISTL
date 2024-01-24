@@ -181,8 +181,6 @@ namespace Project.Controllers
                         && u.Environment == userDTO.Environment && u.UserId == userDTO.UserId).SingleOrDefault();
                 if(user == null)
                 {
-                    //Console.WriteLine("Posted user "+userDTO.UserId+ ": "+userDTO.LoginId+" | "+userDTO.DomainId+" | "+userDTO.Environment+" | "+userDTO.SysAdmin);
-                    
                     user = new LoginDomainUser
                     {
                         LoginId = userDTO.LoginId,
@@ -203,21 +201,18 @@ namespace Project.Controllers
                     };
 
                     context.LoginDomainUsers.Add(user);
+                    //Console.WriteLine("Posted user "+userDTO.UserId+ ": "+userDTO.LoginId+" | "+userDTO.DomainId+" | "+userDTO.Environment+" | "+userDTO.SysAdmin+" | "+userDTO.SysAdminEndDate);
                 }
                 else
                 { 
-                    if(user.SysAdmin == userDTO.SysAdmin) {
-                        return Ok(userDTO);
-                    }
-                    //Console.WriteLine("Modified user "+user.UserId+ ": "+userDTO.LoginId+" | "+user.DomainId+" | "+user.Environment+" | "+user.SysAdmin);
-                    
                     user.SysAdmin = userDTO.SysAdmin;
                     user.SysAdminStartDate = userDTO.SysAdminStartDate;
                     user.SysAdminEndDate = userDTO.SysAdminEndDate;
                     user.Comment = userDTO.Comment;
                     user.ModifiedBy = userDTO.ModifiedBy;
-                    
+
                     context.Entry(user).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                    //Console.WriteLine("Modified user "+user.UserId+ ": "+userDTO.LoginId+" | "+user.DomainId+" | "+user.Environment+" | "+user.SysAdmin+" | "+user.SysAdminEndDate);
                 }
 
                 context.SaveChanges();
@@ -256,15 +251,17 @@ namespace Project.Controllers
                     context.LoginDomainUsers.Remove(user);
                     context.SaveChanges();
 
-                    // Console.WriteLine("Deleted user "+userID+ ": "+loginID+" | "+domainID+" | "+env);
-                    return Ok();
+                    var response = "Deleted user "+userID+ ": "+loginID+" | "+domainID+" | "+env;
+                    Console.WriteLine(response);
+                    return Ok(response);
                 }
                 else
                 {
-                    // Console.WriteLine("Unable to delete "+userID+ ": "+loginID+" | "+domainID+" | "+env);
-                    
-                    return Ok();
+                    var response = "Unable to find user "+userID+ ": "+loginID+" | "+domainID+" | "+env;
+                    Console.WriteLine(response);
+                    return Ok(response);
                 }
+                return Ok();
             }
             catch (Exception ex)
             {

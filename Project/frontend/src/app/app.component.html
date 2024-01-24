@@ -39,21 +39,24 @@
                 class="dropdown-menu"
               >
                 <a
-                  routerLink="/domain-administration"
                   ngbDropdownItem
+                  [routerLink]="active_page"
                   class="btn--2 btn--margin-right btn--in-progress"
+                  (click)="active_page = checkActivity('domain-administration')"
                   >Domain Administration</a
                 >
                 <a
-                  routerLink="sys-admin-by-domain"
                   ngbDropdownItem
+                  [routerLink]="active_page"
                   class="btn--2 btn--margin-right btn--completed"
+                  (click)="active_page = checkActivity('sys-admin-by-domain')"
                   >SysAdmin by Domain</a
                 >
                 <a
-                  routerLink="domain-by-sys-admin"
                   ngbDropdownItem
+                  [routerLink]="active_page"
                   class="btn--2 btn--margin-right btn--completed"
+                  (click)="active_page = checkActivity('domain-by-sys-admin')"
                   >Domain by SysAdmin</a
                 >
               </div>
@@ -75,31 +78,43 @@
               >
                 <a
                   ngbDropdownItem
-                  routerLink="database"
+                  [routerLink]="active_page"
                   class="btn--2 btn--in-progress"
+                  (click)="active_page = checkActivity('database')"
                   >Database</a
                 >
                 <a
                   ngbDropdownItem
-                  routerLink="server"
+                  [routerLink]="active_page"
                   class="btn--2 btn--margin-right btn--completed"
+                  (click)="active_page = checkActivity('server');"
                   >Server</a
                 >
                 <a
                   ngbDropdownItem
-                  routerLink="server-parameter"
+                  [routerLink]="active_page"
                   class="btn--2 btn--margin-right btn--completed"
+                  (click)="active_page = checkActivity('server-parameter')"
                   >Server Parameter</a
                 >
               </div>
             </div>
           </li>
           <li>
-            <a routerLink="/users" class="btn--1 btn--completed">Users</a>
+            <a 
+              [routerLink]="active_page" 
+              class="btn--1 btn--completed" 
+              (click)="active_page = checkActivity('/users')"
+              >Users
+            </a>
           </li>
           <li>
-            <a routerLink="/reports" class="btn--1 btn--completed">Reports</a>
-          </li>
+            <a 
+              class="btn--1 btn--completed" 
+              (click)="active_page = checkActivity('/reports')"
+              [routerLink]="active_page" 
+              >Reports
+            </a>
           <li>
             <p class="text nav-end">
               Hello <strong>{{ email }}</strong
@@ -116,4 +131,13 @@
     </header>
     <router-outlet></router-outlet>
   </ng-container>
+</div>
+
+<!-- Error pop-up -->
+<div>
+  <app-error-popup
+    *ngIf="show_error_popup"
+    [errorMessage]="error_message"
+    (close)="closeErrorPopup()"
+  ></app-error-popup>
 </div>
