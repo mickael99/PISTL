@@ -59,6 +59,7 @@ public class TestServerParameter
             Assert.IsNotNull(response);
 
             var json = JsonConvert.SerializeObject(response.Value);
+            Assert.IsNotNull(json);
             var values = JsonConvert.DeserializeObject<List<ServerParameterDTO>>(json);
             Assert.IsNotNull(values);
             Assert.IsInstanceOf<List<ServerParameterDTO>>(values, "Wrong type");

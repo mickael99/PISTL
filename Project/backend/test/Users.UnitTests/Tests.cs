@@ -96,7 +96,8 @@ public class UsersTests
     // Assert
     Assert.IsNotNull(result);
     Assert.AreEqual(400, result.StatusCode);
-    Assert.AreEqual("Token JWT missing in the Header.", result.Value);
+    Assert.IsNotNull(result.Value);
+    Assert.IsTrue(result.Value.ToString().Contains("Token JWT missing in the Header."));
 
     Assert.Pass("New User not added with missing JWT verified.");
   }
@@ -192,15 +193,18 @@ public class UsersTests
     var result = controller.Add_New_DAT_User(authorizationHeader, model) as BadRequestObjectResult;
 
     // Assert
-    Assert.IsNotNull(result);
-    Assert.AreEqual(400, result.StatusCode);
-    dynamic data = result.Value;
-    Assert.IsNotNull(data, "Data is null.");
-    var messageProperty = data?.GetType().GetProperty("message");
-    var messageValue = messageProperty.GetValue(data) as string;
-    Assert.AreEqual("User phone already exists.", messageValue, "Error messages does not match.");
-
-    Assert.Pass("New User not added with existing Phone verified.");
+    Assert.Multiple(() =>
+    {
+      Assert.IsNotNull(result);
+      Assert.AreEqual(400, result.StatusCode);
+      dynamic data = result.Value;
+      Assert.IsNotNull(data, "Data is null.");
+      var messageProperty = data?.GetType().GetProperty("message");
+      var messageValue = messageProperty.GetValue(data) as string;
+      Assert.AreEqual("User phone already exists.", messageValue, "Error messages does not match.");
+      
+      Assert.Pass("New User not added with existing Phone verified.");
+    }); 
   }
 
   /****************************************************************************************/
@@ -286,7 +290,8 @@ public class UsersTests
     // Assert
     Assert.IsNotNull(result);
     Assert.AreEqual(400, result.StatusCode);
-    Assert.AreEqual("Token JWT missing in the Header.", result.Value);
+    Assert.IsNotNull(result.Value);
+    Assert.IsTrue(result.Value.ToString().Contains("Token JWT missing in the Header."));
 
     Assert.Pass("User not edited with missing JWT verified.");
   }

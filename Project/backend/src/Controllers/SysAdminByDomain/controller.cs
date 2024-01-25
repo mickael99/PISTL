@@ -177,8 +177,15 @@ namespace Project.Controllers
             try
             {
                 var context = new DatContext();
+
+                if(userDTO.Environment > 6 || userDTO.Environment < 1)
+                {
+                    return BadRequest(new { message = "Environment does not exist" });
+                }
+
                 var user = context.LoginDomainUsers.Where(u => u.LoginId == userDTO.LoginId && u.DomainId == userDTO.DomainId
                         && u.Environment == userDTO.Environment && u.UserId == userDTO.UserId).SingleOrDefault();
+                
                 if(user == null)
                 {
                     user = new LoginDomainUser
@@ -257,7 +264,7 @@ namespace Project.Controllers
                 }
                 else
                 {
-                    var response = "Unable to find user "+userID+ ": "+loginID+" | "+domainID+" | "+env;
+                    var response = "Unable to find user "+loginID+" : "+userID+" | "+domainID+" | "+env;
                     Console.WriteLine(response);
                     return Ok(response);
                 }

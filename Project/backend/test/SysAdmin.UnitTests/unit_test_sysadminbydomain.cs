@@ -41,6 +41,9 @@ public class TestSysAdmin
         });
     } 
         
+    /*
+     * Test that the user is added if the user does not exist
+     */
     [Test]
     public void TestUpdateUser()
     {
@@ -94,7 +97,161 @@ public class TestSysAdmin
             Assert.That(values.SysAdminStartDate, Is.LessThan(values.SysAdminEndDate));
         });
     }
-    
+
+    /*
+     * Test that the user is not added if user already exists
+     */
+    [Test]
+    public void TestUpdateUserAlreadyExists()
+    {
+        // Arrange
+        var controller = new SysAdminByDomainController();
+        var user = new LoginDomainUserDTO
+        {
+            DomainId = 351,
+            Environment = 4,
+            LoginId = 26995,
+            UserId = "99999999-9999-9999-9999-999999999999",
+            ModifiedBy = "admin",
+            SysAdmin = true,
+            SysAdminStartDate = DateTime.Parse("2020-05-13T00:00:00"),
+            SysAdminEndDate = DateTime.Parse("2021-05-13T00:00:00"),
+            Comment = "dsvs",
+            UserName = null
+        };
+        controller.UpdateUser(user);
+
+        // Act
+        var response = controller.UpdateUser(user) as OkObjectResult;
+
+        // Assert
+        Assert.Multiple(() =>
+        {
+            Assert.AreNotEqual(response, null);
+            Assert.That(response.StatusCode, Is.EqualTo(200));
+
+            var json = JsonConvert.SerializeObject(response.Value);
+            Assert.AreNotEqual(json, null);
+            
+            Assert.IsInstanceOf<LoginDomainUserDTO>(response.Value, "Wrong type");
+            var values = JsonConvert.DeserializeObject<LoginDomainUser>(json);
+
+            // Assert that the object is not null
+            Assert.AreNotEqual(values, null);
+            
+            // Assert that the types are valid
+            Assert.That(values.ModifiedBy, Is.TypeOf(typeof(string)));
+            Assert.That(values.UserId, Is.TypeOf(typeof(string)));
+            Assert.That(values.UserId, Is.EqualTo("99999999-9999-9999-9999-999999999999"));
+            Assert.That(values.Environment, Is.TypeOf(typeof(int)));
+            Assert.That(values.LoginId, Is.TypeOf(typeof(int)));
+            Assert.That(values.DomainId, Is.TypeOf(typeof(int)));
+            Assert.That(values.SysAdmin, Is.EqualTo(true));
+            Assert.That(values.Comment, Is.TypeOf(typeof(string)));
+
+            // Assert that the dates are valid
+            Assert.That(values.SysAdminEndDate, Is.TypeOf(typeof(DateTime)));
+            Assert.That(values.SysAdminStartDate, Is.TypeOf(typeof(DateTime)));
+            Assert.That(values.SysAdminStartDate, Is.LessThan(values.SysAdminEndDate));
+        });
+    }
+
+    /*
+     * Test that the user is not added if the user loginId does not exist
+     */
+    [Test]
+    public void TestUpdateUserLoginIdNotExist()
+    {
+        // Arrange
+        var controller = new SysAdminByDomainController();
+
+        // Act
+        var response = controller.UpdateUser(
+            new LoginDomainUserDTO
+            {
+                DomainId = 351,
+                Environment = 4,
+                LoginId = 4000,
+                UserId = "99999999-9999-9999-9999-999999999999",
+                ModifiedBy = "admin",
+                SysAdmin = true,
+                SysAdminStartDate = DateTime.Parse("2020-05-13T00:00:00"),
+                SysAdminEndDate = DateTime.Parse("2021-05-13T00:00:00"),
+                Comment = "dsvs",
+                UserName = null
+            }) as OkObjectResult;
+
+        // Assert
+        Assert.Multiple(() =>
+        {
+            Assert.IsNull(response);
+        });
+    }
+
+    /*
+     * Test that the user is not added if the user domainId does not exist
+     */
+    [Test]
+    public void TestUpdateUserDomainIdNotExist()
+    {
+        // Arrange
+        var controller = new SysAdminByDomainController();
+
+        // Act
+        var response = controller.UpdateUser(
+            new LoginDomainUserDTO
+            {
+                DomainId = 4000,
+                Environment = 4,
+                LoginId = 26995,
+                UserId = "99999999-9999-9999-9999-999999999999",
+                ModifiedBy = "admin",
+                SysAdmin = true,
+                SysAdminStartDate = DateTime.Parse("2020-05-13T00:00:00"),
+                SysAdminEndDate = DateTime.Parse("2021-05-13T00:00:00"),
+                Comment = "dsvs",
+                UserName = null
+            }) as OkObjectResult;
+
+        // Assert
+        Assert.Multiple(() =>
+        {
+            Assert.IsNull(response);
+        });
+    }
+
+    /*
+     * Test that the user is not added if the user environment does not exist
+     */
+    [Test]
+    public void TestUpdateUserEnvironmentNotExist()
+    {
+        // Arrange
+        var controller = new SysAdminByDomainController();
+
+        // Act
+        var response = controller.UpdateUser(
+            new LoginDomainUserDTO
+            {
+                DomainId = 351,
+                Environment = 7,
+                LoginId = 26995,
+                UserId = "99999999-9999-9999-9999-999999999999",
+                ModifiedBy = "admin",
+                SysAdmin = true,
+                SysAdminStartDate = DateTime.Parse("2020-05-13T00:00:00"),
+                SysAdminEndDate = DateTime.Parse("2021-05-13T00:00:00"),
+                Comment = "dsvs",
+                UserName = null
+            }) as OkObjectResult;
+
+        // Assert
+        Assert.Multiple(() =>
+        {
+            Assert.IsNull(response);
+        });
+    }
+
     /*
     * Test that the user is deleted if the user is a sysadmin
     */
@@ -161,7 +318,148 @@ public class TestSysAdmin
         {
             Assert.AreNotEqual(response, null);
             Assert.That(response.StatusCode, Is.EqualTo(200));
-            Assert.That(response.Value, Is.EqualTo("Unable to find user "+user.UserId+ ": "+user.LoginId+" | "+user.DomainId+" | "+user.Environment));
+            Assert.That(response.Value, Is.EqualTo("Unable to find user "+user.LoginId+" : "+user.UserId+" | "+user.DomainId+" | "+user.Environment));
         });
     }
+
+    /*
+     * Test that the user is not deleted if the user does not exist : UserId
+     */
+    [Test]
+    public void TestDeleteUserNotExist()
+    {
+        // Arrange
+        var controller = new SysAdminByDomainController();
+        var user = new LoginDomainUserDTO
+        {
+            LoginId = 26995,
+            UserId = "99999999-9999-9999-9999-999999999999",
+            DomainId = 351,
+            Environment = 4,
+            SysAdmin = true,
+            SysAdminStartDate = DateTime.Parse("2024-01-16T00:00:00"),
+            SysAdminEndDate = DateTime.Parse("2024-02-16T00:00:00"),
+            Comment = "added rights",
+            ModifiedBy = "admin",
+            UserName = null
+        };
+        controller.UpdateUser(user);
+
+        // Act
+        var response = controller.DeleteUser(user.LoginId, "99999999-9999-9999-9999-999999999998", user.DomainId, user.Environment) as OkObjectResult;
+        
+        // Assert 
+        Assert.Multiple(() =>
+        {
+            Assert.AreNotEqual(response, null);
+            Assert.That(response.StatusCode, Is.EqualTo(200));
+            Assert.That(response.Value, Is.EqualTo("Unable to find user "+user.LoginId+ " : 99999999-9999-9999-9999-999999999998 | "+user.DomainId+" | "+user.Environment));
+        });
+    }
+
+    /*
+     * Test that the user is not deleted if the user does not exist : LoginId
+     */
+    [Test]
+    public void TestDeleteUserNotExist2()
+    {
+        // Arrange
+        var controller = new SysAdminByDomainController();
+        var user = new LoginDomainUserDTO
+        {
+            LoginId = 26995,
+            UserId = "99999999-9999-9999-9999-999999999999",
+            DomainId = 351,
+            Environment = 4,
+            SysAdmin = true,
+            SysAdminStartDate = DateTime.Parse("2024-01-16T00:00:00"),
+            SysAdminEndDate = DateTime.Parse("2024-02-16T00:00:00"),
+            Comment = "added rights",
+            ModifiedBy = "admin",
+            UserName = null
+        };
+        controller.UpdateUser(user);
+
+        // Act
+        var response = controller.DeleteUser(4000, user.UserId, user.DomainId, user.Environment) as OkObjectResult;
+        
+        // Assert 
+        Assert.Multiple(() =>
+        {
+            Assert.AreNotEqual(response, null);
+            Assert.That(response.StatusCode, Is.EqualTo(200));
+            Assert.That(response.Value, Is.EqualTo("Unable to find user 4000 : "+user.UserId+" | "+user.DomainId+" | "+user.Environment));
+        });
+    }
+
+    /*
+     * Test that the user is not deleted if the user does not exist : Environment
+     */
+    [Test]
+    public void TestDeleteUserNotExist3()
+    {
+        // Arrange
+        var controller = new SysAdminByDomainController();
+        var user = new LoginDomainUserDTO
+        {
+            LoginId = 26995,
+            UserId = "99999999-9999-9999-9999-999999999999",
+            DomainId = 351,
+            Environment = 4,
+            SysAdmin = true,
+            SysAdminStartDate = DateTime.Parse("2024-01-16T00:00:00"),
+            SysAdminEndDate = DateTime.Parse("2024-02-16T00:00:00"),
+            Comment = "added rights",
+            ModifiedBy = "admin",
+            UserName = null
+        };
+        controller.UpdateUser(user);
+
+        // Act
+        var response = controller.DeleteUser(user.LoginId, user.UserId, user.DomainId, 5) as OkObjectResult;
+        
+        // Assert 
+        Assert.Multiple(() =>
+        {
+            Assert.AreNotEqual(response, null);
+            Assert.That(response.StatusCode, Is.EqualTo(200));
+            Assert.That(response.Value, Is.EqualTo("Unable to find user "+user.LoginId+" : "+user.UserId+" | "+user.DomainId+" | 5"));
+        });
+    }
+
+    /*
+     * Test that the user is not deleted if the user does not exist : DomainId
+     */
+    [Test]
+    public void TestDeleteUserNotExist4()
+    {
+        // Arrange
+        var controller = new SysAdminByDomainController();
+        var user = new LoginDomainUserDTO
+        {
+            LoginId = 26995,
+            UserId = "99999999-9999-9999-9999-999999999999",
+            DomainId = 351,
+            Environment = 4,
+            SysAdmin = true,
+            SysAdminStartDate = DateTime.Parse("2024-01-16T00:00:00"),
+            SysAdminEndDate = DateTime.Parse("2024-02-16T00:00:00"),
+            Comment = "added rights",
+            ModifiedBy = "admin",
+            UserName = null
+        };
+        controller.UpdateUser(user);
+
+        // Act
+        var response = controller.DeleteUser(user.LoginId, user.UserId, 352, user.Environment) as OkObjectResult;
+        
+        // Assert 
+        Assert.Multiple(() =>
+        {
+            Assert.AreNotEqual(response, null);
+            Assert.That(response.StatusCode, Is.EqualTo(200));
+            Assert.That(response.Value, Is.EqualTo("Unable to find user "+user.LoginId+" : "+user.UserId+" | 352 | "+user.Environment));
+        });
+    }
+
 }
