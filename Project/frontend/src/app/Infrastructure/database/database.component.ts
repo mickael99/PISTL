@@ -63,6 +63,8 @@ export class DatabaseComponent {
   // Bool used for the 'Edit', 'Delete', 'Reset Password' and 'Unlock' buttons
   isClicked: boolean = false;
 
+  databaseClicked: number;
+
   // Columns names in the table
   displayedColumns: string[] = [
     'databaseId',
@@ -568,6 +570,16 @@ export class DatabaseComponent {
     // Activate the 'Edit', 'Delete', 'Reset Password' and 'Unlock' buttons
     this.isClicked = true;
 
+    this.databaseClicked = database.databaseId;
+
+
+    this.isHovered = true;
+
+    this.databaseHovered = database.databaseId;
+
+    console.log('isHovered: ', this.isHovered);
+    console.log('databaseHovered: ', this.databaseHovered);
+
     console.table(this.databaseSelected);
   }
 
@@ -594,6 +606,10 @@ export class DatabaseComponent {
 
     // Disable the 'Edit', 'Delete', 'Reset Password' and 'Unlock' buttons
     this.isClicked = false;
+    this.databaseClicked = 0;
+
+    this.isHovered = false;
+    this.databaseHovered = 0;
 
     // Disable the 'Edit' button
     this.editEnabled = false;
@@ -698,8 +714,12 @@ export class DatabaseComponent {
    * Function used to activate the hover.
    */
   onMouseEnter(databaseHovered: number) {
-    this.isHovered = true;
-    this.databaseHovered = databaseHovered;
+    if(this.isClicked == false){
+        this.isHovered = true;
+        this.databaseHovered = databaseHovered;
+      
+    }
+
   }
 
   /***************************************************************************************/
@@ -707,8 +727,12 @@ export class DatabaseComponent {
    * Function used to deactivate the hover.
    */
   onMouseLeave() {
-    this.isHovered = false;
-    this.databaseHovered = 0;
+    if(this.isClicked == false){
+        this.isHovered = false;
+        this.databaseHovered = 0;
+      
+    }
+
   }
 
   /***************************************************************************************/

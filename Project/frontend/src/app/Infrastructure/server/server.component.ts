@@ -39,6 +39,8 @@ export class ServerComponent {
   // Bool used for the 'Edit', 'Delete', 'Reset Password' and 'Unlock' buttons
   isClicked: boolean = false;
 
+  serverClicked: number = 0;
+
   // Columns names in the table
   displayedColumns: string[] = [
     'Server ID',
@@ -304,6 +306,10 @@ export class ServerComponent {
 
     // Activate the 'Edit', 'Delete', 'Reset Password' and 'Unlock' buttons
     this.isClicked = true;
+    this.serverClicked = server.serverId;
+
+    this.isHovered = true;
+    this.serverHovered = server.serverId;
 
     console.table('serverSelected: ' + this.serverSelected.ServerId);
   }
@@ -313,8 +319,11 @@ export class ServerComponent {
    * Function used to activate the hover.
    */
   onMouseEnter(serverHovered: number) {
-    this.isHovered = true;
-    this.serverHovered = serverHovered;
+    if(this.isClicked == false) {
+      this.isHovered = true;
+      this.serverHovered = serverHovered;
+    }
+
   }
 
   /***************************************************************************************/
@@ -322,8 +331,10 @@ export class ServerComponent {
    * Function used to deactivate the hover.
    */
   onMouseLeave() {
-    this.isHovered = false;
-    this.serverHovered = 0;
+    if(this.isClicked == false) {
+      this.isHovered = false;
+      this.serverHovered = 0;
+    }
   }
 
   /***************************************************************************************/
@@ -347,6 +358,10 @@ export class ServerComponent {
 
     // Disable the 'Edit', 'Delete', 'Reset Password' and 'Unlock' buttons
     this.isClicked = false;
+    this.serverClicked = 0;
+
+    this.isHovered = false;
+    this.serverHovered = 0;
 
     // Disable the 'Edit' button
     this.editEnabled = false;
