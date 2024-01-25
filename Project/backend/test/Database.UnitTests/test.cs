@@ -227,6 +227,80 @@ public class DatabaseTests
 
   }
 
+  public static void DatabaseController_UpdateDatabase_WithExistingName_ReturnsBadRequest()
+  {
+    // Arrange
+    var context = new DatContext(); 
+    var databaseRepository = new Project.Repository.DatabaseRepository(context);
+    var serverRepository = new Project.Repository.ServerRepository(context);
+    var controller = new DatabaseController(databaseRepository, context, serverRepository);
+
+    var idMin = databaseRepository.GetUnusedMinDatabaseId();
+
+    var database = new Project.Models.Database
+    {
+      Name = "TestDatabase",
+      UserName = "TestUserName",
+      Password = "TestPassword",
+      Context = 1,
+      ServerId = 1,
+      CreatedDate = DateTime.Now,
+      CreatedBy = "TestCreatedBy",
+      ModifiedDate = DateTime.Now,
+      ModifiedBy = "TestModifiedBy"
+    };
+
+    var database2 = new Project.Models.Database
+    {
+      Name = "TestDatabase1",
+      UserName = "TestUserName",
+      Password = "TestPassword",
+      Context = 1,
+      ServerId = 1,
+      CreatedDate = DateTime.Now,
+      CreatedBy = "TestCreatedBy",
+      ModifiedDate = DateTime.Now,
+      ModifiedBy = "TestModifiedBy"
+    };
+
+    var databaseUpdate = new Project.Models.Database
+    {
+      DatabaseId = idMin,
+      Name = "TestDatabase1",
+      UserName = "TestUserName",
+      Password = "TestPassword",
+      Server = serverRepository.GetServer(1),
+      Context = 2,
+      ServerId = 1,
+      ModifiedDate = DateTime.Now,
+      ModifiedBy = "TestModifiedBy"
+    };
+
+    // Act
+    var result = controller.CreateDatabase(database) as OkObjectResult;
+
+    var result3 = controller.CreateDatabase(database2) as OkObjectResult;
+    
+    var result2 = controller.UpdateDatabase(databaseUpdate) as BadRequestObjectResult;
+
+    // Assert
+    Assert.IsNotNull(result2, "Add result is null.");
+    Assert.AreEqual(400, result2.StatusCode, "Status code is not 400.");
+    dynamic data = result2.Value;
+
+
+    var databaseProperty = data?.GetType().GetProperty("message");
+    Console.WriteLine("message: " + databaseProperty);
+    var databaseValue = databaseProperty.GetValue(data) as string;
+    Assert.AreEqual("This name of database already exists", databaseValue);
+ 
+
+    controller.DeleteDatabase(idMin);
+    Assert.Pass("New Database added verified.");
+
+  }
+
+
    /****************************************************************************************/
   /// <summary>
   /// Tests the behavior of the DatabaseController's DeleteDatabase method when the DTO is correct.
