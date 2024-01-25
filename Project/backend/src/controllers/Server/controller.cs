@@ -17,14 +17,12 @@ public class ServerController : Controller
 
     private readonly IServerRepository _serverRepository;
     private readonly DatContext context;
-    private readonly ILogger<ServerController> _logger;  // Add this line
 
 
-    public ServerController(IServerRepository serverRepository, DatContext context, ILogger<ServerController> logger)
+    public ServerController(IServerRepository serverRepository, DatContext context)
     {
         _serverRepository = serverRepository;
         this.context = context;
-        _logger = logger; 
     }
 
 
@@ -52,7 +50,6 @@ public class ServerController : Controller
     [ProducesResponseType(400)]
     public IActionResult GetServer(int id)
     {
-        _logger.LogInformation("----------------->This is a log message");
 
         if (!_serverRepository.ServerExists(id))
             return NotFound();
@@ -72,36 +69,41 @@ public class ServerController : Controller
     [ProducesResponseType(400)]
     public IActionResult CreateServer([FromBody] Server serverCreate)
     {
-        _logger.LogInformation("-------->Create Server");
 
         if (!ModelState.IsValid)
         {
-            _logger.LogInformation("------------------------->Model validation failed. ModelState: {0}", ModelState);
             return BadRequest(ModelState);
         }
 
-        _logger.LogInformation("-------->start creating");
+        Console.WriteLine("-------->Create Server");
 
         try
         {
-            context.Servers.Add(new Server
+            if (context.Servers.FirstOrDefault(s => s.Name == serverCreate.Name || s.Address == serverCreate.Address) == null)
             {
-                ServerId = _serverRepository.GetUnusedMinServerId(),
-                Name = serverCreate.Name,
-                Address = serverCreate.Address,
-                Context = serverCreate.Context,
-                Type = serverCreate.Type,
-                ModifiedBy = serverCreate.ModifiedBy,
-                CreatedBy = serverCreate.CreatedBy,
-                CreatedDate = DateTime.Now,
-                ModifiedDate = DateTime.Now,
-            });
 
-            _logger.LogInformation("---------->data enter finish");
+                context.Servers.Add(new Server
+                {
+                    ServerId = _serverRepository.GetUnusedMinServerId(),
+                    Name = serverCreate.Name,
+                    Address = serverCreate.Address,
+                    Context = serverCreate.Context,
+                    Type = serverCreate.Type,
+                    ModifiedBy = serverCreate.ModifiedBy,
+                    CreatedBy = serverCreate.CreatedBy,
+                    CreatedDate = DateTime.Now,
+                    ModifiedDate = DateTime.Now,
+                });
+            }
+            else
+            {
+                return BadRequest(new { message = "Server already exists" });
+            }
+
+            Console.WriteLine("data enter finish");
 
             context.SaveChanges();
 
-            _logger.LogInformation("---------->saved");
 
             var servers = _serverRepository.GetServers();
 
@@ -109,8 +111,6 @@ public class ServerController : Controller
         }
         catch (Exception ex)
         {
-            _logger.LogInformation("--------------------->Exception: " + ex.Message);
-            _logger.LogInformation("--------------------->StackTrace: " + ex.StackTrace);
 
             return BadRequest(ex.Message);
         }
@@ -175,7 +175,6 @@ public class ServerController : Controller
         serverToUpdate.ModifiedDate = DateTime.Now;
         serverToUpdate.Context = serverUpdate.Context;
         serverToUpdate.Type = serverUpdate.Type;
-        // Update other properties as needed
 
         if (!_serverRepository.UpdateServer(serverToUpdate))
         {

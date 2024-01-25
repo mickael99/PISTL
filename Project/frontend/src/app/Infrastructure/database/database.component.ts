@@ -358,6 +358,16 @@ export class DatabaseComponent {
 
     console.log('Copy database:', this.databaseSelected.DatabaseId);
 
+    // Check if the last two characters of this.selected_parameter[0] match the pattern "_"+ (number)
+    const regex = /_\d$/;
+    if (regex.test(this.databaseSelected.Name)) {
+      this.databaseSelected.Name = this.databaseSelected.Name.slice(0, -1) + (parseInt(this.databaseSelected.Name.slice(-1)) + 1).toString();
+    }
+    else {
+      this.databaseSelected.Name = this.databaseSelected.Name + "_1";
+    }
+
+
     // Create the request body
     const requestBody = {
       ServerId: this.databaseSelected.ServerId,
@@ -484,6 +494,7 @@ export class DatabaseComponent {
           console.log('database: ', this.database);
           this.dataSource = new MatTableDataSource(this.database);
           this.editEnabled = false;
+          this.dataSource.paginator = this.paginator;
           this.dataSource.sortingDataAccessor = (item, property) => {
             switch (property) {
               case 'databaseId':
