@@ -6,9 +6,11 @@ using Project.Interface;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Hosting.Server;
 
+
+// namespace Project.Controllers.Database
 [Route("api/database")]
 [ApiController]
-public class DatabaseController : Controller
+public class DatabaseController : ControllerBase
 {
 
     private readonly IDatabaseRepository _databaseRepository;
@@ -22,11 +24,16 @@ public class DatabaseController : Controller
         this.context = context;
     }
 
+    /// <summary>
+    /// Retrieves a list of databases.
+    /// </summary>
+    /// <returns>An <see cref="IActionResult"/> representing the response of the request.</returns>
     [HttpGet]
     [ProducesResponseType(200, Type = (typeof(IEnumerable<Database>)))]
     [ProducesResponseType(400)]
     public IActionResult GetDatabases()
     {
+        // Retrieves a list of databases
         Console.WriteLine("-------->Get databases");
         var databases = _databaseRepository.GetDataBases();
 
@@ -38,11 +45,17 @@ public class DatabaseController : Controller
         return Ok(databases);
     }
 
+    /// <summary>
+    /// Retrieves a specific database by its ID.
+    /// </summary>
+    /// <param name="id">The ID of the database to retrieve.</param>
+    /// <returns>An <see cref="IActionResult"/> representing the response of the request.</returns>
     [HttpGet("{id}")]
     [ProducesResponseType(200, Type = (typeof(Database)))]
     [ProducesResponseType(400)]
     public IActionResult GetDatabase(int id)
     {
+        // Retrieves a specific database by its ID
         Console.WriteLine("This is a log message");
 
         if (!_databaseRepository.DatabaseExists(id))
@@ -58,18 +71,24 @@ public class DatabaseController : Controller
         return Ok(database);
     }
 
+    /// <summary>
+    /// Creates a new database.
+    /// </summary>
+    /// <param name="databaseCreate">The database object containing the information for the new database.</param>
+    /// <returns>An <see cref="IActionResult"/> representing the response of the request.</returns>
     [HttpPost]
     [ProducesResponseType(204)]
     [ProducesResponseType(400)]
     public IActionResult CreateDatabase([FromBody] Database databaseCreate)
     {
+        // Creates a new database
         Console.WriteLine("-------->Create Database");
 
-        Console.WriteLine("-------->databaseCreateServer: " + databaseCreate.ServerId);
+        string passwordHash = _databaseRepository.EncryptPassword(databaseCreate.Password);
+
 
         var newId = _databaseRepository.GetUnusedMinDatabaseId();
 
-        Console.WriteLine("-------->newId: " + newId);
 
         if (databaseCreate == null)
             return BadRequest(ModelState);
@@ -83,6 +102,8 @@ public class DatabaseController : Controller
             Console.WriteLine("-------->Server do not exists");
             return BadRequest("Server do not exists");
         }
+
+        Console.WriteLine("-------->Context " + databaseCreate.Context);
 
         Console.WriteLine("start creating");
         try
@@ -101,30 +122,19 @@ public class DatabaseController : Controller
                     CreatedBy = databaseCreate.CreatedBy,
                     CreatedDate = DateTime.Now,
                     ModifiedDate = DateTime.Now,
+                    Context = databaseCreate.Context,
                 });
             }
             else
             {
-                return BadRequest(new { message = "Database already exists" });
+                Console.WriteLine("-------->This name of database already exists");
+                return BadRequest(new { message = "This name of database already exists" });
             }
+
 
             Console.WriteLine("data enter finish");
 
-            context.SaveChanges();
-
-
-            if (!_serverRepository.AddDatabaseToServer(newId, databaseCreate.ServerId))
-            {
-                Console.WriteLine("-------->AddDatabaseToServer failed");
-                return BadRequest("AddDatabaseToServer failed");
-            }
-
-            Console.WriteLine("-------->AddDatabaseToServer success");
-
-            context.SaveChanges();
-
-            Console.WriteLine("----------->saved");
-
+            _databaseRepository.Save();
 
             var databases = _databaseRepository.GetDataBases();
 
@@ -136,13 +146,18 @@ public class DatabaseController : Controller
         }
     }
 
+    /// <summary>
+    /// Updates an existing database.
+    /// </summary>
+    /// <param name="dbUpdated">The updated database object.</param>
+    /// <returns>An <see cref="IActionResult"/> representing the response of the request.</returns>
     [HttpPut("{id}")]
     [ProducesResponseType(400)]
     [ProducesResponseType(204)]
     [ProducesResponseType(404)]
     public IActionResult UpdateDatabase([FromBody] Database dbUpdated)
     {
-
+        // Updates an existing database
         Console.WriteLine("-------->Update Database");
         Console.WriteLine("-------->dbUpdated: " + dbUpdated.DatabaseId);
         Console.WriteLine("-------->dbUpdatedServer: " + dbUpdated.ServerId);
@@ -151,6 +166,7 @@ public class DatabaseController : Controller
         {
             return BadRequest(ModelState);
         }
+        string passwordHash = _databaseRepository.EncryptPassword(dbUpdated.Password);
 
 
         if (!_databaseRepository.DatabaseExists(dbUpdated.DatabaseId))
@@ -196,7 +212,7 @@ public class DatabaseController : Controller
         dbToUpdate.DatabaseId = dbUpdated.DatabaseId;
         dbToUpdate.Name = dbUpdated.Name;
         dbToUpdate.UserName = dbUpdated.UserName;
-        dbToUpdate.Password = dbUpdated.Password;
+        dbToUpdate.Password = passwordHash;
         dbToUpdate.ServerId = dbUpdated.ServerId;
         dbToUpdate.Server = server;
         dbToUpdate.ModifiedBy = dbUpdated.ModifiedBy;
@@ -225,12 +241,18 @@ public class DatabaseController : Controller
         return Ok(new { databases });
     }
 
+    /// <summary>
+    /// Deletes a database by its ID.
+    /// </summary>
+    /// <param name="id">The ID of the database to delete.</param>
+    /// <returns>An <see cref="IActionResult"/> representing the response of the request.</returns>
     [HttpDelete("{id}")]
     [ProducesResponseType(400)]
     [ProducesResponseType(204)]
     [ProducesResponseType(404)]
     public IActionResult DeleteDatabase(int id)
     {
+        // Deletes a database by its ID
         if (!_databaseRepository.DatabaseExists(id))
             return NotFound();
 

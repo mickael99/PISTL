@@ -11,6 +11,8 @@ namespace Project.Interface
 
         bool DatabaseExists(int Id);
 
+        bool DatabaseExists(string DatabaseName);
+
         bool CreateDatabase(Database db);
 
         bool Save();
@@ -23,9 +25,7 @@ namespace Project.Interface
 
         public int GetUnusedMinDatabaseId();
 
-        public string GetSalt(int size);
-
-        public string EncryptPassword(string input, string salt);
+        public string EncryptPassword(string input);
 
     }
 }

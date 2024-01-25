@@ -34,6 +34,12 @@ namespace Project.Repository
             return _context.Databases.Any(db => db.DatabaseId == Id);
         }
 
+        public bool DatabaseExists(string DatabaseController_CreateDatabase_WithExistingName_ReturnsBadRequest)
+        {
+            return _context.Databases.Any(db => db.Name == DatabaseController_CreateDatabase_WithExistingName_ReturnsBadRequest);
+        }
+
+
         public bool CreateDatabase(Database db)
         {
             _context.Add(db);
@@ -91,10 +97,9 @@ namespace Project.Repository
         /// <param name="password">The password to be encrypted.</param>
         /// <param name="salt">The salt to be used.</param>
         /// <returns>The encrypted password.</returns>
-        public string EncryptPassword(string password, string salt)
+        public string EncryptPassword(string password)
         {
-            // if (!string.IsNullOrWhiteSpace(salt)) salt += SECRET; // TODO pourquoi utiliser la variable SECRET?
-            var bytes = Encoding.UTF8.GetBytes(password + salt);
+            var bytes = Encoding.UTF8.GetBytes(password);
             var encryptedBytes = SHA512.HashData(bytes);
             return BitConverter.ToString(encryptedBytes).Replace("-", "");
         }

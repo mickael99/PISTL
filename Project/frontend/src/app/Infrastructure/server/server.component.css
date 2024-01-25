@@ -1,29 +1,33 @@
 @import "@angular/material/prebuilt-themes/indigo-pink.css";
-/* 
-.centertest {
-    padding: 10px;
-    border-radius: 10px;
-    background-color: green;
-    font-weight: 900;
-    font-size: 2rem;
-  }
-  
-  .centre {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-  }
-
-  .table tr:hover {
-    cursor: pointer;
-  } */
 
 .title {
   font-size: 2.4rem;
   font-weight: 700;
   color: #3d59a7;
+}
+
+.btn {
+  margin: 8px 8px 8px 0;
+  font-weight: 600;
+}
+
+.green-text {
+  color: green;
+  font-size: 3rem;
+}
+
+.red-text {
+  color: red;
+  font-size: 3rem;
+}
+
+.container {
+  margin: 0 0 0 2rem;
+}
+
+.table {
+  width: 50%;
+  background-color: white;
 }
 
 .btn {
