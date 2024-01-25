@@ -40,23 +40,20 @@
               >
                 <a
                   ngbDropdownItem
-                  [routerLink]="active_page"
+                  routerLink="domain-administration"
                   class="btn--2 btn--margin-right btn--in-progress"
-                  (click)="active_page = checkActivity('domain-administration')"
                   >Domain Administration</a
                 >
                 <a
                   ngbDropdownItem
-                  [routerLink]="active_page"
+                  routerLink="sys-admin-by-domain"
                   class="btn--2 btn--margin-right btn--completed"
-                  (click)="active_page = checkActivity('sys-admin-by-domain')"
                   >SysAdmin by Domain</a
                 >
                 <a
                   ngbDropdownItem
-                  [routerLink]="active_page"
+                  [routerLink]="'domain-by-sys-admin'"
                   class="btn--2 btn--margin-right btn--completed"
-                  (click)="active_page = checkActivity('domain-by-sys-admin')"
                   >Domain by SysAdmin</a
                 >
               </div>
@@ -78,23 +75,20 @@
               >
                 <a
                   ngbDropdownItem
-                  [routerLink]="active_page"
+                  routerLink="database"
                   class="btn--2 btn--in-progress"
-                  (click)="active_page = checkActivity('database')"
                   >Database</a
                 >
                 <a
                   ngbDropdownItem
-                  [routerLink]="active_page"
+                  routerLink="server"
                   class="btn--2 btn--margin-right btn--completed"
-                  (click)="active_page = checkActivity('server');"
                   >Server</a
                 >
                 <a
                   ngbDropdownItem
-                  [routerLink]="active_page"
+                  routerLink="server-parameter"
                   class="btn--2 btn--margin-right btn--completed"
-                  (click)="active_page = checkActivity('server-parameter')"
                   >Server Parameter</a
                 >
               </div>
@@ -102,17 +96,15 @@
           </li>
           <li>
             <a 
-              [routerLink]="active_page" 
+              routerLink="/users" 
               class="btn--1 btn--completed" 
-              (click)="active_page = checkActivity('/users')"
               >Users
             </a>
           </li>
           <li>
             <a 
               class="btn--1 btn--completed" 
-              (click)="active_page = checkActivity('/reports')"
-              [routerLink]="active_page" 
+              routerLink="/reports" 
               >Reports
             </a>
           <li>
