@@ -75,7 +75,7 @@
         name="env"
         value="dev"
         (change)="setEnvironment(2)"
-        checked
+        [checked]="idEnvSelected == 2"
       />
       <label for="dev">Dev</label>
 
@@ -85,6 +85,7 @@
         name="env"
         value="preprod"
         (change)="setEnvironment(4)"
+        [checked]="idEnvSelected == 4"
       />
       <label for="preprod">Preprod</label>
 
@@ -94,6 +95,7 @@
         name="env"
         value="prod"
         (change)="setEnvironment(8)"
+        [checked]="idEnvSelected == 8"
       />
       <label for="prod">Prod</label>
 
@@ -103,6 +105,7 @@
         name="env"
         value="test"
         (change)="setEnvironment(16)"
+        [checked]="idEnvSelected == 16"
       />
       <label for="test">Test</label>
 
@@ -112,6 +115,7 @@
         name="env"
         value="prodcopy"
         (change)="setEnvironment(32)"
+        [checked]="idEnvSelected == 32"
       />
       <label for="prodcopy">Prodcopy</label>
 
@@ -121,6 +125,7 @@
         name="env"
         value="staging"
         (change)="setEnvironment(256)"
+        [checked]="idEnvSelected == 256"
       />
       <label class="stagingColor" for="staging">Staging</label>
     </div>

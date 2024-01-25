@@ -134,8 +134,7 @@ public IActionResult GetDomains() // TODO add JWT
         return newDomain;
     }
 
-    public class DomainModel
-    {
+    public class DomainModel {
         public required string Name { get; set; }
         public int? DomainId { get; set; }
         public byte[]? Logo { get; set; }
