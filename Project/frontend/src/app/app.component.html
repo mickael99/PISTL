@@ -79,7 +79,7 @@
                 <a
                   ngbDropdownItem
                   [routerLink]="active_page"
-                  class="btn--2 btn--in-progress"
+                  class="btn--2 btn--margin-right btn--completed"
                   (click)="active_page = checkActivity('database')"
                   >Database</a
                 >
@@ -87,7 +87,7 @@
                   ngbDropdownItem
                   [routerLink]="active_page"
                   class="btn--2 btn--margin-right btn--completed"
-                  (click)="active_page = checkActivity('server');"
+                  (click)="active_page = checkActivity('server')"
                   >Server</a
                 >
                 <a
@@ -101,20 +101,22 @@
             </div>
           </li>
           <li>
-            <a 
-              [routerLink]="active_page" 
-              class="btn--1 btn--completed" 
+            <a
+              [routerLink]="active_page"
+              class="btn--1 btn--completed"
               (click)="active_page = checkActivity('/users')"
               >Users
             </a>
           </li>
           <li>
-            <a 
-              class="btn--1 btn--completed" 
+            <a
+              class="btn--1 btn--completed"
               (click)="active_page = checkActivity('/reports')"
-              [routerLink]="active_page" 
+              [routerLink]="active_page"
               >Reports
             </a>
+          </li>
+
           <li>
             <p class="text nav-end">
               Hello <strong>{{ email }}</strong
