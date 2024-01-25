@@ -13,15 +13,15 @@ public partial class DomainEnvironment
 
     public int BpwebServerId { get; set; }
 
-    public int? BpDatabaseId { get; set; }
+    public int? BpdatabaseId { get; set; }
 
-    public int? EaiDatabaseId { get; set; }
+    public int? EaidatabaseId { get; set; }
 
-    public int? SsrsServerId { get; set; }
+    public int? SsrsserverId { get; set; }
 
     public int? TableauServerId { get; set; }
 
-    public int? EaiftpServerId { get; set; }
+    public int? EaiftpserverId { get; set; }
 
     public bool IsBp5Enabled { get; set; }
 
@@ -32,7 +32,6 @@ public partial class DomainEnvironment
     public DateTime? ModifiedDate { get; set; }
 
     public string? ModifiedBy { get; set; }
-
     public virtual Database? Bpdatabase { get; set; }
 
     public virtual Server BpwebServer { get; set; } = null!;
