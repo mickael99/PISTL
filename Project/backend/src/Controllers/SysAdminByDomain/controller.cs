@@ -260,15 +260,14 @@ namespace Project.Controllers
 
                     var response = "Deleted user "+userID+ ": "+loginID+" | "+domainID+" | "+env;
                     Console.WriteLine(response);
-                    return Ok(response);
+                    return Ok();
                 }
                 else
                 {
                     var response = "Unable to find user "+loginID+" : "+userID+" | "+domainID+" | "+env;
                     Console.WriteLine(response);
-                    return Ok(response);
+                    return Ok();
                 }
-                return Ok();
             }
             catch (Exception ex)
             {

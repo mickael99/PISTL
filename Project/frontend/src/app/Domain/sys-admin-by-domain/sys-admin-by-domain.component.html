@@ -1,3 +1,9 @@
+<!-- FILEPATH: /home/walter/Desktop/MASTER/PISTL/PISTL/Project/frontend/src/app/Domain/sys-admin-by-domain/sys-admin-by-domain.component.html -->
+<!-- This HTML file represents the UI component for displaying and managing SysAdmins by domain. 
+  It contains a dropdown to select a domain, a table to display SysAdmin data, and checkboxes to manage permissions for 
+  different environments (Dev, Preprod, Prod, Test, ProdCopy, Staging). The component also includes buttons for adding, 
+  saving, and canceling changes. 
+-->
 <div class="container">
   <h1 class="title">SysAdmin by Domain</h1>
 </div>
@@ -120,11 +126,12 @@
 
       <ng-container matColumnDef="dev">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
-          <input
-            type="checkbox"
-            [(ngModel)]="one_checked[1]"
-            (change)="one_checked[1] ? checkAll(1) : uncheckAll(1)"
-          />
+          <mat-checkbox
+            [(ngModel)]="all_checked[1]"
+            (change)="all_checked[1] ? checkAll(1) : uncheckAll(1)"
+            [indeterminate]="one_checked[1] && !all_checked[1]"
+            color="primary"
+          ></mat-checkbox>
           <div
             style="
               margin: 5px;
@@ -161,11 +168,12 @@
 
       <ng-container matColumnDef="preprod">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
-          <input
-            type="checkbox"
-            [(ngModel)]="one_checked[2]"
-            (change)="one_checked[2] ? checkAll(2) : uncheckAll(2)"
-          />
+          <mat-checkbox
+            [(ngModel)]="all_checked[2]"
+            (change)="all_checked[2] ? checkAll(2) : uncheckAll(2)"
+            [indeterminate]="one_checked[2] && !all_checked[2]"
+            color="primary"
+          ></mat-checkbox>
           <div
             style="
               margin: 5px;
@@ -202,11 +210,12 @@
 
       <ng-container matColumnDef="prod">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
-          <input
-            type="checkbox"
-            [(ngModel)]="one_checked[3]"
-            (change)="one_checked[3] ? checkAll(3) : uncheckAll(3)"
-          />
+          <mat-checkbox
+            [(ngModel)]="all_checked[3]"
+            (change)="all_checked[3] ? checkAll(3) : uncheckAll(3)"
+            [indeterminate]="one_checked[3] && !all_checked[3]"
+            color="primary"
+          ></mat-checkbox>
           <div
             style="
               margin: 5px;
@@ -243,11 +252,12 @@
 
       <ng-container matColumnDef="test">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
-          <input
-            type="checkbox"
-            [(ngModel)]="one_checked[4]"
-            (change)="one_checked[4] ? checkAll(4) : uncheckAll(4)"
-          />
+          <mat-checkbox
+          [(ngModel)]="all_checked[4]"
+          (change)="all_checked[4] ? checkAll(4) : uncheckAll(4)"
+          [indeterminate]="one_checked[4] && !all_checked[4]"
+          color="primary"
+        ></mat-checkbox>
           <div
             style="
               margin: 5px;
@@ -284,11 +294,12 @@
 
       <ng-container matColumnDef="prodCopy">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
-          <input
-            type="checkbox"
-            [(ngModel)]="one_checked[5]"
-            (change)="one_checked[5] ? checkAll(5) : uncheckAll(5)"
-          />
+          <mat-checkbox
+            [(ngModel)]="all_checked[5]"
+            (change)="all_checked[5] ? checkAll(5) : uncheckAll(5)"
+            [indeterminate]="one_checked[5] && !all_checked[5]"
+            color="primary"
+          ></mat-checkbox>
           <div
             style="
               margin: 5px;
@@ -325,11 +336,12 @@
 
       <ng-container matColumnDef="staging">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
-          <input
-            type="checkbox"
-            [(ngModel)]="one_checked[6]"
-            (change)="one_checked[6] ? checkAll(6) : uncheckAll(6)"
-          />
+          <mat-checkbox
+            [(ngModel)]="all_checked[6]"
+            (change)="all_checked[6] ? checkAll(6) : uncheckAll(6)"
+            [indeterminate]="one_checked[6] && !all_checked[6]"
+            color="primary"
+          ></mat-checkbox>
           <div
             style="
               margin: 5px;

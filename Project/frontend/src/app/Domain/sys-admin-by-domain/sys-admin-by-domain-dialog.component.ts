@@ -66,10 +66,11 @@ export class SysAdminByDomainDialog {
   ) {
     // Set the default value for "from" to the current date
     const currentDate = new Date();
-    this.from_copy = this.datepipe.transform(data.user.sysAdminStartDate, 'yyyy-MM-dd');
     const fromDate =
       this.datepipe.transform(data.user.sysAdminStartDate, 'yyyy-MM-dd') ||
       this.datepipe.transform(currentDate, 'yyyy-MM-dd');
+    this.from_copy = fromDate;
+
     const toDate = this.datepipe.transform(data.user.sysAdminEndDate, 'yyyy-MM-dd');
     const comment = data.user.comment;
 
@@ -81,6 +82,12 @@ export class SysAdminByDomainDialog {
     });
   }
 
+  /**
+   * Sets the date value in the newAdminForm and closes the datepicker.
+   * 
+   * @param event - The selected date.
+   * @param dp - The datepicker instance.
+   */
   setDate(event, dp) {
     this.newAdminForm.patchValue({
       to: this.datepipe.transform(event, 'yyyy-MM-dd'),
@@ -88,10 +95,17 @@ export class SysAdminByDomainDialog {
     dp.close();
   }
 
+  /**
+   * Handles the form submission event.
+   * Closes the dialog and passes the form value as the result.
+   */
   onSubmit(): void {
     this.dialogRef.close(this.newAdminForm.value);
   }
 
+  /**
+   * Resets the newAdminForm and closes the dialog without returning any value.
+   */
   onCancel(): void {
     this.newAdminForm.reset();
     this.dialogRef.close(null);
