@@ -12,7 +12,7 @@ public class DomainEnvironmentController : ControllerBase {
     [HttpGet]
     public IActionResult GetDomainEnvironments()  {
         try {
-            var context = new MasterContext();
+            var context = new DatContext();
             Console.WriteLine("=> GET /api/domainEnvironment");
 
             var domainEnvironments = context.DomainEnvironments;
@@ -26,7 +26,7 @@ public class DomainEnvironmentController : ControllerBase {
     [HttpPost]
     public IActionResult PostDomainEnvironment([FromBody] List<EnvironmentModel> models) {
         try {
-            var context = new MasterContext();
+            var context = new DatContext();
             Console.WriteLine("=> POST /api/domainEnvironment");
            
            foreach(EnvironmentModel model in models) {
@@ -58,7 +58,7 @@ public class DomainEnvironmentController : ControllerBase {
         Console.WriteLine("===============> PUT /api/domainEnvironment");
 
          try {
-            var context = new MasterContext();
+            var context = new DatContext();
             var existingEnvironmentDomain = context.DomainEnvironments.FirstOrDefault(e => e.DomainEnvironmentId == id);
 
             if (existingEnvironmentDomain == null)
@@ -85,7 +85,7 @@ public class DomainEnvironmentController : ControllerBase {
     [HttpDelete("{id}")]
     public IActionResult DeleteDomainEnvironment(int id) {
         try{
-            var context = new MasterContext();
+            var context = new DatContext();
             Console.WriteLine("===============> DELETE /api/domainEnvironment");
             var domainEnvironmentToDelete = context.DomainEnvironments.FirstOrDefault(e => e.DomainEnvironmentId == id);
 

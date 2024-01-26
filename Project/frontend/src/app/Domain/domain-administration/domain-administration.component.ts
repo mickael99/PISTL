@@ -28,16 +28,27 @@ export class EnvironmentModel {
 
 /***************************************************************************************/
 export class EnvironmentModelForBackend {
-  public environment: number;
-  public bpwebServerId: number;
-  public bpDatabaseId: number;
-  public eaiDatabaseId: number;
-  public ssrsServerId: number;
-  public tableauServerId: number;
-  public eaiftpServerId: number;
-  public isBp5Enabled: boolean;
+  DomainId: number;
+  Environment: number;
+  BpwebServerId: number; 
+  BpdatabaseId: number;
+  EaidatabaseId: number;
+  SsrsserverId: number;
+  TableauServerId: number;
+  EaiftpserverId: number;
+  IsBp5Enabled: boolean;
 }
 
+export class ServersAndDatabasesName {
+  public nameBpwebServer: string;
+  public nameBpDatabase: string;
+  public nameEaiDatabase: string;
+  public nameSsrsServer: string;
+  public nameTableauServer: string;
+  public nameEaiftpServer: string; 
+}
+
+/***************************************************************************************/
 @Component({
   selector: 'app-domain-administration',
   templateUrl: './domain-administration.component.html',
@@ -103,8 +114,13 @@ export class DomainAdministrationComponent {
    */
   onSelect(selectedDomain: any): void {
     this.selectedDomain = selectedDomain;
-    if(selectedDomain && selectedDomain.logo)
-      this.displayLogo(selectedDomain.logo);
+    // if (selectedDomain && selectedDomain.logo)
+    //   this.displayLogo(selectedDomain.logo);
+
+    this.selectedDomainEnvironments = this.domainEnvironments.filter(
+      (env) => env.domainId == this.selectedDomain.domainId
+    );
+  
     this.onEnvironmentSelect(2);
   }
 
@@ -153,14 +169,14 @@ export class DomainAdministrationComponent {
   resetBp5ServersAndDatabasesList(): void {
     const interne = (environment: number): void => {
       this.selectedBp5[environment] = false;
-      this.selectedDatabaseServers[environment] = null;
-      this.selectedWebServers[environment] = null;
-      this.selectedEaiFtpServers[environment] = null;
-      this.selectedTableauServers[environment] = null;
-      this.selectedSsrsServers[environment] = null;
-      this.selectedElasticPools[environment] = null
-    }
-    
+      this.selectedDatabaseServers[environment] = undefined;
+      this.selectedWebServers[environment] = undefined;
+      this.selectedEaiFtpServers[environment] = undefined;
+      this.selectedTableauServers[environment] = undefined;
+      this.selectedSsrsServers[environment] = undefined;
+      this.selectedElasticPools[environment] = undefined;
+    };
+
     interne(2);
     interne(4);
     interne(8);
@@ -171,27 +187,55 @@ export class DomainAdministrationComponent {
 
   /***************************************************************************************/
   /*
-  * Get domains, servers and databases from the Databases.
-  * Select the first occurence into the domain
-  */
-  constructor(private renderer: Renderer2, private http: HttpClient, private router: Router) {
-    this.http.get('http://localhost:5050/api/database').subscribe(
-        (data: any) => {
-          this.databases = data;
-        },
-        (error) => {
-          alert('Connection error: ' + error.message);
-        }
+   * Get domains, servers and databases from the Databases.
+   * Select the first occurence into the domain
+   */
+  constructor(private renderer: Renderer2, private http: HttpClient,
+                private router: Router) {
+    const getDomains = (): void => {
+      this.http.get('http://localhost:5050/api/domain').subscribe(
+      (data: any) => {
+        this.domains = data;
+        // Changing the logo format
+        this.domains.forEach((domain) => {
+          // Because for the 'WWBP5' domain, the logo encoded hasn't the same format
+          if (domain.name === 'WWBP5') {
+            domain.logo = 'data:image/png;base64,' + domain.logo;
+          } else {
+            domain.logo = atob(domain.logo);
+          }
+        });
+
+        if (this.domains.length)
+          this.onSelect(this.domains[0]);
+      },
+      (error) => {
+        alert('Connection error: ' + error.message);
+      }
+    )
+    }
+
+    const getDomainEnvironments = (): void => {
+      this.http.get('http://localhost:5050/api/domainEnvironment').subscribe(
+      (data: any) => {
+        this.domainEnvironments = data;
+        getDomains();
+      },
+      (error) => {
+        alert('Connection error: ' + error.message);
+      }
     );
     };
 
-    this.http.get('http://localhost:5050/api/server').subscribe(
-        (data: any) => {
-          this.servers = data;
-        },
-        (error) => {
-          alert('Connection error: ' + error.message);
-        }
+    const getServers = (): void => {
+      this.http.get('http://localhost:5050/api/server').subscribe(
+      (data: any) => {
+        this.servers = data;
+        getDomainEnvironments();
+      },
+      (error) => {
+        alert('Connection error: ' + error.message);
+      }
     );
     };
 
@@ -199,9 +243,8 @@ export class DomainAdministrationComponent {
 
     this.http.get('http://localhost:5050/api/database').subscribe(
       (data: any) => {
-        this.domains = data;
-        if(this.domains.length)
-          setTimeout( () => { this.onSelect(this.domains[0]) }, 500);
+        this.databases = data;
+        getServers();
       },
       (error) => {
         alert('Connection error: ' + error.message);
@@ -220,40 +263,59 @@ export class DomainAdministrationComponent {
    *         false if not
    */
   isEnvironmentEnabled(environmentId: number): boolean {
-    return !!this.selectedDomain?.environments?.some(env => env.environment === environmentId);
+    return !!this.selectedDomainEnvironments?.some(
+      (env) => env.environment === environmentId
+    );
   }
 
   findDatabaseNameFromSelectedEnvironment(): void {
-    if(this.selectedEnvironment) {
-      //console.log("qsnjdfnjqsd -> ", this.databases.length);
-      const databaseServer = this.databases.find(db => db.databaseId === this.selectedEnvironment.bpDatabaseId);
-      if(databaseServer) 
-        this.selectedEnvironment.nameBpDatabaseId = databaseServer.name;
+    const databaseServer = this.selectedDomainEnvironment ? 
+      this.databases.find(
+        (db) => db.databaseId === this.selectedDomainEnvironment?.bpdatabaseId
+      )
+    : undefined;
+    this.serversAndDatabasesName.nameBpDatabase = databaseServer ? 
+      databaseServer.name : undefined;
 
-      const elasticPool = this.databases.find(db => db.databaseId === this.selectedEnvironment.eaiDatabaseId);
-      if(elasticPool) 
-        this.selectedEnvironment.nameEaiDatabaseId = elasticPool.name;
-    }
+    const elasticPool = this.selectedDomainEnvironment ? 
+      this.databases.find(
+        (db) => db.databaseId === this.selectedDomainEnvironment.eaidatabaseId
+      )
+      : undefined;
+    this.serversAndDatabasesName.nameEaiDatabase = elasticPool ? 
+      elasticPool.name : undefined
+    
   }
 
   findServerNameFromSelectedEnvironment(): void {
-    if(this.selectedEnvironment) {
-      //console.log("qsnjdfnjqsd -> ", this.servers.length);
-      const webServer = this.servers.find(s => s.serverId === this.selectedEnvironment.bpwebServerId);
-      if(webServer) 
-        this.selectedEnvironment.nameBpwebServerId = webServer.name;
+    if(this.selectedDomain) {
+      const webServer = this.selectedDomainEnvironment ? 
+        this.servers.find(
+          (s) => s.serverId === this.selectedDomainEnvironment.bpwebServerId
+        ) : undefined;
+      this.serversAndDatabasesName.nameBpwebServer = webServer ? 
+        webServer.name : undefined;
 
-      const eaiFTP = this.servers.find(s => s.serverId === this.selectedEnvironment.eaiftpServerId);
-      if(eaiFTP) 
-        this.selectedEnvironment.nameEaiftpServerId = eaiFTP.name;
+      const eaiServer = this.selectedDomainEnvironment ? 
+        this.servers.find(
+          (s) => s.serverId === this.selectedDomainEnvironment.eaiftpserverId
+        ) : undefined;
+      this.serversAndDatabasesName.nameEaiftpServer = eaiServer ? 
+        eaiServer.name : undefined;
 
-      const tableauServer = this.servers.find(s => s.serverId === this.selectedEnvironment.tableauServerId);
-      if(tableauServer) 
-        this.selectedEnvironment.nameTableauServerId = tableauServer.name;
-
-      const ssrs = this.servers.find(s => s.serverId === this.selectedEnvironment.ssrsServerId);
-      if(ssrs) 
-        this.selectedEnvironment.nameSsrsServerId = ssrs.name;
+      const tableauServer = this.selectedDomainEnvironment ? 
+        this.servers.find(
+          (s) => s.serverId === this.selectedDomainEnvironment.tableauServerId
+        ) : undefined;
+      this.serversAndDatabasesName.nameTableauServer = tableauServer ? 
+        tableauServer.name : undefined;
+     
+      const ssrsServer = this.selectedDomainEnvironment ? 
+        this.servers.find(
+          (s) => s.serverId === this.selectedDomainEnvironment.ssrsserverId
+        ) : undefined;
+      this.serversAndDatabasesName.nameSsrsServer = ssrsServer ? 
+        ssrsServer.name : undefined;
     }
   }
 
@@ -305,14 +367,25 @@ export class DomainAdministrationComponent {
   }
 
   getServerOrDatabaseIsSelected(): number[] {
-    const checkIfServerOrDatabaseIsSelected = (environmentId: number): boolean => {
-      return this.selectedDatabaseServers[environmentId] != null ||
-              this.selectedWebServers[environmentId] != null ||
-              this.selectedEaiFtpServers[environmentId] != null ||
-              this.selectedTableauServers[environmentId] != null ||
-              this.selectedSsrsServers[environmentId] != null ||
-              this.selectedElasticPools[environmentId] != null;
-    }
+    const checkIfServerOrDatabaseIsSelected = (
+      environmentId: number
+    ): boolean => {
+      if(this.selectedDatabaseServers[environmentId] == "undefined")
+        this.selectedDatabaseServers[environmentId] = undefined;
+      if(this.selectedWebServers[environmentId] == "undefined")
+        this.selectedWebServers[environmentId] = undefined;
+      if(this.selectedEaiFtpServers[environmentId] == "undefined")
+        this.selectedEaiFtpServers[environmentId] = undefined;
+      if(this.selectedTableauServers[environmentId] == "undefined")
+        this.selectedTableauServers[environmentId] = undefined;
+      if(this.selectedSsrsServers[environmentId] == "undefined")
+        this.selectedSsrsServers[environmentId] = undefined;
+      if(this.selectedElasticPools[environmentId] == "undefined")
+        this.selectedElasticPools[environmentId] = undefined;
+
+      return this.selectedWebServers[environmentId] != undefined;
+    };
+
     let selectedEnvironment: number[] = [];
     if (checkIfServerOrDatabaseIsSelected(2)) selectedEnvironment.push(2);
     if (checkIfServerOrDatabaseIsSelected(4)) selectedEnvironment.push(4);
@@ -324,47 +397,86 @@ export class DomainAdministrationComponent {
     return selectedEnvironment;
   }
 
-  addDomain() : void {
+  addDomainEnvironment(domain, environmentsModel, makeOnSelectAction): void {
+    this.http.post('http://localhost:5050/api/domainEnvironment', environmentsModel).subscribe({
+      next: (data: any) => {
+        this.domainEnvironments = data.env;
+        if(makeOnSelectAction)
+          this.onSelect(domain);
+      },
+      error: (error: any) => {
+        alert('Connection error: ' + error.message);
+      },
+    });
+  }
+
+  /***************************************************************************************/
+  /**
+   * Add a new domain into the database
+   */
+  addDomain(): void {
     let selectedEnvironments: number[];
     selectedEnvironments = this.getServerOrDatabaseIsSelected();
-
-    let environmentsModel = [];
-    for(const e of selectedEnvironments) {
+    let environmentsModel = new Array<EnvironmentModelForBackend>();
+    for (const e of selectedEnvironments) {
       let environmentToAdd = new EnvironmentModelForBackend();
-      environmentToAdd.environment = e;
-      environmentToAdd.bpwebServerId = this.selectedWebServers[e]?.serverId ?? null;
-      environmentToAdd.bpDatabaseId = this.selectedDatabaseServers[e]?.databaseId ?? null;
-      environmentToAdd.eaiDatabaseId = this.selectedElasticPools[e]?.databaseId ?? null;
-      environmentToAdd.ssrsServerId = this.selectedSsrsServers[e]?.serverId ?? null;
-      environmentToAdd.tableauServerId = this.selectedTableauServers[e]?.serverId ?? null;
-      environmentToAdd.eaiftpServerId = this.selectedEaiFtpServers[e]?.serverId ?? null;
-      environmentToAdd.isBp5Enabled = this.selectedBp5[e];
+      environmentToAdd.DomainId = this.selectedDomain.domainId;
+      environmentToAdd.Environment = e;
+      environmentToAdd.BpwebServerId =
+        this.selectedWebServers[e]?.serverId ?? undefined;
+      environmentToAdd.BpdatabaseId =
+        this.selectedDatabaseServers[e]?.databaseId ?? undefined;
+      environmentToAdd.EaidatabaseId =
+        this.selectedElasticPools[e]?.databaseId ?? undefined;
+      environmentToAdd.SsrsserverId =
+        this.selectedSsrsServers[e]?.serverId ?? undefined;
+      environmentToAdd.TableauServerId =
+        this.selectedTableauServers[e]?.serverId ?? undefined;
+      environmentToAdd.EaiftpserverId =
+        this.selectedEaiFtpServers[e]?.serverId ?? undefined;
+      environmentToAdd.IsBp5Enabled = this.selectedBp5[e];
 
       environmentsModel.push(environmentToAdd);
     }
+    this.logo = this.logoToAdd;
 
-    console.log(environmentsModel);
+    const requestBody = {
+      Name: this.name,
+      Logo: btoa(this.logo),
+      Edition: this.edition,
+      IsSsoEnabled: this.isSsoEnabled,
+      Comment: this.comment,
+      ParentCompany: this.parentCompany,
+      Environments: environmentsModel,
+    };
 
     //add a new domain
-    this.http
-      .post('http://localhost:5050/api/domain', {
-        name: this.name,
-        logo: this.logo,
-        edition: this.edition,
-        isSsoEnabled: this.isSsoEnabled,
-        comment: this.comment,
-        parentCompany: this.parentCompany,
-        environments: environmentsModel
-      })
-      .subscribe({
-        next: (data: any) => {
-          const newDomainId = data.domainId;
-          console.log("success");
-        },
-        error: (error: any) => {
-          alert('Connection error: ' + error.message);
-        },
-      });
+    this.http.post('http://localhost:5050/api/domain', requestBody).subscribe({
+      next: (data: any) => {
+        this.domains = data.domains;
+        // Changing the logo format
+        this.domains.forEach((domain) => {
+          // Because for the 'WWBP5' domain, the logo encoded hasn't the same format
+          if (domain.name === 'WWBP5') {
+            domain.logo = 'data:image/png;base64,' + domain.logo;
+          } else {
+            domain.logo = atob(domain.logo);
+          }
+        });
+
+        // Setting the selected domain
+        let newDomainId = data.newDomainId;
+        environmentsModel.forEach(e => {
+          e.DomainId = newDomainId
+        });
+        let domain = this.domains.find((d) => d.domainId === newDomainId);
+        
+        this.addDomainEnvironment(domain, environmentsModel, true);
+      },
+      error: (error: any) => {
+        alert('Connection error: ' + error.message);
+      },
+    });
 
     this.endNewDomainMode();
   }
@@ -380,9 +492,8 @@ export class DomainAdministrationComponent {
     }
     //modifier un domaine
     else {
-      const isConfirmed = window.confirm("Are you sure to edit the domain ?");
-      if(isConfirmed)
-        this.updateDomain();
+      const isConfirmed = window.confirm('Are you sure to edit the domain ?');
+      if (isConfirmed) this.update();
     }
   }
 
@@ -395,10 +506,16 @@ export class DomainAdministrationComponent {
         const imagePreview = document.getElementById('imagePreview');
         imagePreview.innerHTML = `<img src="${e.target.result}" alt="Preview" style="width: 10rem; height: 10rem;">`;
       };
-      reader.readAsDataURL(input.files[0]);
-    }
-    else {
-      alert("The format file is not correct, only jpeg jpg and png extention are allowed");
+
+      reader.addEventListener('load', () => {
+        this.logoToAdd = reader.result;
+      });
+
+      reader.readAsDataURL(file);
+    } else {
+      alert(
+        'The format file is not correct, only jpeg jpg and png extention are allowed'
+      );
       this.logo = '';
     }
   }
@@ -408,47 +525,193 @@ export class DomainAdministrationComponent {
     return regex.test(file);
   }
 
-  editDomain() : void {
-    if(this.selectedDomain) {
-      this.isNewDomainMode = true;
-      this.isEditDomainMode = true;
+  findDatabaseFromId(id: number) : any {
+    return this.databases.find(d => d.databaseId == id);
+  }
 
+  findServerFromId(id: number) : any {
+    return this.servers.find(s => s.serverId == id);
+  }
+
+  editDomain(): void {
+    if (this.selectedDomain) {
       this.name = this.selectedDomain.name;
       this.logo = this.selectedDomain.logo;
       this.edition = this.selectedDomain.edition;
       this.isSsoEnabled = this.selectedDomain.isSsoEnabled;
       this.comment = this.selectedDomain.comment;
       this.parentCompany = this.selectedDomain.parentCompany;
+
+      //this.displayLogo(this.selectedDomain.logo);
+
+      this.resetBp5ServersAndDatabasesList();
+      this.selectedDomainEnvironments.forEach(e => {
+        this.selectedBp5[e.environment] = e.isBp5Enabled;
+        this.selectedDatabaseServers[e.environment] = this.findDatabaseFromId(e.bpdatabaseId);
+        this.selectedElasticPools[e.environment] = this.findDatabaseFromId(e.eaidatabaseId);
+        this.selectedWebServers[e.environment] = this.findServerFromId(e.bpwebServerId);
+        this.selectedEaiFtpServers[e.environment] = this.findServerFromId(e.eaiftpserverId);
+        this.selectedTableauServers[e.environment] = this.findServerFromId(e.tableauServerId);
+        this.selectedSsrsServers[e.environment] = this.findServerFromId(e.ssrsserverId);
+      });
+
+      this.isNewDomainMode = true;
+      this.isEditDomainMode = true;
     }
   }
 
-  updateDomain() : void {
-    if(this.selectedDomain && this.isEditDomainMode) {
-      const updatedDomain = {
-        domainId: this.selectedDomain.domainId,
-        name: this.name,
-        logo: this.logo,
-        edition: this.edition,
-        isSsoEnabled: this.isSsoEnabled,
-        comment: this.comment,
-        parentCompany: this.parentCompany, 
-      };
+  update(): void {
+    
+    const updateDomain = () => {
+      const domainToUpdate = {
+        Name: this.name,
+        Logo: btoa(this.logo),
+        Edition: this.edition,
+        IsSsoEnabled: this.isSsoEnabled,
+        Comment: this.comment,
+        ParentCompany: this.parentCompany
+      }
+  
+      this.http
+        .put(
+          `http://localhost:5050/api/domain/${this.selectedDomain.domainId}`, domainToUpdate)
+        .subscribe(
+          (data: any) => {
+            this.domains = data.domains;
+            this.endEditDomainMode();
+            this.endNewDomainMode();
+            const index = this.domains.findIndex(d => d.domainId == data.domain.domainId);
+            this.onSelect(this.domains[index]);
+          },
+          (error) => {
+            alert('Connection error: ' + error.message);
+          }
+        );
+    };
 
-      this.http.put(`http://localhost:5050/api/domain/${this.selectedDomain.domainId}`, {
-        name: this.name,
-        logo: this.logo,
-        edition: this.edition,
-        isSsoEnabled: this.isSsoEnabled,
-        comment: this.comment,
-        parentCompany: this.parentCompany
-        })
-        .subscribe((data: any) => {
-          this.domains = data;
-        }, (error) => {
-          alert("Connection error: " + error.message);
-        });
-        this.endEditDomainMode();
-        this.endNewDomainMode();
+    const deleteDomainEnv = (domainEnvironments, index) => {
+      if(domainEnvironments.length > index) {
+        const id = domainEnvironments[index];
+        this.http.delete(`http://localhost:5050/api/domainEnvironment/${id}`).subscribe(
+          (data: any) => {
+            this.domainEnvironments = data; 
+            deleteDomainEnv(domainEnvironments, index + 1);
+          },
+          (error) => {
+            alert('Connection error: ' + error.message);
+          }
+        );
+      }
+      else
+        updateDomain();
+    };
+
+    const checkIfDeleteDomainEnv = (domainEnvLinkedBeforeUpdate, domainEnvLinkedAfterUpdate) => {
+      let arrayDomainEnvToDelete = new Array<number>();
+      const idDomainEnvToDelete = domainEnvLinkedBeforeUpdate.filter
+        (e => !domainEnvLinkedAfterUpdate.includes(e))
+
+      idDomainEnvToDelete.forEach(e => {
+        const domainEnvIdToDelete = 
+          this.domainEnvironments.find
+            ( env => env.domainId == this.selectedDomain.domainId &&
+                    env.environment == e).domainEnvironmentId;
+        
+        arrayDomainEnvToDelete.push(domainEnvIdToDelete);
+      });  
+
+      if(arrayDomainEnvToDelete.length > 0) 
+          deleteDomainEnv(arrayDomainEnvToDelete, 0); 
+      else 
+        updateDomain();
+    };
+
+    const checkIfAddingDomainEnv = (domainEnvLinkedBeforeUpdate, domainEnvLinkedAfterUpdate) => {
+      let arrayDomainEnvToAdd = new Array<EnvironmentModelForBackend>();
+      const idDomainEnvToAdd = domainEnvLinkedAfterUpdate.filter
+        (e => !domainEnvLinkedBeforeUpdate.includes(e))
+
+      idDomainEnvToAdd.forEach(e => {
+        const domainEnvToAdd = new EnvironmentModelForBackend();
+        domainEnvToAdd.DomainId = this.selectedDomain.domainId;
+        domainEnvToAdd.Environment = e;
+        domainEnvToAdd.BpwebServerId = this.selectedWebServers[e].serverId; 
+        domainEnvToAdd.BpdatabaseId = this.selectedDatabaseServers[e]?.databaseId ?? undefined;
+        domainEnvToAdd.EaidatabaseId = this.selectedElasticPools[e]?.databaseId ?? undefined;
+        domainEnvToAdd.SsrsserverId = this.selectedSsrsServers[e]?.serverId ?? undefined;
+        domainEnvToAdd.TableauServerId = this.selectedTableauServers[e]?.serverId ?? undefined;
+        domainEnvToAdd.EaiftpserverId = this.selectedEaiFtpServers[e]?.serverId ?? undefined;
+        domainEnvToAdd.IsBp5Enabled = this.selectedBp5[e];
+
+        arrayDomainEnvToAdd.push(domainEnvToAdd);
+      });
+      
+      this.http.post('http://localhost:5050/api/domainEnvironment', arrayDomainEnvToAdd).subscribe({
+        next: (data: any) => {
+          this.domainEnvironments = data.env;       
+          checkIfDeleteDomainEnv(domainEnvLinkedBeforeUpdate, domainEnvLinkedAfterUpdate);
+        },
+        error: (error: any) => {
+          alert('Connection error: ' + error.message);
+        },
+      });
+    };
+
+    const updateDomainEnv = (arrayDomainEnv, index, domainEnvLinkedBeforeUpdate, domainEnvLinkedAfterUpdate) => {
+
+      if(arrayDomainEnv.length > index && this.selectedWebServers[arrayDomainEnv[index].environment] === undefined)
+        updateDomainEnv(arrayDomainEnv, index + 1, domainEnvLinkedBeforeUpdate, domainEnvLinkedAfterUpdate);
+      else {
+        if(arrayDomainEnv.length > index) {
+          const e = arrayDomainEnv[index].environment;
+          const domainEnvUpdating = new EnvironmentModelForBackend();
+          domainEnvUpdating.DomainId = this.selectedDomain.domainId;
+          domainEnvUpdating.Environment = e;
+          domainEnvUpdating.BpwebServerId = this.selectedWebServers[e]?.serverId; 
+          domainEnvUpdating.BpdatabaseId = this.selectedDatabaseServers[e]?.databaseId ?? undefined;
+          domainEnvUpdating.EaidatabaseId = this.selectedElasticPools[e]?.databaseId ?? undefined;;
+          domainEnvUpdating.SsrsserverId = this.selectedSsrsServers[e]?.serverId ?? undefined;;
+          domainEnvUpdating.TableauServerId = this.selectedTableauServers[e]?.serverId ?? undefined;;
+          domainEnvUpdating.EaiftpserverId = this.selectedEaiFtpServers[e]?.serverId ?? undefined;;
+          domainEnvUpdating.IsBp5Enabled = this.selectedBp5[e];
+
+          this.http
+          .put(
+            `http://localhost:5050/api/domainEnvironment/${arrayDomainEnv[index].domainEnvironmentId}`, domainEnvUpdating)
+          .subscribe(
+            (data: any) => {
+              this.domainEnvironments = data.domainEnvironments;
+              updateDomainEnv(arrayDomainEnv, index + 1, domainEnvLinkedBeforeUpdate, domainEnvLinkedAfterUpdate);
+            },
+            (error) => {
+              alert('Connection error: ' + error.message);
+            }
+          );
+        }
+        else 
+          checkIfAddingDomainEnv(domainEnvLinkedBeforeUpdate, domainEnvLinkedAfterUpdate);
+      }  
+    };
+
+    const checkIfUpdateDomainEnv = (domainEnvLinkedBeforeUpdate, domainEnvLinkedAfterUpdate) => {
+        const domainEnvToUpdate = this.domainEnvironments.filter(
+          (e) => e.domainId == this.selectedDomain.domainId);  
+        
+        if(domainEnvToUpdate.length)
+          updateDomainEnv(domainEnvToUpdate, 0, domainEnvLinkedBeforeUpdate, domainEnvLinkedAfterUpdate);
+        else 
+          checkIfAddingDomainEnv(domainEnvLinkedBeforeUpdate, domainEnvLinkedAfterUpdate);
+    };
+
+    if (this.selectedDomain && this.isEditDomainMode) {
+      //console.log("liste des environements: ", this.domainEnvironments)
+      const domainEnvLinkedBeforeUpdate = 
+        this.domainEnvironments.filter
+          (e => e.domainId == this.selectedDomain.domainId).
+          map(env => env.environment);
+
+      const domainEnvLinkedAfterUpdate = this.getServerOrDatabaseIsSelected();
+      checkIfUpdateDomainEnv(domainEnvLinkedBeforeUpdate, domainEnvLinkedAfterUpdate);
     }
   }
 
@@ -492,41 +755,66 @@ export class DomainAdministrationComponent {
     if (this.selectedDomain) {
       const isConfirmed = window.confirm('Are you sure to copy the domain?');
       if (isConfirmed) {
-        this.name = "copy - " + this.selectedDomain.name;
-        this.logo = this.selectedDomain.logo;
-        this.edition = this.selectedDomain.edition;
-        this.isSsoEnabled = this.selectedDomain.isSsoEnabled;
-        this.comment = this.selectedDomain.comment;
-        this.parentCompany = this.selectedDomain.parentCompany;
-  
-        // Ajoutez le domaine copié en appelant la fonction addDomain
-        this.addDomain();
+        const newDomain = {
+          Name: "Copy - " + this.selectedDomain.name,
+          Logo: btoa(this.selectedDomain.logo), 
+          Edition: this.selectedDomain.edition,
+          IsSsoEnabled: this.isSsoEnabled,
+          Comment: this.comment,
+          ParentCompany: this.parentCompany
+        };
+        
+        postDomain(newDomain);
       }
     }
   }
 
-  deleteDomain() : void {
-    if(this.selectedDomain) {
-      const isConfirmed = window.confirm("Are you sure to delete this domain ?");
-      if(isConfirmed) {
+  deleteDomain(): void {
+    const deleteDomain = (domainIdToDelete) => {
+      this.http
+          .delete(`http://localhost:5050/api/domain/${domainIdToDelete}`)
+          .subscribe(
+            (data: any) => {
+              this.domains = data;
+              this.onSelect(this.domains[0]);
+            },
+            (error) => {
+              alert('Connection error: ' + error.message);
+            }
+          );
+    };
+
+    const deleteDomainEnvironment = (domainEnvironmentsToDelete, index, domainIdToDelete) => {
+      if(domainEnvironmentsToDelete.length <= index)
+        deleteDomain(domainIdToDelete);
+      this.http
+          .delete(`http://localhost:5050/api/domainEnvironment/${domainEnvironmentsToDelete[index].domainEnvironmentId}`)
+          .subscribe(
+            (data: any) => {
+              this.domainEnvironments = data;
+              deleteDomainEnvironment(domainEnvironmentsToDelete, index + 1, domainIdToDelete);
+            },
+            (error) => {
+              alert('Connection error: ' + error.message);
+            }
+          );
+    };
+
+    if (this.selectedDomain) {
+      const isConfirmed = window.confirm(
+        'Are you sure to delete this domain ?'
+      );
+      if (isConfirmed) {
         const domainIdToDelete = this.selectedDomain.domainId;
 
-        this.http.delete(`http://localhost:5050/api/domain/${domainIdToDelete}`)
-        .subscribe(
-          (data: any) => {
-            this.domains = data;
-            this.name = '';
-            this.logo = '';
-            this.edition = '';
-            this.isSsoEnabled = false;
-            this.comment = '';
-            this.parentCompany = '';
-          },
-          (error) => {
-            alert("Connection error: " + error.message);
-          }
-        );
+        const domainEnvironmentsToDelete = this.domainEnvironments.filter(
+          (e) => e.domainId == domainIdToDelete);
+
+          deleteDomainEnvironment(domainEnvironmentsToDelete, 0, domainIdToDelete);
       }
     }
   }
 }
+/***************************************************************************************/
+/***************************************************************************************/
+/***************************************************************************************/
