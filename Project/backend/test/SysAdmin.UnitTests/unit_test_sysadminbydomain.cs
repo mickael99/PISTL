@@ -10,15 +10,32 @@ using System.Collections.Generic;
 
 namespace backend.Tests;
 
+/****************************************************************************************/
+/****************************************************************************************/
+/****************************************************************************************/
 public class TestSysAdmin
 {
+    /****************************************************************************************/
+    /// <summary>
+    /// Represents the response object for the SysAdmin API.
+    /// </summary>
     public class SysAdminResponse
     {
         public List<DomainDTO> domains { get; set; } // Remove 'required' keyword
+
         public List<LoginDomainUserDTO> users { get; set; } // Remove 'required' keyword
+
         public List<LoginDTO> logins { get; set; } // Remove 'required' keyword
     }
-    
+
+    /****************************************************************************************/
+    /// <summary>
+    /// Test case for the GetSysAdmin method in the SysAdminByDomainController class.
+    /// </summary>
+    /// <remarks>
+    /// This test verifies that the GetSysAdmin method returns the expected response.
+    /// It checks that the response is not null and that the deserialized values have the correct types.
+    /// </remarks>
     [Test]
     public void TestGetSysAdmin()
     {
@@ -39,11 +56,12 @@ public class TestSysAdmin
             Assert.AreNotEqual(values.logins, null);
             Assert.IsInstanceOf<List<LoginDTO>>(values.logins, "Wrong type");
         });
-    } 
-        
-    /*
-     * Test that the user is added if the user does not exist
-     */
+    }
+
+    /****************************************************************************************/
+    /// <summary>
+    /// Test that the user is added if the user does not exist
+    /// </summary>
     [Test]
     public void TestUpdateUser()
     {
@@ -74,13 +92,13 @@ public class TestSysAdmin
 
             var json = JsonConvert.SerializeObject(response.Value);
             Assert.AreNotEqual(json, null);
-            
+
             Assert.IsInstanceOf<LoginDomainUserDTO>(response.Value, "Wrong type");
             var values = JsonConvert.DeserializeObject<LoginDomainUser>(json);
 
             // Assert that the object is not null
             Assert.AreNotEqual(values, null);
-            
+
             // Assert that the types are valid
             Assert.That(values.ModifiedBy, Is.TypeOf(typeof(string)));
             Assert.That(values.UserId, Is.TypeOf(typeof(string)));
@@ -98,9 +116,10 @@ public class TestSysAdmin
         });
     }
 
-    /*
-     * Test that the user is not added if user already exists
-     */
+    /****************************************************************************************/
+    /// <summary>
+    /// Test that the user is not added if user already exists
+    /// </summary>
     [Test]
     public void TestUpdateUserAlreadyExists()
     {
@@ -132,13 +151,13 @@ public class TestSysAdmin
 
             var json = JsonConvert.SerializeObject(response.Value);
             Assert.AreNotEqual(json, null);
-            
+
             Assert.IsInstanceOf<LoginDomainUserDTO>(response.Value, "Wrong type");
             var values = JsonConvert.DeserializeObject<LoginDomainUser>(json);
 
             // Assert that the object is not null
             Assert.AreNotEqual(values, null);
-            
+
             // Assert that the types are valid
             Assert.That(values.ModifiedBy, Is.TypeOf(typeof(string)));
             Assert.That(values.UserId, Is.TypeOf(typeof(string)));
@@ -156,9 +175,10 @@ public class TestSysAdmin
         });
     }
 
-    /*
-     * Test that the user is not added if the user loginId does not exist
-     */
+    /****************************************************************************************/
+    /// <summary>
+    /// Test that the user is not added if the user loginId does not exist
+    /// </summary>
     [Test]
     public void TestUpdateUserLoginIdNotExist()
     {
@@ -188,9 +208,10 @@ public class TestSysAdmin
         });
     }
 
-    /*
-     * Test that the user is not added if the user domainId does not exist
-     */
+    /****************************************************************************************/
+    /// <summary>
+    /// Test that the user is not added if the user domainId does not exist
+    /// </summary>
     [Test]
     public void TestUpdateUserDomainIdNotExist()
     {
@@ -220,9 +241,10 @@ public class TestSysAdmin
         });
     }
 
-    /*
-     * Test that the user is not added if the user environment does not exist
-     */
+    /****************************************************************************************/
+    /// <summary>
+    /// Test that the user is not added if the user environment does not exist
+    /// </summary>
     [Test]
     public void TestUpdateUserEnvironmentNotExist()
     {
@@ -252,9 +274,10 @@ public class TestSysAdmin
         });
     }
 
-    /*
-    * Test that the user is deleted if the user is a sysadmin
-    */
+    /****************************************************************************************/
+    /// <summary>
+    /// Test that the user is deleted if the user is a sysadmin
+    /// </summary>
     [Test]
     public void TestDeleteUser()
     {
@@ -273,23 +296,23 @@ public class TestSysAdmin
             ModifiedBy = "admin",
             UserName = null
         };
-        controller.UpdateUser(user);
 
         // Act
         var response = controller.DeleteUser(user.LoginId, user.UserId, user.DomainId, user.Environment) as OkObjectResult;
-        
+
         // Assert 
         Assert.Multiple(() =>
         {
-            Assert.AreNotEqual(response, null);
+            Assert.AreNotEqual(response, null, "Response is null");
             Assert.That(response.StatusCode, Is.EqualTo(200));
-            Assert.That(response.Value, Is.EqualTo("Deleted user "+user.UserId+ ": "+user.LoginId+" | "+user.DomainId+" | "+user.Environment));
+            Assert.That(response.Value, Is.EqualTo("Deleted user " + user.UserId + ": " + user.LoginId + " | " + user.DomainId + " | " + user.Environment));
         });
     }
 
-    /*
-     * Test that the user is not deleted if the user is not a sysadmin
-     */
+    /****************************************************************************************/
+    /// <summary>
+    /// Test that the user is not deleted if the user is not a sysadmin
+    /// </summary>
     [Test]
     public void TestDeleteUserNotSysAdmin()
     {
@@ -312,19 +335,20 @@ public class TestSysAdmin
 
         // Act
         var response = controller.DeleteUser(user.LoginId, user.UserId, user.DomainId, user.Environment) as OkObjectResult;
-        
+
         // Assert 
         Assert.Multiple(() =>
         {
             Assert.AreNotEqual(response, null);
             Assert.That(response.StatusCode, Is.EqualTo(200));
-            Assert.That(response.Value, Is.EqualTo("Unable to find user "+user.LoginId+" : "+user.UserId+" | "+user.DomainId+" | "+user.Environment));
+            Assert.That(response.Value, Is.EqualTo("Unable to find user " + user.LoginId + " : " + user.UserId + " | " + user.DomainId + " | " + user.Environment));
         });
     }
 
-    /*
-     * Test that the user is not deleted if the user does not exist : UserId
-     */
+    /****************************************************************************************/
+    /// <summary>
+    /// Test that the user is not deleted if the user does not exist : UserId
+    /// </summary>
     [Test]
     public void TestDeleteUserNotExist()
     {
@@ -347,19 +371,20 @@ public class TestSysAdmin
 
         // Act
         var response = controller.DeleteUser(user.LoginId, "99999999-9999-9999-9999-999999999998", user.DomainId, user.Environment) as OkObjectResult;
-        
+
         // Assert 
         Assert.Multiple(() =>
         {
             Assert.AreNotEqual(response, null);
             Assert.That(response.StatusCode, Is.EqualTo(200));
-            Assert.That(response.Value, Is.EqualTo("Unable to find user "+user.LoginId+ " : 99999999-9999-9999-9999-999999999998 | "+user.DomainId+" | "+user.Environment));
+            Assert.That(response.Value, Is.EqualTo("Unable to find user " + user.LoginId + " : 99999999-9999-9999-9999-999999999998 | " + user.DomainId + " | " + user.Environment));
         });
     }
 
-    /*
-     * Test that the user is not deleted if the user does not exist : LoginId
-     */
+    /****************************************************************************************/
+    /// <summary>
+    /// Test that the user is not deleted if the user does not exist : LoginId
+    /// </summary>
     [Test]
     public void TestDeleteUserNotExist2()
     {
@@ -382,19 +407,20 @@ public class TestSysAdmin
 
         // Act
         var response = controller.DeleteUser(4000, user.UserId, user.DomainId, user.Environment) as OkObjectResult;
-        
+
         // Assert 
         Assert.Multiple(() =>
         {
             Assert.AreNotEqual(response, null);
             Assert.That(response.StatusCode, Is.EqualTo(200));
-            Assert.That(response.Value, Is.EqualTo("Unable to find user 4000 : "+user.UserId+" | "+user.DomainId+" | "+user.Environment));
+            Assert.That(response.Value, Is.EqualTo("Unable to find user 4000 : " + user.UserId + " | " + user.DomainId + " | " + user.Environment));
         });
     }
 
-    /*
-     * Test that the user is not deleted if the user does not exist : Environment
-     */
+    /****************************************************************************************/
+    /// <summary>
+    /// Test that the user is not deleted if the user does not exist : Environment
+    /// </summary>
     [Test]
     public void TestDeleteUserNotExist3()
     {
@@ -417,19 +443,20 @@ public class TestSysAdmin
 
         // Act
         var response = controller.DeleteUser(user.LoginId, user.UserId, user.DomainId, 5) as OkObjectResult;
-        
+
         // Assert 
         Assert.Multiple(() =>
         {
             Assert.AreNotEqual(response, null);
             Assert.That(response.StatusCode, Is.EqualTo(200));
-            Assert.That(response.Value, Is.EqualTo("Unable to find user "+user.LoginId+" : "+user.UserId+" | "+user.DomainId+" | 5"));
+            Assert.That(response.Value, Is.EqualTo("Unable to find user " + user.LoginId + " : " + user.UserId + " | " + user.DomainId + " | 5"));
         });
     }
 
-    /*
-     * Test that the user is not deleted if the user does not exist : DomainId
-     */
+    /****************************************************************************************/
+    /// <summary>
+    /// Test that the user is not deleted if the user does not exist : DomainId
+    /// </summary>
     [Test]
     public void TestDeleteUserNotExist4()
     {
@@ -452,14 +479,13 @@ public class TestSysAdmin
 
         // Act
         var response = controller.DeleteUser(user.LoginId, user.UserId, 352, user.Environment) as OkObjectResult;
-        
+
         // Assert 
         Assert.Multiple(() =>
         {
             Assert.AreNotEqual(response, null);
             Assert.That(response.StatusCode, Is.EqualTo(200));
-            Assert.That(response.Value, Is.EqualTo("Unable to find user "+user.LoginId+" : "+user.UserId+" | 352 | "+user.Environment));
+            Assert.That(response.Value, Is.EqualTo("Unable to find user " + user.LoginId + " : " + user.UserId + " | 352 | " + user.Environment));
         });
     }
-
 }

@@ -25,7 +25,7 @@ public class DatabaseTests
   public static void DatabaseController_CreateDatabase_ReturnsOkResult()
   {
     // Arrange
-    var context = new DatContext(); 
+    var context = new DatContext();
     var databaseRepository = new Project.Repository.DatabaseRepository(context);
     var serverRepository = new Project.Repository.ServerRepository(context);
     var controller = new DatabaseController(databaseRepository, context, serverRepository);
@@ -56,8 +56,7 @@ public class DatabaseTests
 
 
     var databaseProperty = data?.GetType().GetProperty("databases");
-    Console.WriteLine("data: " + data);
-    var databaseValue = databaseProperty.GetValue(data) as System.Collections.Generic.List<Project.Models.Database>; 
+    var databaseValue = databaseProperty.GetValue(data) as System.Collections.Generic.List<Project.Models.Database>;
 
     if (databaseValue != null)
     {
@@ -66,7 +65,8 @@ public class DatabaseTests
         if (db.Name == database.Name)
         {
           // Assert.Mutliple(() => {    Assert1;    Assert2;    ....});
-          Assert.Multiple(() => {
+          Assert.Multiple(() =>
+          {
             Assert.AreEqual(db.Name, database.Name, "Databases name does not match.");
             Assert.AreEqual(db.UserName, database.UserName, "Databases username does not match.");
             Assert.AreEqual(db.Context, database.Context, "Databases context does not match.");
@@ -83,7 +83,7 @@ public class DatabaseTests
     Assert.Pass("New Database added verified.");
   }
 
-/****************************************************************************************/
+  /****************************************************************************************/
   /// <summary>
   /// Tests the behavior of the DatabaseController's CreateDatabase method when the database name already exists.
   /// </summary>
@@ -91,7 +91,7 @@ public class DatabaseTests
   public static void DatabaseController_CreateDatabase_WithExistingName_ReturnsBadRequest()
   {
     // Arrange
-    var context = new DatContext(); 
+    var context = new DatContext();
     var databaseRepository = new Project.Repository.DatabaseRepository(context);
     var serverRepository = new Project.Repository.ServerRepository(context);
     var controller = new DatabaseController(databaseRepository, context, serverRepository);
@@ -135,16 +135,15 @@ public class DatabaseTests
 
 
     var databaseProperty = data?.GetType().GetProperty("message");
-    Console.WriteLine("message: " + databaseProperty);
     var databaseValue = databaseProperty.GetValue(data) as string;
     Assert.AreEqual("This name of database already exists", databaseValue);
- 
+
 
     controller.DeleteDatabase(idMin);
     Assert.Pass("New Database added verified.");
   }
 
-  
+
 
   /****************************************************************************************/
   /// <summary>
@@ -154,7 +153,7 @@ public class DatabaseTests
   public static void DatabaseController_UpdateDatabase_ReturnsOkResult()
   {
     // Arrange
-    var context = new DatContext(); 
+    var context = new DatContext();
     var databaseRepository = new Project.Repository.DatabaseRepository(context);
     var serverRepository = new Project.Repository.ServerRepository(context);
     var controller = new DatabaseController(databaseRepository, context, serverRepository);
@@ -189,7 +188,7 @@ public class DatabaseTests
 
     // Act
     var result = controller.CreateDatabase(database) as OkObjectResult;
-    
+
     var result2 = controller.UpdateDatabase(databaseUpdate) as OkObjectResult;
 
     // Assert
@@ -199,8 +198,7 @@ public class DatabaseTests
 
 
     var databaseProperty = data?.GetType().GetProperty("databases");
-    Console.WriteLine("data: " + data);
-    var databaseValue = databaseProperty.GetValue(data) as System.Collections.Generic.List<Project.Models.Database>; 
+    var databaseValue = databaseProperty.GetValue(data) as System.Collections.Generic.List<Project.Models.Database>;
 
     if (databaseValue != null)
     {
@@ -209,7 +207,8 @@ public class DatabaseTests
         if (db.Name == databaseUpdate.Name)
         {
           // Assert.Mutliple(() => {    Assert1;    Assert2;    ....});
-          Assert.Multiple(() => {
+          Assert.Multiple(() =>
+          {
             Assert.AreEqual(db.Name, databaseUpdate.Name, "Databases name does not match.");
             Assert.AreEqual(db.UserName, databaseUpdate.UserName, "Databases username does not match.");
             Assert.AreEqual(db.Context, databaseUpdate.Context, "Databases context does not match.");
@@ -230,7 +229,7 @@ public class DatabaseTests
   public static void DatabaseController_UpdateDatabase_WithExistingName_ReturnsBadRequest()
   {
     // Arrange
-    var context = new DatContext(); 
+    var context = new DatContext();
     var databaseRepository = new Project.Repository.DatabaseRepository(context);
     var serverRepository = new Project.Repository.ServerRepository(context);
     var controller = new DatabaseController(databaseRepository, context, serverRepository);
@@ -280,7 +279,7 @@ public class DatabaseTests
     var result = controller.CreateDatabase(database) as OkObjectResult;
 
     var result3 = controller.CreateDatabase(database2) as OkObjectResult;
-    
+
     var result2 = controller.UpdateDatabase(databaseUpdate) as BadRequestObjectResult;
 
     // Assert
@@ -290,10 +289,9 @@ public class DatabaseTests
 
 
     var databaseProperty = data?.GetType().GetProperty("message");
-    Console.WriteLine("message: " + databaseProperty);
     var databaseValue = databaseProperty.GetValue(data) as string;
     Assert.AreEqual("This name of database already exists", databaseValue);
- 
+
 
     controller.DeleteDatabase(idMin);
     Assert.Pass("New Database added verified.");
@@ -301,7 +299,7 @@ public class DatabaseTests
   }
 
 
-   /****************************************************************************************/
+  /****************************************************************************************/
   /// <summary>
   /// Tests the behavior of the DatabaseController's DeleteDatabase method when the DTO is correct.
   /// </summary>
@@ -309,7 +307,7 @@ public class DatabaseTests
   public static void DatabaseController_DeleteDatabase_ReturnsOkResult()
   {
     // Arrange
-    var context = new DatContext(); 
+    var context = new DatContext();
     var databaseRepository = new Project.Repository.DatabaseRepository(context);
     var serverRepository = new Project.Repository.ServerRepository(context);
     var controller = new DatabaseController(databaseRepository, context, serverRepository);
@@ -331,7 +329,7 @@ public class DatabaseTests
 
     // Act
     var result = controller.CreateDatabase(database) as OkObjectResult;
-    
+
     var result2 = controller.DeleteDatabase(idMin) as OkObjectResult;
 
     // Assert

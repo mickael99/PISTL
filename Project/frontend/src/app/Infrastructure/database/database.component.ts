@@ -557,7 +557,6 @@ export class DatabaseComponent {
     this.databaseSelected.Password = database.password;
     this.databaseSelected.PasswordModified = '';
     this.databaseSelected.Server = database.Server;
-    console.log('databaseSelected.Server: ', this.server);
     this.databaseSelected.ServerId = database.serverId;
     this.databaseSelected.CreatedBy = database.createdBy;
     this.databaseSelected.ModifiedBy = database.modifiedBy;
@@ -572,15 +571,9 @@ export class DatabaseComponent {
 
     this.databaseClicked = database.databaseId;
 
-
     this.isHovered = true;
 
     this.databaseHovered = database.databaseId;
-
-    console.log('isHovered: ', this.isHovered);
-    console.log('databaseHovered: ', this.databaseHovered);
-
-    console.table(this.databaseSelected);
   }
 
   /***************************************************************************************/
@@ -714,12 +707,10 @@ export class DatabaseComponent {
    * Function used to activate the hover.
    */
   onMouseEnter(databaseHovered: number) {
-    if(this.isClicked == false){
-        this.isHovered = true;
-        this.databaseHovered = databaseHovered;
-      
+    if (this.isClicked == false) {
+      this.isHovered = true;
+      this.databaseHovered = databaseHovered;
     }
-
   }
 
   /***************************************************************************************/
@@ -727,12 +718,10 @@ export class DatabaseComponent {
    * Function used to deactivate the hover.
    */
   onMouseLeave() {
-    if(this.isClicked == false){
-        this.isHovered = false;
-        this.databaseHovered = 0;
-      
+    if (this.isClicked == false) {
+      this.isHovered = false;
+      this.databaseHovered = 0;
     }
-
   }
 
   /***************************************************************************************/

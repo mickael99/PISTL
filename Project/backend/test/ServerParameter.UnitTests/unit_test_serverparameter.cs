@@ -7,14 +7,30 @@ using NUnit.Framework; // Add missing using statement
 
 namespace backend.Tests;
 
+/****************************************************************************************/
+/****************************************************************************************/
+/****************************************************************************************/
 public class TestServerParameter
 {
+    /****************************************************************************************/
+    /// <summary>
+    /// Represents the response containing a list of servers and server parameters.
+    /// </summary>
     public class ServerParameterResponse
     {
         public List<ServerDTO> servers { get; set; } // Remove unnecessary "required" keyword
         public List<ServerParameterDTO> server_parameters { get; set; } // Remove unnecessary "required" keyword
     }
 
+    /****************************************************************************************/
+    /// <summary>
+    /// Tests the GetServerParametersByServer method of the ServerParametersController class.
+    /// </summary>
+    /// <remarks>
+    /// This test verifies that the GetServerParametersByServer method returns the correct server parameters
+    /// for a given server ID. It checks that the response is not null, and that the returned values are of
+    /// the expected types (List<ServerDTO> and List<ServerParameterDTO>).
+    /// </remarks>
     [Test]
     public void TestGetServerParametersByServer()
     {
@@ -38,25 +54,33 @@ public class TestServerParameter
         });
     }
 
+    /****************************************************************************************/
+    /// <summary>
+    /// Tests the creation of a server parameter.
+    /// </summary>
+    /// <remarks>
+    /// This test method verifies that the CreateServerParameter method of the ServerParametersController
+    /// correctly creates a server parameter with the specified values. 
+    /// </remarks>
     [Test]
     public void TestCreateServerParameter()
     {
         // Arrange
         var controller = new ServerParametersController();
+        var server_parameter = new ServerParameterDTO
+        {
+            ServerId = 1,
+            ParameterKey = "test",
+            ParameterValue = "test_value",
+        };
 
         // Act
-        var response = controller.CreateServerParameter(
-            new ServerParameterDTO
-            {
-                ServerId = 1,
-                ParameterKey = "test",
-                ParameterValue = "test_value",
-            }) as OkObjectResult;
+        var response = controller.CreateServerParameter(server_parameter) as OkObjectResult;
 
         // Assert
         Assert.Multiple(() =>
         {
-            Assert.IsNotNull(response);
+            Assert.IsNotNull(response, "Response is null");
 
             var json = JsonConvert.SerializeObject(response.Value);
             Assert.IsNotNull(json);
@@ -64,24 +88,31 @@ public class TestServerParameter
             Assert.IsNotNull(values);
             Assert.IsInstanceOf<List<ServerParameterDTO>>(values, "Wrong type");
             Assert.IsNotNull(values.FirstOrDefault(p => p.ParameterKey == "test"), "Server parameter not found");
-            Assert.IsNotNull(values.FirstOrDefault(p => p.ParameterValue == "test_value"), "Server parameter not found"); 
+            Assert.IsNotNull(values.FirstOrDefault(p => p.ParameterValue == "test_value"), "Server parameter not found");
         });
+
+        controller.DeleteServerParameter(server_parameter.ServerId, server_parameter.ParameterKey);
     }
 
+    /****************************************************************************************/
+    /// <summary>
+    /// Test method for updating a server parameter.
+    /// </summary>
     [Test]
     public void TestUpdateServerParameter()
     {
         // Arrange
         var controller = new ServerParametersController();
+        var server_parameter = new ServerParameterDTO
+        {
+            ServerId = 1,
+            ParameterKey = "test",
+            ParameterValue = "test_value",
+        };
 
         // Act
-        var response = controller.UpdateServerParameter(
-            new ServerParameterDTO
-            {
-                ServerId = 1,
-                ParameterKey = "test",
-                ParameterValue = "test_value",
-            }) as OkObjectResult;
+        controller.CreateServerParameter(server_parameter);
+        var response = controller.UpdateServerParameter(server_parameter) as OkObjectResult;
 
         // Assert
         Assert.Multiple(() =>
@@ -94,7 +125,11 @@ public class TestServerParameter
 
             Assert.IsInstanceOf<List<ServerParameterDTO>>(values, "Wrong type");
             Assert.IsNotNull(values.FirstOrDefault(p => p.ParameterKey == "test"), "Server parameter not deleted");
-            Assert.IsNotNull(values.FirstOrDefault(p => p.ParameterValue == "test_value"), "Server parameter not deleted"); 
+            Assert.IsNotNull(values.FirstOrDefault(p => p.ParameterValue == "test_value"), "Server parameter not deleted");
         });
+        controller.DeleteServerParameter(server_parameter.ServerId, server_parameter.ParameterKey);
     }
 }
+/****************************************************************************************/
+/****************************************************************************************/
+/****************************************************************************************/

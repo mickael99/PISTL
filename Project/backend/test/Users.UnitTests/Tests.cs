@@ -11,7 +11,6 @@ namespace backend.Tests;
 /****************************************************************************************/
 /****************************************************************************************/
 /****************************************************************************************/
-
 public class UsersTests
 {
   // ClassName_MethodName_ExpectedResult
@@ -202,9 +201,9 @@ public class UsersTests
       var messageProperty = data?.GetType().GetProperty("message");
       var messageValue = messageProperty.GetValue(data) as string;
       Assert.AreEqual("User phone already exists.", messageValue, "Error messages does not match.");
-      
-      Assert.Pass("New User not added with existing Phone verified.");
-    }); 
+    });
+
+    Assert.Pass("New User not added with existing Phone verified.");
   }
 
   /****************************************************************************************/
@@ -395,7 +394,7 @@ public class UsersTests
     var result = controller.Delete_New_DAT_User(authorizationHeader, userToRemove) as OkObjectResult;
 
     // Assert
-    Assert.IsNotNull(result, "Edit result is null.");
+    Assert.IsNotNull(result, "Delete result is null.");
     Assert.AreEqual(200, result.StatusCode, "Status code is not 200.");
     dynamic data = result.Value;
     Assert.IsNotNull(data, "Data is null.");

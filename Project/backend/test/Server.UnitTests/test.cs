@@ -15,8 +15,8 @@ using Project.Repository;
 [TestFixture]
 public class ServerTests
 {
-    
-    /****************************************************************************************/
+
+  /****************************************************************************************/
   /// <summary>
   /// Tests the behavior of the SreverController's CreateServer method when the DTO is correct.
   /// </summary>
@@ -24,7 +24,7 @@ public class ServerTests
   public static void ServerController_CreateServer_ReturnsOkResult()
   {
     // Arrange
-    var context = new DatContext(); 
+    var context = new DatContext();
     var serverRepository = new Project.Repository.ServerRepository(context);
     var controller = new ServerController(serverRepository, context);
 
@@ -53,8 +53,7 @@ public class ServerTests
 
 
     var serversProperty = data?.GetType().GetProperty("servers");
-    Console.WriteLine("data: " + data);
-    var serversValue = serversProperty.GetValue(data) as System.Collections.Generic.List<Project.Models.Server>; 
+    var serversValue = serversProperty.GetValue(data) as System.Collections.Generic.List<Project.Models.Server>;
 
     if (serversValue != null)
     {
@@ -63,7 +62,8 @@ public class ServerTests
         if (s.Name == server.Name)
         {
           // Assert.Mutliple(() => {    Assert1;    Assert2;    ....});
-          Assert.Multiple(() => {
+          Assert.Multiple(() =>
+          {
             Assert.AreEqual(s.Name, server.Name, "Server name does not match.");
             Assert.AreEqual(s.Context, server.Context, "Server context does not match.");
             Assert.AreEqual(s.Type, server.Type, "Server type does not match.");
@@ -79,16 +79,16 @@ public class ServerTests
     Assert.Pass("New Server added verified.");
   }
 
-      
-    /****************************************************************************************/
+
+  /****************************************************************************************/
   /// <summary>
   /// Tests the behavior of the SreverController's CreateServer method when the DTO is correct.
   /// </summary>
   [Test]
   public static void ServerController_UpdateServer_ReturnsOkResult()
   {
-        // Arrange
-    var context = new DatContext(); 
+    // Arrange
+    var context = new DatContext();
     var serverRepository = new Project.Repository.ServerRepository(context);
     var controller = new ServerController(serverRepository, context);
 
@@ -130,8 +130,7 @@ public class ServerTests
 
 
     var serversProperty = data?.GetType().GetProperty("servers");
-    Console.WriteLine("data: " + data);
-    var serversValue = serversProperty.GetValue(data) as System.Collections.Generic.List<Project.Models.Server>; 
+    var serversValue = serversProperty.GetValue(data) as System.Collections.Generic.List<Project.Models.Server>;
 
     if (serversValue != null)
     {
@@ -139,8 +138,8 @@ public class ServerTests
       {
         if (s.Name == serverUpdate.Name)
         {
-          // Assert.Mutliple(() => {    Assert1;    Assert2;    ....});
-          Assert.Multiple(() => {
+          Assert.Multiple(() =>
+          {
             Assert.AreEqual(s.Name, serverUpdate.Name, "Server name does not match.");
             Assert.AreEqual(s.Context, serverUpdate.Context, "Server context does not match.");
             Assert.AreEqual(s.Type, serverUpdate.Type, "Server type does not match.");
@@ -156,8 +155,8 @@ public class ServerTests
 
   }
 
-      
-    /****************************************************************************************/
+
+  /****************************************************************************************/
   /// <summary>
   /// Tests the behavior of the SreverController's CreateServer method when the DTO is correct.
   /// </summary>
@@ -165,7 +164,7 @@ public class ServerTests
   public static void ServerController_DeleteServer_ReturnsOkResult()
   {
     // Arrange
-    var context = new DatContext(); 
+    var context = new DatContext();
     var serverRepository = new Project.Repository.ServerRepository(context);
     var controller = new ServerController(serverRepository, context);
 

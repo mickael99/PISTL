@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Project.Repository
 {
-    public class ServerRepository: IServerRepository
+    public class ServerRepository : IServerRepository
     {
         private readonly DatContext _context;
 
@@ -54,7 +54,6 @@ namespace Project.Repository
         public bool Save()
         {
             var saved = _context.SaveChanges();
-            Console.WriteLine("-------->Save success" + saved);
             return saved > 0 ? true : false;
         }
 
@@ -81,27 +80,17 @@ namespace Project.Repository
 
         public bool AddDatabaseToServer(int databaseId, int serverId)
         {
-            Console.WriteLine("-------->AddDatabaseToServer begin");
             var server = GetServer(serverId);
 
-            Console.WriteLine("-------->server found ");
-            Console.WriteLine("--------> Total databases: " + server.Databases.Count );
-            Console.WriteLine("--------> Last entity ID: " + server.Databases.LastOrDefault()?.DatabaseId);
             var database = _context.Databases.FirstOrDefault(d => d.DatabaseId == databaseId);
- 
-            Console.WriteLine("-------->database found ");
+
             if (server != null && database != null)
             {
                 server.Databases.Add(database);
                 UpdateServer(server);
-                
-                Console.WriteLine("--------> Total databases: " + server.Databases.Count );
-                Console.WriteLine("--------> Last entity ID: " + server.Databases.FirstOrDefault()?.DatabaseId);
 
-                Console.WriteLine("--------> Last entity ID: " + server.Databases.LastOrDefault()?.DatabaseId);
-                _context.Entry(server).State = EntityState.Modified; 
+                _context.Entry(server).State = EntityState.Modified;
 
-                Console.WriteLine("-------->AddDatabaseToServer success");
                 return Save();
             }
 
@@ -111,4 +100,3 @@ namespace Project.Repository
 }
 
 
-        

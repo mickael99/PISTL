@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "5jkuQRNjnc9Qh92RwshGTQEMBtj3B+31Y1NPJr2vvPGpQgu6uN2wKR4vDCSRB6YoSjv71w6MykCmFJX+nDouhw==",
+  "dgSpecHash": "KFf37nsfq1rkMXKiBc3yaq6NAx1iME7OkEP9fNyMI8HbQK5M8P8pkjOekWHUz2kvzJuW2Fmj8jnNfOJwvW2ZYg==",
   "success": true,
   "projectFilePath": "/home/s-daniiel/Desktop/M2 STL 2023-2024/Semestre 1/PITSL - Projet d'ingénierie STL /PISTL/Project/Project.csproj",
   "expectedPackageFiles": [
@@ -8,6 +8,7 @@
     "/home/s-daniiel/.nuget/packages/microsoft.codecoverage/17.6.0/microsoft.codecoverage.17.6.0.nupkg.sha512",
     "/home/s-daniiel/.nuget/packages/microsoft.net.test.sdk/17.6.0/microsoft.net.test.sdk.17.6.0.nupkg.sha512",
     "/home/s-daniiel/.nuget/packages/microsoft.netcore.platforms/1.1.0/microsoft.netcore.platforms.1.1.0.nupkg.sha512",
+    "/home/s-daniiel/.nuget/packages/microsoft.testplatform/17.8.0/microsoft.testplatform.17.8.0.nupkg.sha512",
     "/home/s-daniiel/.nuget/packages/microsoft.testplatform.objectmodel/17.6.0/microsoft.testplatform.objectmodel.17.6.0.nupkg.sha512",
     "/home/s-daniiel/.nuget/packages/microsoft.testplatform.testhost/17.6.0/microsoft.testplatform.testhost.17.6.0.nupkg.sha512",
     "/home/s-daniiel/.nuget/packages/netstandard.library/2.0.0/netstandard.library.2.0.0.nupkg.sha512",

@@ -63,7 +63,7 @@ public class UsersPageController : ControllerBase // TODO change name
 
       if (string.IsNullOrEmpty(token))
       {
-        return BadRequest(new {message = "Token JWT missing in the Header."});
+        return BadRequest(new { message = "Token JWT missing in the Header." });
       }
 
       var handler = new JwtSecurityTokenHandler();
@@ -228,24 +228,28 @@ public class UsersPageController : ControllerBase // TODO change name
           {
             var context = new DatContext();
             var users = context.Logins;
-            bool found = false;
-            foreach (var login in users)
+            var loginDomainUser = context.LoginDomainUsers;
+            var deleted = false;
+
+            var userFound = users.FirstOrDefault(u => u.Email == model.Email);
+            if (userFound != null)
             {
-              if (login.Email == model.Email)
+              var loginDomainUserFound = loginDomainUser.FirstOrDefault(u => u.LoginId == userFound.LoginId);
+              if (loginDomainUserFound != null)
               {
-                users.Remove(login);
-                found = true;
+                context.LoginDomainUsers.Remove(loginDomainUserFound);
+                context.SaveChanges();
               }
-            }
-            if (found)
-            {
+              context.Logins.Remove(userFound);
               context.SaveChanges();
-              return Ok(new { users, message = "User deleted." });
+              deleted = true;
             }
-            else
+            if (deleted)
             {
-              return BadRequest(new { message = "User not found." });
+              return Ok(new { users, message = "User deleted." });
+
             }
+            return BadRequest(new { message = "User not found." });
           }
         }
       }
@@ -256,6 +260,10 @@ public class UsersPageController : ControllerBase // TODO change name
     }
     catch (Exception ex)
     {
+      if (ex.InnerException != null)
+      {
+        Console.WriteLine("Inner Exception: " + ex.InnerException.Message);
+      }
       return BadRequest(new
       {
         message = ex.Message

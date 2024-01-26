@@ -109,20 +109,20 @@ public class Utils
   /// <param name="email">The email of the login to be removed.</param>
   public static void remove_login(string email) // TODO faire avec un where/find
   {
-    using var context = new DatContext();
-    var logins = context.Logins;
-    Models.Login? loginOK = null;
-    foreach (var login in logins)
+    var context = new DatContext();
+    var users = context.Logins;
+    var loginDomainUser = context.LoginDomainUsers;
+
+    var userFound = users.FirstOrDefault(u => u.Email == email);
+    if (userFound != null)
     {
-      if (login.Email == email)
+      var loginDomainUserFound = loginDomainUser.FirstOrDefault(u => u.LoginId == userFound.LoginId);
+      if (loginDomainUserFound != null)
       {
-        loginOK = login;
-        break;
+        context.LoginDomainUsers.Remove(loginDomainUserFound);
+        context.SaveChanges();
       }
-    }
-    if (loginOK != null)
-    {
-      context.Logins.Remove(loginOK);
+      context.Logins.Remove(userFound);
       context.SaveChanges();
     }
     return;

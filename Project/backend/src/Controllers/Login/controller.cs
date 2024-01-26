@@ -57,7 +57,6 @@ public class UsersController : ControllerBase // TODO change name
             {
 
                 Console.WriteLine("User blocked, invalid attempts cout = 3.");
-                Console.Write("Email: " + loginFound.Email);
                 loginFound.TermsAccepted = true;
                 context.SaveChanges();
                 return BadRequest(new { message = "User blocked, invalid attempts cout = 3." });

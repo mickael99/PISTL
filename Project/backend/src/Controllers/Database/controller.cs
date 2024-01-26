@@ -34,7 +34,6 @@ public class DatabaseController : ControllerBase
     public IActionResult GetDatabases()
     {
         // Retrieves a list of databases
-        Console.WriteLine("-------->Get databases");
         var databases = _databaseRepository.GetDataBases();
 
         if (!ModelState.IsValid)
@@ -56,7 +55,6 @@ public class DatabaseController : ControllerBase
     public IActionResult GetDatabase(int id)
     {
         // Retrieves a specific database by its ID
-        Console.WriteLine("This is a log message");
 
         if (!_databaseRepository.DatabaseExists(id))
             return NotFound();
@@ -82,8 +80,6 @@ public class DatabaseController : ControllerBase
     public IActionResult CreateDatabase([FromBody] Database databaseCreate)
     {
         // Creates a new database
-        Console.WriteLine("-------->Create Database");
-
         string passwordHash = _databaseRepository.EncryptPassword(databaseCreate.Password);
 
 
@@ -93,19 +89,14 @@ public class DatabaseController : ControllerBase
         if (databaseCreate == null)
             return BadRequest(ModelState);
 
-        Console.WriteLine("-------->Get Server");
 
         var server = _serverRepository.GetServer(databaseCreate.ServerId);
 
         if (server == null)
         {
-            Console.WriteLine("-------->Server do not exists");
             return BadRequest("Server do not exists");
         }
 
-        Console.WriteLine("-------->Context " + databaseCreate.Context);
-
-        Console.WriteLine("start creating");
         try
         {
             if (context.Databases.FirstOrDefault(s => s.Name == databaseCreate.Name) == null)
@@ -127,12 +118,8 @@ public class DatabaseController : ControllerBase
             }
             else
             {
-                Console.WriteLine("-------->This name of database already exists");
                 return BadRequest(new { message = "This name of database already exists" });
             }
-
-
-            Console.WriteLine("data enter finish");
 
             _databaseRepository.Save();
 
@@ -158,10 +145,6 @@ public class DatabaseController : ControllerBase
     public IActionResult UpdateDatabase([FromBody] Database dbUpdated)
     {
         // Updates an existing database
-        Console.WriteLine("-------->Update Database");
-        Console.WriteLine("-------->dbUpdated: " + dbUpdated.DatabaseId);
-        Console.WriteLine("-------->dbUpdatedServer: " + dbUpdated.ServerId);
-
         if (dbUpdated == null)
         {
             return BadRequest(ModelState);
@@ -171,11 +154,8 @@ public class DatabaseController : ControllerBase
 
         if (!_databaseRepository.DatabaseExists(dbUpdated.DatabaseId))
         {
-            Console.WriteLine("-------->Database not found");
             return NotFound();
         }
-
-        Console.WriteLine("-------->start editing");
 
         if (dbUpdated == null)
         {
@@ -186,8 +166,6 @@ public class DatabaseController : ControllerBase
         {
             return BadRequest("--------->Provided server is null");
         }
-
-        Console.WriteLine("-------->Not Null ");
 
         var dbToUpdate = _databaseRepository.GetDatabase(dbUpdated.DatabaseId);
 
@@ -222,8 +200,6 @@ public class DatabaseController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        Console.WriteLine("-------->end editing");
-
 
         if (!_databaseRepository.UpdateDatabase(dbToUpdate))
         {
@@ -231,12 +207,7 @@ public class DatabaseController : ControllerBase
             return StatusCode(500, ModelState);
         }
 
-        Console.WriteLine("-------->end updating");
-
         var databases = _databaseRepository.GetDataBases();
-
-        Console.WriteLine("-------->success");
-
 
         return Ok(new { databases });
     }

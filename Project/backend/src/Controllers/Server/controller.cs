@@ -71,8 +71,6 @@ public class ServerController : Controller
             return BadRequest(ModelState);
         }
 
-        Console.WriteLine("-------->Create Server");
-
         try
         {
             if (context.Servers.FirstOrDefault(s => s.Name == serverCreate.Name || s.Address == serverCreate.Address) == null)
@@ -96,10 +94,7 @@ public class ServerController : Controller
                 return BadRequest(new { message = "Server already exists" });
             }
 
-            Console.WriteLine("data enter finish");
-
             context.SaveChanges();
-
 
             var servers = _serverRepository.GetServers();
 
@@ -118,12 +113,8 @@ public class ServerController : Controller
     [ProducesResponseType(404)]
     public IActionResult DeleteServer(int id)
     {
-        Console.WriteLine("-------->Delete Server");
-
         if (!_serverRepository.ServerExists(id))
             return NotFound();
-
-        Console.WriteLine("Server Found");
 
         var serverToDelete = _serverRepository.GetServer(id);
 
@@ -134,8 +125,6 @@ public class ServerController : Controller
         {
             ModelState.AddModelError("", "Something went wrong deleting database");
         }
-
-        Console.WriteLine("Server Deleted");
 
         // Send message to front-end
         var message = "Server deleted successfully";
@@ -152,10 +141,6 @@ public class ServerController : Controller
     [ProducesResponseType(404)]
     public IActionResult UpdateServer(int id, [FromBody] Server serverUpdate)
     {
-        Console.WriteLine("-------->Update Server");
-        Console.WriteLine("Server : " + serverUpdate.ServerId);
-        Console.WriteLine("Server : " + serverUpdate.Address);
-
         if (!_serverRepository.ServerExists(id))
             return NotFound();
 
@@ -176,11 +161,6 @@ public class ServerController : Controller
         {
             ModelState.AddModelError("", "Something went wrong updating the server");
         }
-
-        // Send message to front-end
-        var message = "Server updated successfully";
-
-        Console.WriteLine("----------->Server Updated");
 
         var servers = _serverRepository.GetServers();
 

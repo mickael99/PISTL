@@ -5,7 +5,7 @@ using System.Collections;
 
 namespace Project.Controllers
 {
-    [Route("api/sysadminbydomain")] 
+    [Route("api/sysadminbydomain")]
     [ApiController]
     public class SysAdminByDomainController : ControllerBase
     {
@@ -26,25 +26,25 @@ namespace Project.Controllers
                     // Map properties from Domain to DomainDTO
                     DomainId = d.DomainId,
                     Name = d.Name,
-                    Environments = new bool[6] {false, false, false, false, false, false}
+                    Environments = new bool[6] { false, false, false, false, false, false }
                 }).ToList();
-                
+
                 // Retrieve the list of all users with sysadmin rights and the domain selected from your data source
                 var users = context.LoginDomainUsers.Where(u => u.DomainId == domainId && u.UserId == "99999999-9999-9999-9999-999999999999")
                                                     .Select(u => new LoginDomainUserDTO
-                {
-                    // Map properties from LoginDomainUser to LoginDomainUserDTO
-                    LoginId = u.LoginId,
-                    DomainId = u.DomainId,
-                    UserId = u.UserId,
-                    Environment = u.Environment,
-                    SysAdmin = u.SysAdmin,
-                    SysAdminStartDate = u.SysAdminStartDate,
-                    SysAdminEndDate = u.SysAdminEndDate,
-                    Comment = u.Comment,
-                    UserName = u.UserName,
-                    ModifiedBy = u.ModifiedBy,
-                }).ToList();
+                                                    {
+                                                        // Map properties from LoginDomainUser to LoginDomainUserDTO
+                                                        LoginId = u.LoginId,
+                                                        DomainId = u.DomainId,
+                                                        UserId = u.UserId,
+                                                        Environment = u.Environment,
+                                                        SysAdmin = u.SysAdmin,
+                                                        SysAdminStartDate = u.SysAdminStartDate,
+                                                        SysAdminEndDate = u.SysAdminEndDate,
+                                                        Comment = u.Comment,
+                                                        UserName = u.UserName,
+                                                        ModifiedBy = u.ModifiedBy,
+                                                    }).ToList();
 
                 // Retrieve the list of all logins from your data source
                 var logins = context.Logins.Select(l => new LoginDTO
@@ -57,46 +57,47 @@ namespace Project.Controllers
                 // Retrieve the list of all users from your data source
                 var all_users = context.LoginDomainUsers.Where(u => u.UserId == "99999999-9999-9999-9999-999999999999")
                                                     .Select(u => new LoginDomainUserDTO
-                {
-                    // Map properties from LoginDomainUser to LoginDomainUserDTO
-                    LoginId = u.LoginId,
-                    DomainId = u.DomainId,
-                    UserId = u.UserId,
-                    Environment = u.Environment,
-                    SysAdmin = u.SysAdmin,
-                    SysAdminStartDate = u.SysAdminStartDate,
-                    SysAdminEndDate = u.SysAdminEndDate,
-                    Comment = u.Comment,
-                    UserName = u.UserName,
-                    ModifiedBy = u.ModifiedBy,
-                }).ToList();
+                                                    {
+                                                        // Map properties from LoginDomainUser to LoginDomainUserDTO
+                                                        LoginId = u.LoginId,
+                                                        DomainId = u.DomainId,
+                                                        UserId = u.UserId,
+                                                        Environment = u.Environment,
+                                                        SysAdmin = u.SysAdmin,
+                                                        SysAdminStartDate = u.SysAdminStartDate,
+                                                        SysAdminEndDate = u.SysAdminEndDate,
+                                                        Comment = u.Comment,
+                                                        UserName = u.UserName,
+                                                        ModifiedBy = u.ModifiedBy,
+                                                    }).ToList();
                 foreach (var domain in domains)
                 {
                     foreach (var user in all_users)
                     {
-                        if (domain.DomainId == user.DomainId && user.SysAdmin == true){
+                        if (domain.DomainId == user.DomainId && user.SysAdmin == true)
+                        {
                             {
-                                if(user.Environment == 1)
+                                if (user.Environment == 1)
                                 {
                                     domain.Environments[0] = true;
                                 }
-                                else if(user.Environment == 2)
+                                else if (user.Environment == 2)
                                 {
                                     domain.Environments[1] = true;
                                 }
-                                else if(user.Environment == 3)
+                                else if (user.Environment == 3)
                                 {
                                     domain.Environments[2] = true;
                                 }
-                                else if(user.Environment == 4)
+                                else if (user.Environment == 4)
                                 {
                                     domain.Environments[3] = true;
                                 }
-                                else if(user.Environment == 5)
+                                else if (user.Environment == 5)
                                 {
                                     domain.Environments[4] = true;
                                 }
-                                else if(user.Environment == 6)
+                                else if (user.Environment == 6)
                                 {
                                     domain.Environments[5] = true;
                                 }
@@ -137,19 +138,19 @@ namespace Project.Controllers
                 // Retrieve the list of all users from your data source
                 var users = context.LoginDomainUsers.Where(u => u.UserId == "99999999-9999-9999-9999-999999999999")
                                                     .Select(u => new LoginDomainUserDTO
-                {
-                    // Map properties from LoginDomainUser to LoginDomainUserDTO
-                    LoginId = u.LoginId,
-                    DomainId = u.DomainId,
-                    UserId = u.UserId,
-                    Environment = u.Environment,
-                    SysAdmin = u.SysAdmin,
-                    SysAdminStartDate = u.SysAdminStartDate,
-                    SysAdminEndDate = u.SysAdminEndDate,
-                    Comment = u.Comment,
-                    UserName = u.UserName,
-                    ModifiedBy = u.ModifiedBy,
-                }).ToList();
+                                                    {
+                                                        // Map properties from LoginDomainUser to LoginDomainUserDTO
+                                                        LoginId = u.LoginId,
+                                                        DomainId = u.DomainId,
+                                                        UserId = u.UserId,
+                                                        Environment = u.Environment,
+                                                        SysAdmin = u.SysAdmin,
+                                                        SysAdminStartDate = u.SysAdminStartDate,
+                                                        SysAdminEndDate = u.SysAdminEndDate,
+                                                        Comment = u.Comment,
+                                                        UserName = u.UserName,
+                                                        ModifiedBy = u.ModifiedBy,
+                                                    }).ToList();
 
                 // Retrieve the list of all logins from your data source
                 var logins = context.Logins.Select(l => new LoginDTO
@@ -173,20 +174,21 @@ namespace Project.Controllers
         /// <param name="userDTO">The data transfer object containing the updated user information.</param>
         /// <returns>An IActionResult representing the result of the update operation.</returns>
         [HttpPut]
-        public IActionResult UpdateUser([FromBody] LoginDomainUserDTO userDTO) {
+        public IActionResult UpdateUser([FromBody] LoginDomainUserDTO userDTO)
+        {
             try
             {
                 var context = new DatContext();
 
-                if(userDTO.Environment > 6 || userDTO.Environment < 1)
+                if (userDTO.Environment > 6 || userDTO.Environment < 1)
                 {
                     return BadRequest(new { message = "Environment does not exist" });
                 }
 
                 var user = context.LoginDomainUsers.Where(u => u.LoginId == userDTO.LoginId && u.DomainId == userDTO.DomainId
                         && u.Environment == userDTO.Environment && u.UserId == userDTO.UserId).SingleOrDefault();
-                
-                if(user == null)
+
+                if (user == null)
                 {
                     user = new LoginDomainUser
                     {
@@ -211,7 +213,7 @@ namespace Project.Controllers
                     //Console.WriteLine("Posted user "+userDTO.UserId+ ": "+userDTO.LoginId+" | "+userDTO.DomainId+" | "+userDTO.Environment+" | "+userDTO.SysAdmin+" | "+userDTO.SysAdminEndDate);
                 }
                 else
-                { 
+                {
                     user.SysAdmin = userDTO.SysAdmin;
                     user.SysAdminStartDate = userDTO.SysAdminStartDate;
                     user.SysAdminEndDate = userDTO.SysAdminEndDate;
@@ -223,7 +225,7 @@ namespace Project.Controllers
                 }
 
                 context.SaveChanges();
-                
+
                 return Ok(userDTO);
             }
             catch (Exception ex)
@@ -253,20 +255,20 @@ namespace Project.Controllers
                         && u.Environment == env && u.UserId == userID && u.SysAdmin == true).SingleOrDefault<LoginDomainUser>();
 #pragma warning restore CS8600 // Conversion de littéral ayant une valeur null ou d'une éventuelle valeur null en type non-nullable.
 
-                if(user != null)
-                { 
+                if (user != null)
+                {
                     context.LoginDomainUsers.Remove(user);
                     context.SaveChanges();
 
-                    var response = "Deleted user "+userID+ ": "+loginID+" | "+domainID+" | "+env;
-                    Console.WriteLine(response);
-                    return Ok();
+                    var response = "Deleted user " + userID + ": " + loginID + " | " + domainID + " | " + env;
+                    // Console.WriteLine(response);
+                    return Ok(response);
                 }
                 else
                 {
-                    var response = "Unable to find user "+loginID+" : "+userID+" | "+domainID+" | "+env;
-                    Console.WriteLine(response);
-                    return Ok();
+                    var response = "Unable to find user " + loginID + " : " + userID + " | " + domainID + " | " + env;
+                    // Console.WriteLine(response);
+                    return Ok(response);
                 }
             }
             catch (Exception ex)

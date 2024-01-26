@@ -25,7 +25,7 @@ public class ConnectionTests
     var controller = new UsersController();
     var user = new UsersController.User
     {
-      Email = "simadaniel@hotmail.com",
+      Email = "testing@hotmail.com",
       Password = "STL"
     };
 
@@ -82,7 +82,7 @@ public class ConnectionTests
     var controller = new UsersController();
     var user = new UsersController.User
     {
-      Email = "simadaniel@hotmail.com",
+      Email = "testing@hotmail.com",
       Password = "wrongpassword"
     };
 
