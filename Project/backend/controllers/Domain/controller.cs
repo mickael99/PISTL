@@ -94,6 +94,12 @@ public IActionResult GetDomains() // TODO add JWT
         try
         {
             var context = new MasterContext();
+            
+            //delete login domains
+            var loginDomainToDelete = context.LoginDomainUsers.Where(l => l.DomainId == id).ToList();
+            context.LoginDomainUsers.RemoveRange(loginDomainToDelete);
+
+            //delete domain
             var domainToDelete = context.Domains.FirstOrDefault(d => d.DomainId == id);
 
             if (domainToDelete == null)

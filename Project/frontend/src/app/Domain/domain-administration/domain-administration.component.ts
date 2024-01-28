@@ -6,28 +6,9 @@ import { Router } from '@angular/router';
 /***************************************************************************************/
 /***************************************************************************************/
 /* represent a domain linked to an environment */
-export class EnvironmentModel {
-  public environmentId: number;
-  public domainId: number;
-  public environment: number;
-  public bpwebserverId: number;
-  public bpdatabaseId: number;
-  public eaidatabaseId: number;
-  public ssrsserverId: number;
-  public tableauserverId: number;
-  public eaiftpserverId: number;
-  public isBp5Enabled: boolean;
-
-  public nameBpwebServerId: string;
-  public nameBpDatabaseId: string;
-  public nameEaiDatabaseId: string;
-  public nameSsrsServerId: string;
-  public nameTableauServerId: string;
-  public nameEaiftpServerId: string;
-}
 
 /***************************************************************************************/
-export class EnvironmentModelForBackend {
+export class EnvironmentModel {
   DomainId: number;
   Environment: number;
   BpwebServerId: number; 
@@ -76,9 +57,6 @@ export class DomainAdministrationComponent {
   comment: string;
   parentCompany: string;
 
-  /* selected environment among dev, preprod, prod, test, prodcopy and staging*/
-  selectedEnvironment: EnvironmentModel;
-
   /* selected environment while adding or editing */
   idEnvSelected: number;
 
@@ -86,7 +64,9 @@ export class DomainAdministrationComponent {
   isNewDomainMode: boolean = false;
   isEditDomainMode: boolean = false;
 
-  //bp5 link to each environment
+  selectedEnabled: { [key: number]: boolean } = {};
+
+  //bp5 link to each environment  
   selectedBp5: { [key: number]: boolean } = {};
 
   /* selected servers when the DAT user want to edit or create a domain.
@@ -113,6 +93,7 @@ export class DomainAdministrationComponent {
    * @selectedDomain the selected domain
    */
   onSelect(selectedDomain: any): void {
+
     this.selectedDomain = selectedDomain;
     // if (selectedDomain && selectedDomain.logo)
     //   this.displayLogo(selectedDomain.logo);
@@ -121,7 +102,7 @@ export class DomainAdministrationComponent {
       (env) => env.domainId == this.selectedDomain.domainId
     );
   
-    this.onEnvironmentSelect(2);
+    this.onEnvironmentSelect(this.idEnvSelected);
   }
 
   onSelectServer(
@@ -168,6 +149,7 @@ export class DomainAdministrationComponent {
 
   resetBp5ServersAndDatabasesList(): void {
     const interne = (environment: number): void => {
+      this.selectedEnabled[environment] = false
       this.selectedBp5[environment] = false;
       this.selectedDatabaseServers[environment] = undefined;
       this.selectedWebServers[environment] = undefined;
@@ -207,6 +189,7 @@ export class DomainAdministrationComponent {
         });
 
         if (this.domains.length)
+          this.idEnvSelected = 2;
           this.onSelect(this.domains[0]);
       },
       (error) => {
@@ -323,8 +306,36 @@ export class DomainAdministrationComponent {
     this.idEnvSelected = environmentId;
   }
 
+  getRadioNameById(environementId: number) {
+    switch(environementId) {
+      case 2: return "dev";
+      case 4: return "preprod";
+      case 8: return "prod";
+      case 16: return "test";
+      case 32: return "prodcopy";
+      case 256: return "staging";
+      default: 
+        console.error(
+          "error in getaRadioNameById function");
+        break;
+    }
+  }
+
   onEnvironmentSelect(environmentId: number): void {
+    const domainEnvironmentLinked = this.domainEnvironments.filter(
+      env => env.domainId == this.selectedDomain.domainId);
+    if(domainEnvironmentLinked.length == 0)
+      environmentId = 2
+    else if(domainEnvironmentLinked.every(env => env.environment != environmentId)) 
+      environmentId = domainEnvironmentLinked[0].environment;
+    
     this.setEnvironment(environmentId);
+    
+    if(!this.isNewDomainMode) {
+      var element = document.getElementById(this.getRadioNameById(environmentId)) as HTMLInputElement;
+      element.checked = true;
+    }
+
     if (this.selectedDomain && this.selectedDomainEnvironments) {
       this.selectedDomainEnvironment = this.selectedDomainEnvironments.find(
         (env) => env.environment == environmentId
@@ -358,12 +369,14 @@ export class DomainAdministrationComponent {
     this.parentCompany = '';
   }
 
-  endNewDomainMode(): void {
-    if (this.isNewDomainMode) this.isNewDomainMode = false;
+  cancel(): void {
+      this.endNewDomainMode();
+      setTimeout( () => this.onSelect(this.selectedDomain), 5);
   }
 
-  endEditDomainMode(): void {
-    if (this.isEditDomainMode) this.isEditDomainMode = false;
+  endNewDomainMode(): void {
+    this.isEditDomainMode = false
+    this.isNewDomainMode = false;
   }
 
   getServerOrDatabaseIsSelected(): number[] {
@@ -383,7 +396,8 @@ export class DomainAdministrationComponent {
       if(this.selectedElasticPools[environmentId] == "undefined")
         this.selectedElasticPools[environmentId] = undefined;
 
-      return this.selectedWebServers[environmentId] != undefined;
+      return this.selectedEnabled[environmentId] && 
+        this.selectedWebServers[environmentId] != undefined;
     };
 
     let selectedEnvironment: number[] = [];
@@ -402,7 +416,8 @@ export class DomainAdministrationComponent {
       next: (data: any) => {
         this.domainEnvironments = data.env;
         if(makeOnSelectAction)
-          this.onSelect(domain);
+          this.idEnvSelected = 2;
+        this.onSelect(domain);
       },
       error: (error: any) => {
         alert('Connection error: ' + error.message);
@@ -417,9 +432,9 @@ export class DomainAdministrationComponent {
   addDomain(): void {
     let selectedEnvironments: number[];
     selectedEnvironments = this.getServerOrDatabaseIsSelected();
-    let environmentsModel = new Array<EnvironmentModelForBackend>();
+    let environmentsModel = new Array<EnvironmentModel>();
     for (const e of selectedEnvironments) {
-      let environmentToAdd = new EnvironmentModelForBackend();
+      let environmentToAdd = new EnvironmentModel();
       environmentToAdd.DomainId = this.selectedDomain.domainId;
       environmentToAdd.Environment = e;
       environmentToAdd.BpwebServerId =
@@ -482,18 +497,31 @@ export class DomainAdministrationComponent {
   }
 
   confirmSave(): void {
+    console.log("hey")
     if (!this.isNewDomainMode && !this.isEditDomainMode)
       throw new Error('problem while domain adding');
-
-    //ajouter un domaine
-    if (!this.isEditDomainMode) {
-      const isConfirmed = window.confirm('Are you sure to add the domain ?');
-      if (isConfirmed) this.addDomain();
-    }
-    //modifier un domaine
-    else {
-      const isConfirmed = window.confirm('Are you sure to edit the domain ?');
-      if (isConfirmed) this.update();
+    var error = false;
+    if(this.selectedEnabled[2] && this.selectedWebServers[2] === undefined || 
+      this.selectedEnabled[4] && this.selectedWebServers[4] === undefined ||
+      this.selectedEnabled[8] && this.selectedWebServers[8] === undefined ||
+      this.selectedEnabled[16] && this.selectedWebServers[16] === undefined ||
+      this.selectedEnabled[32] && this.selectedWebServers[32] === undefined ||
+      this.selectedEnabled[256] && this.selectedWebServers[256] === undefined) {
+        window.alert("Vous avez séléctionné un environement sans lui attribuer de serveur web !");
+        error = true;
+      }
+    
+    if(!error) {
+      //ajouter un domaine
+      if (!this.isEditDomainMode) {
+        const isConfirmed = window.confirm('Are you sure to add the domain ?');
+        if (isConfirmed) this.addDomain();
+      }
+      //modifier un domaine
+      else {
+        const isConfirmed = window.confirm('Are you sure to edit the domain ?');
+        if (isConfirmed) this.update();
+      }
     }
   }
 
@@ -545,6 +573,7 @@ export class DomainAdministrationComponent {
       //this.displayLogo(this.selectedDomain.logo);
 
       this.resetBp5ServersAndDatabasesList();
+      console.log(this.selectedDomainEnvironments)
       this.selectedDomainEnvironments.forEach(e => {
         this.selectedBp5[e.environment] = e.isBp5Enabled;
         this.selectedDatabaseServers[e.environment] = this.findDatabaseFromId(e.bpdatabaseId);
@@ -553,6 +582,7 @@ export class DomainAdministrationComponent {
         this.selectedEaiFtpServers[e.environment] = this.findServerFromId(e.eaiftpserverId);
         this.selectedTableauServers[e.environment] = this.findServerFromId(e.tableauServerId);
         this.selectedSsrsServers[e.environment] = this.findServerFromId(e.ssrsserverId);
+        this.selectedEnabled[e.environment] = true;
       });
 
       this.isNewDomainMode = true;
@@ -578,10 +608,9 @@ export class DomainAdministrationComponent {
         .subscribe(
           (data: any) => {
             this.domains = data.domains;
-            this.endEditDomainMode();
             this.endNewDomainMode();
             const index = this.domains.findIndex(d => d.domainId == data.domain.domainId);
-            this.onSelect(this.domains[index]);
+            setTimeout( () => this.onSelect(this.domains[index]), 5);
           },
           (error) => {
             alert('Connection error: ' + error.message);
@@ -627,12 +656,12 @@ export class DomainAdministrationComponent {
     };
 
     const checkIfAddingDomainEnv = (domainEnvLinkedBeforeUpdate, domainEnvLinkedAfterUpdate) => {
-      let arrayDomainEnvToAdd = new Array<EnvironmentModelForBackend>();
+      let arrayDomainEnvToAdd = new Array<EnvironmentModel>();
       const idDomainEnvToAdd = domainEnvLinkedAfterUpdate.filter
         (e => !domainEnvLinkedBeforeUpdate.includes(e))
 
       idDomainEnvToAdd.forEach(e => {
-        const domainEnvToAdd = new EnvironmentModelForBackend();
+        const domainEnvToAdd = new EnvironmentModel();
         domainEnvToAdd.DomainId = this.selectedDomain.domainId;
         domainEnvToAdd.Environment = e;
         domainEnvToAdd.BpwebServerId = this.selectedWebServers[e].serverId; 
@@ -664,7 +693,7 @@ export class DomainAdministrationComponent {
       else {
         if(arrayDomainEnv.length > index) {
           const e = arrayDomainEnv[index].environment;
-          const domainEnvUpdating = new EnvironmentModelForBackend();
+          const domainEnvUpdating = new EnvironmentModel();
           domainEnvUpdating.DomainId = this.selectedDomain.domainId;
           domainEnvUpdating.Environment = e;
           domainEnvUpdating.BpwebServerId = this.selectedWebServers[e]?.serverId; 
@@ -704,7 +733,6 @@ export class DomainAdministrationComponent {
     };
 
     if (this.selectedDomain && this.isEditDomainMode) {
-      //console.log("liste des environements: ", this.domainEnvironments)
       const domainEnvLinkedBeforeUpdate = 
         this.domainEnvironments.filter
           (e => e.domainId == this.selectedDomain.domainId).
@@ -787,8 +815,9 @@ export class DomainAdministrationComponent {
     const deleteDomainEnvironment = (domainEnvironmentsToDelete, index, domainIdToDelete) => {
       if(domainEnvironmentsToDelete.length <= index)
         deleteDomain(domainIdToDelete);
+      console.log(domainEnvironmentsToDelete[index].domainEnvironmentId)
       this.http
-          .delete(`http://localhost:5050/api/domainEnvironment/${domainEnvironmentsToDelete[index].domainEnvironmentId}`)
+          .delete(`http://localhost:5050/api/domainEnvironment/${domainEnvironmentsToDelete[index]?.domainEnvironmentId}`)
           .subscribe(
             (data: any) => {
               this.domainEnvironments = data;

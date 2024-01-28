@@ -87,8 +87,16 @@ public class DomainEnvironmentController : ControllerBase {
         try{
             var context = new MasterContext();
             Console.WriteLine("===============> DELETE /api/domainEnvironment");
+                        
             var domainEnvironmentToDelete = context.DomainEnvironments.FirstOrDefault(e => e.DomainEnvironmentId == id);
 
+            //delete login domains
+            var loginDomainToDelete = context.LoginDomainUsers.Where
+                (l => l.DomainId == domainEnvironmentToDelete.DomainId &&
+                 l.Environment == domainEnvironmentToDelete.Environment).ToList();
+            context.LoginDomainUsers.RemoveRange(loginDomainToDelete);
+
+            //delete domain environment
             if (domainEnvironmentToDelete == null)
                 return NotFound($"Domain with ID {id} not found.");
 
