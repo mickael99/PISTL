@@ -1,27 +1,33 @@
-version: '3.4'
+version: '3.8'
 
 services:
-  project:
-    image: ${DOCKER_REGISTRY-}project
+  backend:
     build:
-      context: .
-      dockerfile: Project/Dockerfile
-  WalterJunior:
-      container_name: SqlServerContainer
-      image: mcr.microsoft.com/mssql/server:2017-latest
-      ports:
-        - "8002:1433"
-      environment:
-        - ACCEPT_EULA=Y
-        - SA_PASSWORD=Password123
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "5050:5050"
+    depends_on:
+      - database
+    environment:
+      ConnectionStrings__DefaultConnection: "Server=127.0.0.1,1434;Database=DAT;User Id=sa;Password=Daniel123;TrustServerCertificate=true;"
 
-  WebApi:
-      container_name: WebApiContainer
-      image: ${DOCKER_REGISTRY-}project
-      ports:
-        - "8001:80"
-      build:
-        context: .
-        dockerfile: project/Dockerfile
-      depends_on:
-        - SqlServerDb
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "4200:4200"
+    depends_on:
+      - backend
+
+  database:
+    build:
+      context: ./docker
+      dockerfile: Dockerfile
+    ports:
+      - "1433:1434"
+    environment:
+      SA_PASSWORD: "Daniel123"
+      ACCEPT_EULA: "Y"
+      MSSQL_DB_NAME: "DAT"

@@ -418,13 +418,15 @@ export class DomainBySysAdminComponent {
    * @returns True if all users are checked for the given environment, false otherwise.
    */
   allChecked(env: any): boolean {
-      for (const domainId of Object.keys(this.domain_users)) {
-        if(this.domain_users[domainId].length > 0){
-          if(this.domain_users[domainId][2][env] == null)
-            return false;
-        }
+    for (const domainId of Object.keys(this.domain_users)) {
+      if(this.domain_users[domainId].length == 0)
+        return false;
+      if(this.domain_users[domainId].length > 0){
+        if(this.domain_users[domainId][2][env] == null)
+          return false;
       }
-      return true;
+    }
+    return true;
   }
 
   /**
