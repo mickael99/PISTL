@@ -17,20 +17,20 @@ public class DomainAdministrationController : ControllerBase
     /// </summary>
     /// <returns>An IActionResult representing the result of the operation.</returns>
     [HttpGet]
-public IActionResult GetDomains() // TODO add JWT
-{
-    try
+    public IActionResult GetDomains() // TODO add JWT
     {
-        var context = new DatContext();
+        try
+        {
+            var context = new DatContext();
 
-        var domains = context.Domains;
-        return Ok(domains);
+            var domains = context.Domains;
+            return Ok(domains);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
-    catch (Exception ex)
-    {
-        return BadRequest(ex.Message);
-    }
-}
 
     /***************************************************************************************/
     /// <summary>
@@ -68,7 +68,7 @@ public IActionResult GetDomains() // TODO add JWT
         {
             var context = new DatContext();
             var existingDomain = context.Domains.FirstOrDefault(d => d.DomainId == id);
-            
+
             if (existingDomain == null)
                 return NotFound($"Domain with ID {id} not found.");
 
@@ -80,7 +80,7 @@ public IActionResult GetDomains() // TODO add JWT
             existingDomain.ParentCompany = model.ParentCompany;
             context.SaveChanges();
 
-            return Ok( new { domains = context.Domains, domain = existingDomain });
+            return Ok(new { domains = context.Domains, domain = existingDomain });
         }
         catch (Exception ex)
         {
@@ -94,6 +94,12 @@ public IActionResult GetDomains() // TODO add JWT
         try
         {
             var context = new DatContext();
+
+            //delete login domains
+            var loginDomainToDelete = context.LoginDomainUsers.Where(l => l.DomainId == id).ToList();
+            context.LoginDomainUsers.RemoveRange(loginDomainToDelete);
+
+            //delete domain
             var domainToDelete = context.Domains.FirstOrDefault(d => d.DomainId == id);
 
             if (domainToDelete == null)
@@ -134,7 +140,8 @@ public IActionResult GetDomains() // TODO add JWT
         return newDomain;
     }
 
-    public class DomainModel {
+    public class DomainModel
+    {
         public required string Name { get; set; }
         public int? DomainId { get; set; }
         public byte[]? Logo { get; set; }

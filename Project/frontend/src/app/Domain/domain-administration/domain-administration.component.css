@@ -174,6 +174,56 @@ input[type="radio"]:checked + label {
   background-color: yellow; 
 }
 
+
+.ongletName #deve:checked + label {
+  background-color: orange; 
+}
+
+.ongletName #deve:not(:checked) + label {
+  background-color: orange; 
+}
+
+.ongletName #preprode:not(:checked) + label {
+  background-color: purple; 
+}
+
+.ongletName #preprode:checked + label {
+  background-color: purple; 
+}
+
+.ongletName #prode:not(:checked) + label {
+  background-color: blue; 
+}
+
+.ongletName #prode:checked + label {
+  background-color: blue; 
+}
+
+.ongletName #teste:not(:checked) + label {
+  background-color: green; 
+}
+
+.ongletName #teste:checked + label {
+  background-color: green; 
+}
+
+.ongletName #prodcopye:not(:checked) + label {
+  background-color: maroon; 
+}
+
+.ongletName #prodcopye:checked + label {
+  background-color: maroon; 
+}
+
+.ongletName #staginge:not(:checked) + label {
+  background-color: yellow;
+}
+
+.ongletName #staginge:checked + label {
+  background-color: yellow; 
+}
+
+
 input[type="radio"]:checked + label + div {
   display: block;
 }
@@ -206,8 +256,4 @@ input[type="radio"]:checked + label + div {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 10px;
-}
-
-.grid-item {
-  /* Ajoutez des styles spécifiques à chaque élément si nécessaire */
 }
