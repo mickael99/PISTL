@@ -43,7 +43,7 @@
 .check--all {
   position: absolute;
   top: 0.5rem;
-  right: 0.5rem;
+  right: 0rem;
   z-index: 1;
 }
 

@@ -29,6 +29,7 @@ public class UsersController : ControllerBase // TODO change name
             var logins = context.Logins;
             bool found = false; // TODO change name
             bool blocked = false;
+            bool datNotEnabled = false;
             Login loginFound = null;
             foreach (var login in logins)
             {
@@ -40,6 +41,10 @@ public class UsersController : ControllerBase // TODO change name
                     {
                         blocked = true;
                         break;
+                    }
+                    if (login.Datenabled == false)
+                    {
+                        datNotEnabled = true;
                     }
 
                     var bytes = Encoding.UTF8.GetBytes(user.Password + login.PasswordSalt);
@@ -60,6 +65,12 @@ public class UsersController : ControllerBase // TODO change name
                 loginFound.TermsAccepted = true;
                 context.SaveChanges();
                 return BadRequest(new { message = "User blocked, invalid attempts cout = 3." });
+            }
+
+            if (datNotEnabled && loginFound != null)
+            {
+                Console.WriteLine("User blocked, DAT not enabled.");
+                return BadRequest(new { message = "User blocked, DAT not enabled." });
             }
 
             // if the user is found and the password is correct

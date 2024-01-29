@@ -67,12 +67,15 @@ export class LoginComponent {
           }
         },
         (error) => {
+          // TODO change former error message
           if (error.error.message === 'User not found.') {
             this.showErrorMessage = 'Incorrect email or password!';
           } else if (
             error.error.message === 'User blocked, invalid attempts cout = 3.'
           ) {
             this.showErrorMessage = 'User blocked, 3 invalid attempts made!';
+          } else {
+            this.showErrorMessage = 'User blocked, DAT not enabled.';
           }
         }
       );
