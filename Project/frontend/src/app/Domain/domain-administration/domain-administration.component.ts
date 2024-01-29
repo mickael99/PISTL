@@ -570,7 +570,7 @@ export class DomainAdministrationComponent {
       this.comment = this.selectedDomain.comment;
       this.parentCompany = this.selectedDomain.parentCompany;
 
-      //this.displayLogo(this.selectedDomain.logo);
+      this.displayLogo(this.selectedDomain.logo);
 
       this.resetBp5ServersAndDatabasesList();
       console.log(this.selectedDomainEnvironments)
