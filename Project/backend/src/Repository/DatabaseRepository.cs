@@ -19,6 +19,10 @@ namespace Project.Repository
             return _context.Databases.Where(db => db.DatabaseId == id).FirstOrDefault();
         }
 
+        public Database GetDatabase(string name){
+            return _context.Databases.Where(db => db.Name == name).FirstOrDefault();
+        }
+
         public ICollection<Database> GetDataBases(){
             return _context.Databases.OrderBy(db => db.DatabaseId).ToList();
         }
@@ -28,10 +32,11 @@ namespace Project.Repository
             return _context.Databases.Any(db => db.DatabaseId == Id);
         }
 
-        public bool DatabaseExists(string DatabaseController_CreateDatabase_WithExistingName_ReturnsBadRequest)
+        public bool DatabaseExists(string Name)
         {
-            return _context.Databases.Any(db => db.Name == DatabaseController_CreateDatabase_WithExistingName_ReturnsBadRequest);
+            return _context.Databases.Any(db => db.Name == Name);
         }
+
         
 
         public bool CreateDatabase(Database db){

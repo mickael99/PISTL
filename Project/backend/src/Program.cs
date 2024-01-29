@@ -15,8 +15,8 @@ namespace DataBaseFirstDemo
     /***************************************************************************************/
     static void Main(string[] args)
     {
-      // addLogin("simadaniel@hotmail.com", "STL");
-      // addDomain("STL");
+       addLogin("simadaniel@hotmail.com", "STL");
+       addDomain("STL");
 
       CreateHostBuilder(args).Build().Run();
 
