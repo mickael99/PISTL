@@ -261,39 +261,4 @@
       </form>
     </div>
   </ng-container>
-
-  <!-- Error pop-up -->
-  <div>
-    <app-error-popup
-      *ngIf="showPopupError"
-      [errorMessage]="popupMessage"
-      (close)="closeErrorPopup()"
-    ></app-error-popup>
-  </div>
-
-  <!-- Inform pop-up -->
-  <div>
-    <app-inform-popup
-      *ngIf="showInformPopup"
-      [informationMessage]="popupMessage"
-      [passwordReseted]="passwordReseted"
-      (close)="close_inform_popup()"
-    ></app-inform-popup>
-  </div>
-
-  <!-- Delete confirmation -->
-  <app-confirm-popup
-    *ngIf="showDeleteConfirmation"
-    [confirmationMessage]="confirmationMessage"
-    (confirm)="onDeleteConfirm()"
-    (close)="onDeleteClose()"
-  ></app-confirm-popup>
-
-  <!-- Reset password confirmation -->
-  <app-confirm-popup
-    *ngIf="showResetPasswordConfirmation"
-    [confirmationMessage]="confirmationMessage"
-    (confirm)="onResetPasswordConfirm()"
-    (close)="onResetPasswordClose()"
-  ></app-confirm-popup>
 </div>

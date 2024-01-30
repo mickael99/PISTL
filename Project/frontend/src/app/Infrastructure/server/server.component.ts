@@ -164,7 +164,7 @@ export class ServerComponent {
         this.dataSource.sort = this.sort;
       },
       (error) => {
-        this.showErrorPopup(error.error);
+        console.error(error);
       }
     );
 
@@ -284,7 +284,7 @@ export class ServerComponent {
           this.reinitaliseServerCreatedForm();
         },
         error: (error: any) => {
-          this.showErrorPopup(error.error.message);
+          console.error(error.error.message);
         },
       });
   }
@@ -470,7 +470,6 @@ export class ServerComponent {
         },
         error: (error: any) => {
           console.error(error.error.message);
-          this.showErrorPopup(error.error.message);
         },
       });
   }
@@ -548,8 +547,7 @@ export class ServerComponent {
           this.dataSource.sort = this.sort;
         },
         error: (error: any) => {
-          console.error(error.error.message);
-          this.showErrorPopup(error.error.message);
+          console.log(error);
         },
       });
   }
@@ -634,8 +632,7 @@ export class ServerComponent {
         this.dataSource.sort = this.sort;
       },
       error: (error: any) => {
-        console.error(error.error.message);
-        this.showErrorPopup(error.error.message);
+        console.log(error);
       },
     });
   }

@@ -175,21 +175,6 @@
 
     <div class="formCreate">
       <ng-container *ngIf="showFormCreate">
-        <button
-          mat-raised-button
-          class="color-button margin--right"
-          (click)="newServerFormCreateServer()"
-        >
-          Save
-        </button>
-        <button
-          mat-raised-button
-          color="primary"
-          class="btn"
-          (click)="showFormCreateServer()"
-        >
-          Cancel
-        </button>
         <form class="form--servers">
           <mat-form-field class="example-full-width">
             <mat-label>Name</mat-label>
@@ -257,6 +242,23 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
+          <div class="button-container" style="margin-bottom: 10%">
+            <button
+              mat-raised-button
+              class="color-button margin--right"
+              (click)="newServerFormCreateServer()"
+            >
+              Save
+            </button>
+            <button
+              mat-raised-button
+              color="primary"
+              class="btn"
+              (click)="showFormCreateServer()"
+            >
+              Cancel
+            </button>
+          </div>
         </form>
       </ng-container>
     </div>
@@ -267,22 +269,6 @@
     <!---------------------------------->
     <div class="">
       <ng-container *ngIf="serverSelected.ServerId">
-        <button
-          mat-raised-button
-          (click)="editServer()"
-          [ngClass]="{ 'color-button': editEnabled, 'margin--right': true }"
-          [disabled]="!editEnabled"
-        >
-          Save
-        </button>
-        <button
-          mat-raised-button
-          color="primary"
-          class="btn"
-          (click)="reinitaliseServerSelectedForm()"
-        >
-          Cancel
-        </button>
         <form class="form--servers">
           <mat-form-field class="example-full-width">
             <mat-label>Name</mat-label>
@@ -361,45 +347,25 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
+          <div class="button-container" style="margin-bottom: 10%">
+            <button
+              mat-raised-button
+              (click)="editServer()"
+              [ngClass]="{ 'color-button': editEnabled, 'margin--right': true }"
+              [disabled]="!editEnabled"
+            >
+              Save
+            </button>
+            <button
+              mat-raised-button
+              color="primary"
+              class="btn"
+              (click)="reinitaliseServerSelectedForm()"
+            >
+              Cancel
+            </button>
+          </div>
         </form>
       </ng-container>
     </div>
-
-    <!-- Error pop-up -->
-    <div>
-      <app-error-popup
-        *ngIf="showPopupError"
-        [errorMessage]="popupMessage"
-        (close)="closeErrorPopup()"
-      ></app-error-popup>
-    </div>
-
-    <!-- Inform pop-up -->
-    <div>
-      <app-inform-popup
-        *ngIf="showInformPopup"
-        [informationMessage]="popupMessage"
-        [passwordReseted]="passwordReseted"
-        (close)="close_inform_popup()"
-      ></app-inform-popup>
-    </div>
-
-    <!-- Delete confirmation -->
-    <app-confirm-popup
-      *ngIf="showDeleteConfirmation"
-      [confirmationMessage]="confirmationMessage"
-      (confirm)="onDeleteConfirm()"
-      (close)="onDeleteClose()"
-    ></app-confirm-popup>
-
-    <!-- Copy confirmation -->
-    <div>
-      <app-confirm-popup
-        *ngIf="showCopyConfirmation"
-        [confirmationMessage]="confirmationMessage"
-        (confirm)="onCopyConfirm()"
-        (close)="onCopyClose()"
-      ></app-confirm-popup>
-    </div>
-  </div>
 </div>
