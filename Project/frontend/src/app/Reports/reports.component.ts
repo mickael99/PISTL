@@ -132,7 +132,7 @@ export class ReportsComponent {
     // Get all the domains from the DB
     this.http.get('http://localhost:5050/api/domain').subscribe(
       (data: any) => {
-        this.domains = data.mappedData.map((domain: any) => {
+        this.domains = data.map((domain: any) => {
           domain.checked = false; // Add a checked property to the domain object
           return domain;
         });

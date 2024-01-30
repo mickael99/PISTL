@@ -13,7 +13,6 @@ namespace DataBaseFirstDemo
     static void Main(string[] args)
     {
       // Utils.AddLogin("simadaniel@hotmail.com", "STL");
-      // addDomain("STL");
 
       CreateHostBuilder(args).Build().Run();
     }

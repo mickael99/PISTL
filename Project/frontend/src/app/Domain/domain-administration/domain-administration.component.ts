@@ -5,9 +5,6 @@ import { Router } from '@angular/router';
 /***************************************************************************************/
 /***************************************************************************************/
 /***************************************************************************************/
-/* represent a domain linked to an environment */
-
-/***************************************************************************************/
 export class EnvironmentModel {
   DomainId: number;
   Environment: number;
@@ -51,7 +48,7 @@ export class DomainAdministrationComponent {
 
   /*domain fields */
   name: string;
-  logo: string;
+  logo: string = '';
   edition: string;
   isSsoEnabled: boolean;
   comment: string;
@@ -86,6 +83,26 @@ export class DomainAdministrationComponent {
   // Logo used to load to 'this.logo' after the user has selected a img file
   logoToAdd: any;
 
+  // Domain selected before the user click on the New button (needed to restore if the user cancel the creation)
+  domainSelectedBeforeNew: any;
+
+  // Boolean to know if the user has selected a new logo
+  newLogoPresent: boolean = false;
+
+  // Logo to display in the html
+  logoToDisplay: string = '';
+
+  // Environments tabs
+  environments = [
+    { id: 2, name: 'Dev' },
+    { id: 4, name: 'Preprod' },
+    { id: 8, name: 'Prod' },
+    { id: 16, name: 'Test' },
+    { id: 32, name: 'ProdCopy' },
+    { id: 256, name: 'Staging' },
+  ];
+
+  /***************************************************************************************/
   /*
    *  Update the selected domain from the list and print the dev information.
    *  If the selected domain is not link to the dev environment, preprod is printed and so on
@@ -94,8 +111,9 @@ export class DomainAdministrationComponent {
    */
   onSelect(selectedDomain: any): void {
     this.selectedDomain = selectedDomain;
-    if (selectedDomain && selectedDomain.logo)
-      this.displayLogo(selectedDomain.logo, 'printLogo');
+    if (selectedDomain && selectedDomain.logo) {
+      this.logoToDisplay = selectedDomain.logo;
+    }
 
     this.selectedDomainEnvironments = this.domainEnvironments.filter(
       (env) => env.domainId == this.selectedDomain.domainId
@@ -123,7 +141,6 @@ export class DomainAdministrationComponent {
         this.selectedSsrsServers[environmentId] = selectedServer;
         break;
       default:
-        console.error('Server not recognized:', serverType);
         break;
     }
   }
@@ -141,7 +158,6 @@ export class DomainAdministrationComponent {
         this.selectedElasticPools[environmentId] = selectedDatabase;
         break;
       default:
-        console.error('Database not recognized:', databaseType);
         break;
     }
   }
@@ -182,12 +198,7 @@ export class DomainAdministrationComponent {
           this.domains = data;
           // Changing the logo format
           this.domains.forEach((domain) => {
-            // Because for the 'WWBP5' domain, the logo encoded hasn't the same format
-            if (domain.name === 'WWBP5') {
-              domain.logo = 'data:image/png;base64,' + domain.logo;
-            } else {
-              domain.logo = atob(domain.logo);
-            }
+            domain.logo = atob(domain.logo);
           });
 
           if (this.domains.length) this.idEnvSelected = 2;
@@ -312,7 +323,17 @@ export class DomainAdministrationComponent {
     }
   }
 
+  /***************************************************************************************/
+  setEnvironmentEvent(event: any): void {
+    const selectedTabIndex = event.index;
+    const selectedEnvironment = this.environments[selectedTabIndex];
+    console.log('selectedEnvironment ', selectedEnvironment);
+    this.setEnvironment(selectedEnvironment.id);
+  }
+
+  /***************************************************************************************/
   setEnvironment(environmentId: number): void {
+    console.log('setEnvironment');
     this.idEnvSelected = environmentId;
   }
 
@@ -331,11 +352,19 @@ export class DomainAdministrationComponent {
       case 256:
         return 'staging';
       default:
-        console.error('error in getaRadioNameById function');
         break;
     }
   }
 
+  /***************************************************************************************/
+  onEnvironmentSelectEvent(event: any): void {
+    const selectedTabIndex = event.index;
+    const selectedEnvironment = this.environments[selectedTabIndex];
+    console.log('selectedEnvironment ', selectedEnvironment);
+    this.onEnvironmentSelect(selectedEnvironment.id);
+  }
+
+  /***************************************************************************************/
   onEnvironmentSelect(environmentId: number): void {
     const domainEnvironmentLinked = this.domainEnvironments.filter(
       (env) => env.domainId == this.selectedDomain.domainId
@@ -352,7 +381,7 @@ export class DomainAdministrationComponent {
       var element = document.getElementById(
         this.getRadioNameById(environmentId)
       ) as HTMLInputElement;
-      element.checked = true;
+      if (element) element.checked = true;
     }
 
     if (this.selectedDomain && this.selectedDomainEnvironments) {
@@ -370,12 +399,15 @@ export class DomainAdministrationComponent {
    * @param encodingLogoPath the path of the logo encoded in base64
    */
   displayLogo(encodingLogoPath: string, id: string): void {
-    const imagePreview = document.getElementById(id) as HTMLDivElement;
-    console.log(encodingLogoPath);
-    if (encodingLogoPath !== 'undefined') {
-      imagePreview.innerHTML = `<img src="${encodingLogoPath}" alt="Logo" style="width: 10rem; height: 10rem;">`;
-    } else {
-      imagePreview.innerHTML = '';
+    // const imagePreview = document.getElementById(id) as HTMLDivElement;
+    const imagePreview = document.getElementById(id);
+    console.log('imagePreview ', imagePreview);
+    if (imagePreview) {
+      if (encodingLogoPath !== 'undefined') {
+        imagePreview.innerHTML = `<img src="${encodingLogoPath}" alt="Logo" style="width: 10rem; height: 10rem;">`;
+      } else {
+        imagePreview.innerHTML = '';
+      }
     }
   }
 
@@ -385,17 +417,35 @@ export class DomainAdministrationComponent {
     this.idEnvSelected = 2;
     this.isNewDomainMode = true;
 
-    this.name = '';
-    this.logo = '';
-    this.edition = '';
-    this.isSsoEnabled = false;
-    this.comment = '';
-    this.parentCompany = '';
+    this.newLogoPresent = false;
+
+    this.domainSelectedBeforeNew = { ...this.selectedDomain };
+
+    this.selectedDomain.name = '';
+    this.selectedDomain.logo = '';
+    this.selectedDomain.edition = '';
+    this.selectedDomain.isSsoEnabled = false;
+    this.selectedDomain.comment = '';
+    this.selectedDomain.parentCompany = '';
   }
 
   cancel(): void {
+    if (this.selectedDomain.name === '') {
+      // this.selectedDomain = this.domainSelectedBeforeNew;
+      this.domains.map((domain) => {
+        if (domain.domainId === this.domainSelectedBeforeNew.domainId) {
+          domain.name = this.domainSelectedBeforeNew.name;
+          domain.logo = this.domainSelectedBeforeNew.logo;
+          domain.edition = this.domainSelectedBeforeNew.edition;
+          domain.isSsoEnabled = this.domainSelectedBeforeNew.isSsoEnabled;
+          domain.comment = this.domainSelectedBeforeNew.comment;
+          domain.parentCompany = this.domainSelectedBeforeNew.parentCompany;
+        }
+      });
+    }
     this.endNewDomainMode();
-    setTimeout(() => this.onSelect(this.selectedDomain), 5);
+    this.newLogoPresent = false;
+    this.onSelect(this.selectedDomain);
   }
 
   endNewDomainMode(): void {
@@ -480,15 +530,16 @@ export class DomainAdministrationComponent {
 
       environmentsModel.push(environmentToAdd);
     }
-    this.logo = this.logoToAdd;
+
+    this.selectedDomain.logo = this.logoToAdd ?? this.selectedDomain.logo;
 
     const requestBody = {
-      Name: this.name,
-      Logo: btoa(this.logo),
-      Edition: this.edition,
-      IsSsoEnabled: this.isSsoEnabled,
-      Comment: this.comment,
-      ParentCompany: this.parentCompany,
+      Name: this.selectedDomain.name,
+      Logo: btoa(this.selectedDomain.logo),
+      Edition: this.selectedDomain.edition,
+      IsSsoEnabled: this.selectedDomain.isSsoEnabled,
+      Comment: this.selectedDomain.comment,
+      ParentCompany: this.selectedDomain.parentCompany,
       Environments: environmentsModel,
     };
 
@@ -498,12 +549,7 @@ export class DomainAdministrationComponent {
         this.domains = data.domains;
         // Changing the logo format
         this.domains.forEach((domain) => {
-          // Because for the 'WWBP5' domain, the logo encoded hasn't the same format
-          if (domain.name === 'WWBP5') {
-            domain.logo = 'data:image/png;base64,' + domain.logo;
-          } else {
-            domain.logo = atob(domain.logo);
-          }
+          domain.logo = atob(domain.logo);
         });
 
         // Setting the selected domain
@@ -524,10 +570,10 @@ export class DomainAdministrationComponent {
   }
 
   confirmSave(): void {
-    if (!this.isNewDomainMode && !this.isEditDomainMode)
-      throw new Error('problem while domain adding');
+    // if (!this.isNewDomainMode && !this.isEditDomainMode)
+    //   throw new Error('problem while domain adding');
+
     var error = false;
-    console.log('hbbdnbqndn ', typeof this.selectedWebServers[2]);
     if (
       (this.selectedEnabled[2] && this.selectedWebServers[2] === undefined) ||
       (this.selectedEnabled[2] && this.selectedWebServers[2] === 'undefined') ||
@@ -552,7 +598,10 @@ export class DomainAdministrationComponent {
       error = true;
     }
 
-    if (this.name === undefined || this.name === '') {
+    if (
+      this.selectedDomain.name === undefined ||
+      this.selectedDomain.name === ''
+    ) {
       window.alert('You must provide a name for the domain!');
       error = true;
     }
@@ -572,17 +621,20 @@ export class DomainAdministrationComponent {
   }
 
   onLogoChange(event: any): void {
-    if (this.isFileFormatConformed(this.logo)) {
-      const file = event.target.files[0];
+    const file = event.target.files[0];
+    // Verifying the file format
+    if (this.isFileFormatConformed(file.name)) {
       const reader = new FileReader();
 
-      reader.onload = (e) => {
-        const imagePreview = document.getElementById('imagePreview');
-        imagePreview.innerHTML = `<img src="${e.target.result}" alt="Preview" style="width: 10rem; height: 10rem;">`;
-      };
+      this.newLogoPresent = true;
+      // reader.onload = (e) => {
+      // const printLogo = document.getElementById('printLogo');
+      // printLogo.innerHTML = `<img src="${e.target.result}" alt="Logo" style="width: 10rem; height: 10rem;">`;
+      // };
 
       reader.addEventListener('load', () => {
         this.logoToAdd = reader.result;
+        this.logoToDisplay = reader.result as string;
       });
 
       reader.readAsDataURL(file);
@@ -609,23 +661,12 @@ export class DomainAdministrationComponent {
 
   editDomain(): void {
     if (this.selectedDomain) {
-      this.name = this.selectedDomain.name;
-      this.logo = this.selectedDomain.logo;
-      this.edition = this.selectedDomain.edition;
-      this.isSsoEnabled = this.selectedDomain.isSsoEnabled;
-      this.comment = this.selectedDomain.comment;
-      this.parentCompany = this.selectedDomain.parentCompany;
-
-      console.log('this.logo: ', this.logo);
-
-      console.log('this.selectedDomain.logo', this.selectedDomain.logo);
-      setTimeout(
-        () => this.displayLogo(this.selectedDomain.logo, 'imagePreview'),
-        10
-      );
+      // setTimeout(() => {
+      //   this.displayLogo(this.selectedDomain.logo, 'printLogo');
+      // }, 10);
+      this.logoToDisplay = this.selectedDomain.logo;
 
       this.resetBp5ServersAndDatabasesList();
-      console.log(this.selectedDomainEnvironments);
       this.selectedDomainEnvironments.forEach((e) => {
         this.selectedBp5[e.environment] = e.isBp5Enabled;
         this.selectedDatabaseServers[e.environment] = this.findDatabaseFromId(
@@ -649,22 +690,22 @@ export class DomainAdministrationComponent {
         this.selectedEnabled[e.environment] = true;
       });
 
-      this.isNewDomainMode = true;
+      // this.isNewDomainMode = true;
       this.isEditDomainMode = true;
     }
   }
 
   update(): void {
     const updateDomain = () => {
-      this.logo = this.logoToAdd;
+      this.selectedDomain.logo = this.logoToAdd ?? this.selectedDomain.logo;
 
       const domainToUpdate = {
-        Name: this.name,
-        Logo: btoa(this.logo),
-        Edition: this.edition,
-        IsSsoEnabled: this.isSsoEnabled,
-        Comment: this.comment,
-        ParentCompany: this.parentCompany,
+        Name: this.selectedDomain.name,
+        Logo: btoa(this.selectedDomain.logo),
+        Edition: this.selectedDomain.edition,
+        IsSsoEnabled: this.selectedDomain.isSsoEnabled,
+        Comment: this.selectedDomain.comment,
+        ParentCompany: this.selectedDomain.parentCompany,
       };
 
       this.http
@@ -676,19 +717,13 @@ export class DomainAdministrationComponent {
           (data: any) => {
             this.domains = data.domains;
             this.domains.forEach((domain) => {
-              // Because for the 'WWBP5' domain, the logo encoded hasn't the same format
-              if (domain.name === 'WWBP5') {
-                domain.logo = 'data:image/png;base64,' + domain.logo;
-              } else {
-                domain.logo = atob(domain.logo);
-              }
+              domain.logo = atob(domain.logo);
             });
-            console.table(this.domains);
             this.endNewDomainMode();
             const index = this.domains.findIndex(
               (d) => d.domainId == data.domain.domainId
             );
-            setTimeout(() => this.onSelect(this.domains[index]), 5);
+            setTimeout(() => this.onSelect(this.domains[index]), 10);
           },
           (error) => {
             alert('Connection error: ' + error.message);
@@ -912,12 +947,7 @@ export class DomainAdministrationComponent {
           this.domains = data.domains;
           // Changing the logo format
           this.domains.forEach((domain) => {
-            // Because for the 'WWBP5' domain, the logo encoded hasn't the same format
-            if (domain.name === 'WWBP5') {
-              domain.logo = 'data:image/png;base64,' + domain.logo;
-            } else {
-              domain.logo = atob(domain.logo);
-            }
+            domain.logo = atob(domain.logo);
           });
           const newDomainId = data.newDomainId;
 
@@ -954,12 +984,7 @@ export class DomainAdministrationComponent {
           (data: any) => {
             this.domains = data;
             this.domains.forEach((domain) => {
-              // Because for the 'WWBP5' domain, the logo encoded hasn't the same format
-              if (domain.name === 'WWBP5') {
-                domain.logo = 'data:image/png;base64,' + domain.logo;
-              } else {
-                domain.logo = atob(domain.logo);
-              }
+              domain.logo = atob(domain.logo);
             });
             this.onSelect(this.domains[0]);
           },
@@ -976,24 +1001,26 @@ export class DomainAdministrationComponent {
     ) => {
       if (domainEnvironmentsToDelete.length <= index)
         deleteDomain(domainIdToDelete);
-      console.log(domainEnvironmentsToDelete[index].domainEnvironmentId);
-      this.http
-        .delete(
-          `http://localhost:5050/api/domainEnvironment/${domainEnvironmentsToDelete[index]?.domainEnvironmentId}`
-        )
-        .subscribe(
-          (data: any) => {
-            this.domainEnvironments = data;
-            deleteDomainEnvironment(
-              domainEnvironmentsToDelete,
-              index + 1,
-              domainIdToDelete
-            );
-          },
-          (error) => {
-            alert('Connection error: ' + error.message);
-          }
-        );
+
+      if (domainEnvironmentsToDelete[index]) {
+        this.http
+          .delete(
+            `http://localhost:5050/api/domainEnvironment/${domainEnvironmentsToDelete[index]?.domainEnvironmentId}`
+          )
+          .subscribe(
+            (data: any) => {
+              this.domainEnvironments = data;
+              deleteDomainEnvironment(
+                domainEnvironmentsToDelete,
+                index + 1,
+                domainIdToDelete
+              );
+            },
+            (error) => {
+              alert('Connection error: ' + error.message);
+            }
+          );
+      }
     };
 
     if (this.selectedDomain) {
@@ -1013,6 +1040,17 @@ export class DomainAdministrationComponent {
           domainIdToDelete
         );
       }
+    }
+  }
+
+  /***************************************************************************************/
+  /**
+   * Update the selected edition for a domain.
+   * @param selectedValue the selected edition
+   */
+  updateSelectedEdition(selectedValue: string) {
+    if (this.selectedDomain) {
+      this.selectedDomain.edition = selectedValue;
     }
   }
 }

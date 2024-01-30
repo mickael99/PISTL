@@ -12,6 +12,7 @@ using System.IO;
 [ApiController]
 public class DomainAdministrationController : ControllerBase
 {
+    /***************************************************************************************/
     /// <summary>
     /// Retrieves the domains with their associated environments from the database.
     /// </summary>
@@ -60,6 +61,12 @@ public class DomainAdministrationController : ControllerBase
     }
 
     /***************************************************************************************/
+    /// <summary>
+    /// Updates a domain with the specified ID.
+    /// </summary>
+    /// <param name="id">The ID of the domain to update.</param>
+    /// <param name="model">The updated domain model.</param>
+    /// <returns>The updated domain if successful, or an error message if not.</returns>
     [HttpPut("{id}")]
     public IActionResult PutDomain(int id, [FromBody] DomainModel model)
     {
@@ -88,6 +95,12 @@ public class DomainAdministrationController : ControllerBase
         }
     }
 
+    /***************************************************************************************/
+    /// <summary>
+    /// Deletes a domain with the specified ID.
+    /// </summary>
+    /// <param name="id">The ID of the domain to delete.</param>
+    /// <returns>The remaining domains if successful, or an error message if not.</returns>
     [HttpDelete("{id}")]
     public IActionResult DeleteDomain(int id)
     {
@@ -107,6 +120,8 @@ public class DomainAdministrationController : ControllerBase
 
             context.Domains.Remove(domainToDelete);
             context.SaveChanges();
+
+            Console.WriteLine("===============>");
 
             var remainingDomains = context.Domains.ToList();
             return Ok(remainingDomains);

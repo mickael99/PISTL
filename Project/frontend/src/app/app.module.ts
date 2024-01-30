@@ -41,6 +41,7 @@ import { ConfirmPopupComponent } from './utils/confirm-popup/confirm-popup.compo
 import { InformPopupComponent } from './utils/inform-popup/inform-popup.component';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { NgxCsvParserModule } from 'ngx-csv-parser';
+import { MatTabsModule } from '@angular/material/tabs';
 
 @NgModule({
   declarations: [
@@ -60,7 +61,7 @@ import { NgxCsvParserModule } from 'ngx-csv-parser';
     ReportsComponent,
     ErrorPopupComponent,
     ConfirmPopupComponent,
-    InformPopupComponent
+    InformPopupComponent,
   ],
   imports: [
     BrowserModule,
@@ -87,9 +88,10 @@ import { NgxCsvParserModule } from 'ngx-csv-parser';
     CommonModule,
     NgxCsvParserModule,
     MatNativeDateModule,
+    MatTabsModule,
   ],
 
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule {}

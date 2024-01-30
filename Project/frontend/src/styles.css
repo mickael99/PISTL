@@ -6,9 +6,47 @@
 /* Default color */
 #3D59A7
 
-/* Background color */
+/* Background */
 #F0F0F0
 
+/* Success */
+#5CB85C
+
+/* Warning */
+#F0AD4E
+
+/* Danger */
+#D9534F
+
+/* Info */
+#00A2E8
+
+/* Environments */
+/* Dev */
+#FF4500
+
+/* Test */
+#FFA500
+
+/* Staging */
+#CC00FF
+
+/* Prod Copy */
+#A0522D
+
+/* Simu */
+#00D13A
+
+/* Simu Migration  */
+#6AA84F
+
+/* Prod Migration */
+#000000
+
+/* Prod */
+#FFFFFF
+
+/* Text */
 /*************************************************************************************************/
 /*************************************************************************************************/
 /*************************************************************************************************/
@@ -44,5 +82,11 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; } */
 /*************************************************************************************************/
 /*************************************************************************************************/
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
