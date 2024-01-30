@@ -47,11 +47,6 @@ namespace Project.Repository
         {
             return _context.Databases.Any(db => db.Name == Name);
         }
-<<<<<<< HEAD
-=======
-
-        
->>>>>>> database
 
 
         public bool CreateDatabase(Database db)
