@@ -138,21 +138,6 @@
     <!---------------------------->
     <div class="formCreate">
       <ng-container *ngIf="showFormCreate">
-        <button
-          mat-raised-button
-          class="color-button margin--right"
-          (click)="newUserFormCreateUser()"
-        >
-          Save
-        </button>
-        <button
-          mat-raised-button
-          color="primary"
-          class="btn"
-          (click)="showFormCreateUser()"
-        >
-          Cancel
-        </button>
         <form class="form--users">
           <mat-form-field class="example-full-width">
             <mat-label>Name</mat-label>
@@ -256,6 +241,23 @@
             name="locked"
             >Locked (Invalid Attempts)</mat-checkbox
           >
+          <div class="button-container" style="margin-bottom: 10%">
+            <button
+            mat-raised-button
+            class="color-button"
+            (click)="newUserFormCreateUser()"
+            >
+              Save
+            </button>
+            <button
+              mat-raised-button
+              color="primary"
+              class="btn"
+              (click)="showFormCreateUser()"
+            >
+              Cancel
+            </button>
+          </div>
         </form>
       </ng-container>
 
@@ -265,22 +267,6 @@
       <!---------------------------------->
       <div class="">
         <ng-container *ngIf="userSelected.email">
-          <button
-            mat-raised-button
-            (click)="editUser()"
-            [ngClass]="{ 'color-button': editEnabled, 'margin--right': true }"
-            [disabled]="!editEnabled"
-          >
-            Save
-          </button>
-          <button
-            mat-raised-button
-            color="primary"
-            class="btn"
-            (click)="reinitaliseUserSelectedForm()"
-          >
-            Cancel
-          </button>
           <form class="form--users">
             <mat-form-field class="example-full-width">
               <mat-label>Name</mat-label>
@@ -396,6 +382,25 @@
               [disabled]="!editEnabled"
               >Locked (Invalid Attempts)</mat-checkbox
             >
+
+            <div class="button-container" style="margin-bottom: 10%">
+                <button
+                mat-raised-button
+                (click)="editUser()"
+                [ngClass]="{ 'color-button': editEnabled, 'margin--right': true }"
+                [disabled]="!editEnabled"
+                >
+                  Save
+                </button>
+                <button
+                  mat-raised-button
+                  color="primary"
+                  class="btn"
+                  (click)="reinitaliseUserSelectedForm()"
+                >
+                  Cancel
+                </button>
+              </div>
           </form>
         </ng-container>
       </div>

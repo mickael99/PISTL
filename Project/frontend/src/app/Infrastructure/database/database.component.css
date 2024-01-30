@@ -7,30 +7,6 @@
     color: #3d59a7;
   }
   
-  .btn {
-    margin: 8px 8px 8px 0;
-    font-weight: 600;
-  }
-  
-  .green-text {
-    color: green;
-    font-size: 3rem;
-  }
-  
-  .red-text {
-    color: red;
-    font-size: 3rem;
-  }
-  
-  .container {
-    margin: 0 0 0 2rem;
-  }
-  
-  .table {
-    width: 50%;
-    background-color: white;
-  }
-
 .btn {
   margin: 8px 8px 8px 0;
   font-weight: 600;
@@ -52,7 +28,6 @@
 
 .table {
   width: 50%;
-  background-color: white;
 }
 
 .listes {
@@ -65,8 +40,6 @@
 
 .formCreate {
   margin-left: 25rem;
-  margin-top: -5.5rem;
-  grid-template-columns: 1fr 1fr;
 }
 
 .mat-mdc-raised-button.color-button {
@@ -81,6 +54,9 @@
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
   width: 110%;
+  background-color: #6878a5;
+  padding: 5rem;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
 }
 
 /**********************************************************************/
@@ -96,12 +72,6 @@
 .database--selected {
   background-color: #ddd;
   font-weight: 900;
-}
-
-.form--databases {
-  background-color: #6878a5;
-  padding: 5rem;
-  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
 }
 
 /**********************************************************************/

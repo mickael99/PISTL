@@ -38,13 +38,12 @@
 
   <div class="listes">
     <div class="table">
-      <hr />
       <mat-card-content>
+        <hr />
         <table
           matSort
           mat-table
           [dataSource]="dataSource"
-          class="custom-table"
           #tableElement
         >
           <ng-container matColumnDef="databaseId">
@@ -183,23 +182,8 @@
       </mat-card-content>
     </div>
 
-    <div class="formCreate">
-      <ng-container *ngIf="showFormCreate">
-        <button
-          mat-raised-button
-          class="color-button margin--right"
-          (click)="newDatabaseFormDatabase()"
-        >
-          Save
-        </button>
-        <button
-          mat-raised-button
-          color="primary"
-          class="btn"
-          (click)="showFormCreateDatabase()"
-        >
-          Cancel
-        </button>
+    <ng-container *ngIf="showFormCreate">
+      <div class="formCreate">
         <form class="form--databases">
           <mat-form-field class="example-full-width">
             <mat-label>Name</mat-label>
@@ -279,33 +263,34 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
+          <br />
+          <div class="button-container" style="margin-bottom: 10%">
+            <button
+            mat-raised-button
+            class="color-button margin--right"
+            (click)="newDatabaseFormDatabase()"
+            >
+              Save
+            </button>
+            <button
+              mat-raised-button
+              color="primary"
+              class="btn"
+              (click)="showFormCreateDatabase()"
+            >
+              Cancel
+            </button>
+          </div>
         </form>
-      </ng-container>
-    </div>
+      </div>
+    </ng-container>
 
     <!-------------------------------- -->
     <!-- Access an existing Sys Admin -->
     <!-- Edit an existing Sys Admin   -->
     <!-------------------------------- -->
-    <div class="formEdit">
-      <ng-container *ngIf="databaseSelected.DatabaseId">
-        <button
-          mat-raised-button
-          (click)="editDatabase()"
-          [ngClass]="{ 'color-button': editEnabled, 'margin--right': true }"
-          [disabled]="!editEnabled"
-        >
-          Save
-        </button>
-        <button
-          mat-raised-button
-          color="primary"
-          class="btn"
-          (click)="reinitaliseDatabaseSelectedForm()"
-        >
-          Cancel
-        </button>
-
+    <ng-container *ngIf="databaseSelected.DatabaseId">
+      <div class="formCreate">
         <form class="form--databases">
           <mat-form-field class="example-full-width">
             <mat-label>Name</mat-label>
@@ -393,14 +378,30 @@
               [(ngModel)]="databaseSelected.PasswordModified"
               name="Password"
               [disabled]="!editEnabled"
-            />
-            <mat-hint
-              >Leave it blank if you don't want to change the password</mat-hint
             >
           </mat-form-field>
+          <br />
+          <div class="button-container" style="margin-bottom: 10%">
+              <button
+              mat-raised-button
+              (click)="editDatabase()"
+              [ngClass]="{ 'color-button': editEnabled, 'margin--right': true }"
+              [disabled]="!editEnabled"
+            >
+              Save
+            </button>
+            <button
+              mat-raised-button
+              color="primary"
+              class="btn"
+              (click)="reinitaliseDatabaseSelectedForm()"
+            >
+              Cancel
+            </button>
+          </div>
         </form>
-      </ng-container>
-    </div>
+      </div>
+    </ng-container>
 
     <!-- Error pop-up -->
     <div>

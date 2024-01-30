@@ -311,6 +311,8 @@ export class UsersComponent {
       DATEnabled: false,
       locked: false,
     };
+
+    this.editEnabled = false;
   }
 
   /***************************************************************************************/
