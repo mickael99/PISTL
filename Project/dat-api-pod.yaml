@@ -9,6 +9,10 @@ spec:
     imagePullPolicy: Always
     ports:
     - containerPort: 5050
+    env:
+      - name: ConnectionStrings__DefaultConnection
+        value: "Server=database-container,1434;Database=DAT;User Id=sa;Password=Daniel123;TrustServerCertificate=true;"
+
 
   - name: frontend-container
     image: walty13/dat_repo:frontend-image

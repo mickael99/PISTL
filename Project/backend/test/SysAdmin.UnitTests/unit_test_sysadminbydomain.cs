@@ -1,5 +1,6 @@
 
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.Elfie.Serialization;
 using Newtonsoft.Json;
 using NUnit.Framework; // Add missing using statement
 using Project.Controllers;
@@ -299,13 +300,14 @@ public class TestSysAdmin
 
         // Act
         var response = controller.DeleteUser(user.LoginId, user.UserId, user.DomainId, user.Environment) as OkObjectResult;
-
+        
         // Assert 
         Assert.Multiple(() =>
         {
             Assert.AreNotEqual(response, null, "Response is null");
             Assert.That(response.StatusCode, Is.EqualTo(200));
-            Assert.That(response.Value, Is.EqualTo("Deleted user " + user.UserId + ": " + user.LoginId + " | " + user.DomainId + " | " + user.Environment));
+            var message = response.Value.GetType().GetProperty("message").GetValue(response.Value, null);
+            Assert.That(message, Is.EqualTo("Deleted user " + user.UserId + ": " + user.LoginId + " | " + user.DomainId + " | " + user.Environment));
         });
     }
 
@@ -341,7 +343,8 @@ public class TestSysAdmin
         {
             Assert.AreNotEqual(response, null);
             Assert.That(response.StatusCode, Is.EqualTo(200));
-            Assert.That(response.Value, Is.EqualTo("Unable to find user " + user.LoginId + " : " + user.UserId + " | " + user.DomainId + " | " + user.Environment));
+            var message = response.Value.GetType().GetProperty("message").GetValue(response.Value, null);
+            Assert.That(message, Is.EqualTo("Unable to find user " + user.LoginId + " : " + user.UserId + " | " + user.DomainId + " | " + user.Environment));
         });
     }
 
@@ -377,7 +380,8 @@ public class TestSysAdmin
         {
             Assert.AreNotEqual(response, null);
             Assert.That(response.StatusCode, Is.EqualTo(200));
-            Assert.That(response.Value, Is.EqualTo("Unable to find user " + user.LoginId + " : 99999999-9999-9999-9999-999999999998 | " + user.DomainId + " | " + user.Environment));
+            var message = response.Value.GetType().GetProperty("message").GetValue(response.Value, null);
+            Assert.That(message, Is.EqualTo("Unable to find user " + user.LoginId + " : 99999999-9999-9999-9999-999999999998 | " + user.DomainId + " | " + user.Environment));
         });
     }
 
@@ -413,7 +417,9 @@ public class TestSysAdmin
         {
             Assert.AreNotEqual(response, null);
             Assert.That(response.StatusCode, Is.EqualTo(200));
-            Assert.That(response.Value, Is.EqualTo("Unable to find user 4000 : " + user.UserId + " | " + user.DomainId + " | " + user.Environment));
+            Assert.AreNotEqual(response.Value, null);
+            var message = response.Value.GetType().GetProperty("message").GetValue(response.Value, null);
+            Assert.That(message, Is.EqualTo("Unable to find user 4000 : " + user.UserId + " | " + user.DomainId + " | " + user.Environment));
         });
     }
 
@@ -449,7 +455,8 @@ public class TestSysAdmin
         {
             Assert.AreNotEqual(response, null);
             Assert.That(response.StatusCode, Is.EqualTo(200));
-            Assert.That(response.Value, Is.EqualTo("Unable to find user " + user.LoginId + " : " + user.UserId + " | " + user.DomainId + " | 5"));
+            var message = response.Value.GetType().GetProperty("message").GetValue(response.Value, null);
+            Assert.That(message, Is.EqualTo("Unable to find user " + user.LoginId + " : " + user.UserId + " | " + user.DomainId + " | 5"));
         });
     }
 
@@ -485,7 +492,8 @@ public class TestSysAdmin
         {
             Assert.AreNotEqual(response, null);
             Assert.That(response.StatusCode, Is.EqualTo(200));
-            Assert.That(response.Value, Is.EqualTo("Unable to find user " + user.LoginId + " : " + user.UserId + " | 352 | " + user.Environment));
+            var message = response.Value.GetType().GetProperty("message").GetValue(response.Value, null);
+            Assert.That(message, Is.EqualTo("Unable to find user " + user.LoginId + " : " + user.UserId + " | 352 | " + user.Environment));
         });
     }
 }

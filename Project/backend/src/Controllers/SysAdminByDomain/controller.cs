@@ -260,15 +260,15 @@ namespace Project.Controllers
                     context.LoginDomainUsers.Remove(user);
                     context.SaveChanges();
 
-                    var response = "Deleted user " + userID + ": " + loginID + " | " + domainID + " | " + env;
+                    var message = "Deleted user " + userID + ": " + loginID + " | " + domainID + " | " + env;
                     // Console.WriteLine(response);
-                    return Ok(response);
+                    return Ok(new {message = message});
                 }
                 else
                 {
-                    var response = "Unable to find user " + loginID + " : " + userID + " | " + domainID + " | " + env;
+                    var message = "Unable to find user " + loginID + " : " + userID + " | " + domainID + " | " + env;
                     // Console.WriteLine(response);
-                    return Ok(response);
+                    return Ok(new {message = message});
                 }
             }
             catch (Exception ex)

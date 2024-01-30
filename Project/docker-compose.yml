@@ -10,7 +10,7 @@ services:
     depends_on:
       - database
     environment:
-      ConnectionStrings__DefaultConnection: "Server=127.0.0.1,1434;Database=DAT;User Id=sa;Password=Daniel123;TrustServerCertificate=true;"
+      ConnectionStrings__DefaultConnection: "Server=database,1434;Database=DAT;User Id=sa;Password=Daniel123;TrustServerCertificate=true;"
 
   frontend:
     build:
