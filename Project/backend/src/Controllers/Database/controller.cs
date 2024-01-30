@@ -245,10 +245,6 @@ public class DatabaseController : ControllerBase
         var databases = _databaseRepository.GetDataBases();
 
 
-<<<<<<< HEAD:Project/backend/src/Controllers/Database/controller.cs
         return Ok(new { databases });
-=======
-        return Ok(new { databases });    
->>>>>>> database:Project/backend/src/controllers/Database/controller.cs
     }
 }
