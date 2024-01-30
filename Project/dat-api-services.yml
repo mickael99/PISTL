@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+spec:
+  selector:
+    app: dat-api-pod
+    container: backend-container
+  ports:
+    - protocol: TCP
+      port: 5050
+      targetPort: 5050
+  type: LoadBalancer
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+spec:
+  selector:
+    app: dat-api-pod
+    container: frontend-container
+  ports:
+    - protocol: TCP
+      port: 4200
+      targetPort: 5050
+  type: LoadBalancer
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: database-service
+spec:
+  selector:
+    app: dat-api-pod
+    container: database-container
+  ports:
+    - protocol: TCP
+      port: 1433
+      targetPort: 1433
+  type: LoadBalancer

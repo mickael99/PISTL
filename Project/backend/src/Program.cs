@@ -27,7 +27,7 @@ namespace DataBaseFirstDemo
     Host.CreateDefaultBuilder(args)
         .ConfigureWebHostDefaults(webBuilder =>
         {
-          webBuilder.UseUrls("http://localhost:5050");
+          webBuilder.UseUrls("http://[::]:5050");
           webBuilder.UseStartup<Startup>();
         });
 

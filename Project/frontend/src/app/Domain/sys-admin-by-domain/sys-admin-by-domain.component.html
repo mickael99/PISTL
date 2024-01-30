@@ -95,6 +95,7 @@
           <div *ngIf="show_add">
             <button
               mat-raised-button
+              name="add"
               color="primary"
               (click)="addSysAdmin(element)"
               style="margin: 8px 8px 8px 0"
@@ -104,6 +105,7 @@
           </div>
           <div *ngIf="!show_add">
             <button
+              name="save"
               mat-raised-button
               class="color-button"
               (click)="saveSysAdmin()"
@@ -112,6 +114,7 @@
               Save
             </button>
             <button
+              name="cancel"
               mat-raised-button
               color="primary"
               (click)="cancelSysAdmin()"

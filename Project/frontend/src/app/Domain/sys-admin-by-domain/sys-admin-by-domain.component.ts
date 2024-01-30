@@ -408,7 +408,10 @@ export class SysAdminByDomainComponent {
    * @returns True if all users are checked for the given environment, false otherwise.
    */
   allChecked(env: any): boolean {
+    console.log(this.login_users);
     for (const loginId of Object.keys(this.login_users)) {
+      if(this.login_users[loginId].length == 0) 
+        return false;
       if(this.login_users[loginId].length > 0){
         if(this.login_users[loginId][2][env] == null)
           return false;

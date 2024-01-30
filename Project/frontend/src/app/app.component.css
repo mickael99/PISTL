@@ -42,6 +42,7 @@ header {
   list-style: none;
   display: flex;
   gap: 8rem;
+  padding-top: 2rem;
 }
 
 .logo {
@@ -142,7 +143,7 @@ header {
   text-decoration: none;
   background-color: #dc143c;
   padding: 2rem 4rem;
-  color: #444;
+  color: #fff;
   font-weight: 700;
   font-size: 1.6rem;
   border-radius: 11px;
