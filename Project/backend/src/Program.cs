@@ -12,7 +12,12 @@ namespace DataBaseFirstDemo
     /***************************************************************************************/
     static void Main(string[] args)
     {
+<<<<<<< HEAD
       // Utils.AddLogin("simadaniel@hotmail.com", "STL");
+=======
+       addLogin("simadaniel@hotmail.com", "STL");
+       addDomain("STL");
+>>>>>>> database
 
       CreateHostBuilder(args).Build().Run();
     }

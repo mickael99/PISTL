@@ -162,9 +162,11 @@ public class DatabaseController : ControllerBase
             return BadRequest("---------->Provided database is null");
         }
 
-        if (dbUpdated.Server == null)
-        {
-            return BadRequest("--------->Provided server is null");
+        if(_databaseRepository.DatabaseExists(dbUpdated.Name)){
+            var db = _databaseRepository.GetDatabase(dbUpdated.Name);
+            if(db.DatabaseId != dbUpdated.DatabaseId){
+                return BadRequest("This name of database already exists");
+            }
         }
 
         var dbToUpdate = _databaseRepository.GetDatabase(dbUpdated.DatabaseId);
@@ -186,6 +188,7 @@ public class DatabaseController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
+       
         // Update the server properties
         dbToUpdate.DatabaseId = dbUpdated.DatabaseId;
         dbToUpdate.Name = dbUpdated.Name;
@@ -196,6 +199,8 @@ public class DatabaseController : ControllerBase
         dbToUpdate.ModifiedBy = dbUpdated.ModifiedBy;
         dbToUpdate.ModifiedDate = DateTime.Now;
         dbToUpdate.Context = dbUpdated.Context;
+        
+
 
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
@@ -240,6 +245,10 @@ public class DatabaseController : ControllerBase
         var databases = _databaseRepository.GetDataBases();
 
 
+<<<<<<< HEAD:Project/backend/src/Controllers/Database/controller.cs
         return Ok(new { databases });
+=======
+        return Ok(new { databases });    
+>>>>>>> database:Project/backend/src/controllers/Database/controller.cs
     }
 }

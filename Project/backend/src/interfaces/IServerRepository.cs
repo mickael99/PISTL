@@ -11,9 +11,12 @@ namespace Project.Interface
     public interface IServerRepository
     {
         Server GetServer(int id);
+        Server GetServer(string name);
+        Server GetServerWithAddress(string address);
         ICollection<Server> GetServers();
         bool ServerExists(int Id);
         bool ServerExists(string ServerName);
+        bool ServerExistsWithAddress(string ServerAddress);
         bool CreateServer(Server db);
         bool Save();
         bool DeleteServer(Server db);

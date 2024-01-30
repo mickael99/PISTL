@@ -7,6 +7,8 @@ namespace Project.Interface
     {
         Database GetDatabase(int id);
 
+        Database GetDatabase(string name);
+
         ICollection<Database> GetDataBases();
 
         bool DatabaseExists(int Id);

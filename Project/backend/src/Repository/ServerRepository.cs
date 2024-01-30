@@ -24,6 +24,16 @@ namespace Project.Repository
             return _context.Servers.Where(s => s.ServerId == id).FirstOrDefault();
         }
 
+        public Server GetServer(string name)
+        {
+            return _context.Servers.Where(s => s.Name == name).FirstOrDefault();
+        }
+
+        public Server GetServerWithAddress(string address)
+        {
+            return _context.Servers.Where(s => s.Address == address).FirstOrDefault();
+        }
+
         public ICollection<Server> GetServers()
         {
             return _context.Servers.OrderBy(s => s.ServerId).ToList();
@@ -37,6 +47,11 @@ namespace Project.Repository
         public bool ServerExists(string ServerName)
         {
             return _context.Servers.Any(s => s.Name == ServerName);
+        }
+
+        public bool ServerExistsWithAddress(string ServerAddress)
+        {
+            return _context.Servers.Any(s => s.Address == ServerAddress);
         }
 
         public bool CreateServer(Server db)

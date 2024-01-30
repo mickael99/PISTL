@@ -91,7 +91,7 @@ public class ServerController : Controller
             }
             else
             {
-                return BadRequest(new { message = "Server already exists" });
+                return BadRequest(new { message = "Name or Address of server already exists" });
             }
 
             context.SaveChanges();
@@ -102,7 +102,6 @@ public class ServerController : Controller
         }
         catch (Exception ex)
         {
-
             return BadRequest(ex.Message);
         }
     }
@@ -146,9 +145,26 @@ public class ServerController : Controller
 
         var serverToUpdate = _serverRepository.GetServer(id);
 
+        if (_serverRepository.ServerExists(serverUpdate.Name))
+        {
+            var server = _serverRepository.GetServer(serverUpdate.Name);
+            if (server.ServerId != id)
+            {
+                return BadRequest(new { message = "This name of server already exists" });
+            }
+        }
+
+        if(_serverRepository.ServerExistsWithAddress(serverUpdate.Address)){
+            var server = _serverRepository.GetServerWithAddress(serverUpdate.Address);
+            if(server.ServerId != id){
+                return BadRequest(new { message = "This address of server already exists" });
+            }
+        }
+
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
+        
         // Update the server properties
         serverToUpdate.Name = serverUpdate.Name;
         serverToUpdate.Address = serverUpdate.Address;
@@ -156,6 +172,7 @@ public class ServerController : Controller
         serverToUpdate.ModifiedDate = DateTime.Now;
         serverToUpdate.Context = serverUpdate.Context;
         serverToUpdate.Type = serverUpdate.Type;
+        
 
         if (!_serverRepository.UpdateServer(serverToUpdate))
         {
