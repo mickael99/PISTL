@@ -393,7 +393,6 @@
               <mat-label>Database Server</mat-label>
               <mat-select
                 name="Database"
-                [disabled]="!(isEditDomainMode || isNewDomainMode)"
                 [ngModel]="
                   selectedDatabaseServers &&
                   selectedDatabaseServers[idEnvSelected]
@@ -410,12 +409,13 @@
                 <mat-option
                   [value]="undefined"
                   [selected]="
+                    selectedDatabaseServers &&
                     selectedDatabaseServers[idEnvSelected] === undefined
                   "
                 >
                   No Database
                 </mat-option>
-                <mat-option *ngFor="let db of databases" [ngValue]="db">
+                <mat-option *ngFor="let db of databases" [value]="db">
                   {{ db.name }}
                 </mat-option>
               </mat-select>
@@ -429,7 +429,6 @@
                 [(ngModel)]="
                   selectedWebServers && selectedWebServers[idEnvSelected]
                 "
-                [disabled]="!selectedEnabled[idEnvSelected]"
                 (ngModelChange)="
                   onSelectServer(
                     'webServer',
@@ -445,7 +444,7 @@
                 >
                   No Server
                 </mat-option>
-                <mat-option *ngFor="let server of servers" [ngValue]="server">
+                <mat-option *ngFor="let server of servers" [value]="server">
                   {{ server.name }}
                 </mat-option>
               </mat-select>
@@ -476,7 +475,7 @@
                 >
                   No Database
                 </mat-option>
-                <mat-option *ngFor="let server of servers" [ngValue]="server">
+                <mat-option *ngFor="let server of servers" [value]="server">
                   {{ server.name }}
                 </mat-option>
               </mat-select>
@@ -508,7 +507,7 @@
                 >
                   No Database
                 </mat-option>
-                <mat-option *ngFor="let server of servers" [ngValue]="server">
+                <mat-option *ngFor="let server of servers" [value]="server">
                   {{ server.name }}
                 </mat-option>
               </mat-select>
@@ -537,7 +536,7 @@
                 >
                   No Database
                 </mat-option>
-                <mat-option *ngFor="let server of servers" [ngValue]="server">
+                <mat-option *ngFor="let server of servers" [value]="server">
                   {{ server.name }}
                 </mat-option>
               </mat-select>

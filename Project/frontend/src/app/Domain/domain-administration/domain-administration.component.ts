@@ -127,6 +127,7 @@ export class DomainAdministrationComponent {
     selectedServer: any,
     environmentId: number
   ): void {
+    console.log('selectedWebServers: ', this.selectedWebServers);
     switch (serverType) {
       case 'webServer':
         this.selectedWebServers[environmentId] = selectedServer;
@@ -150,6 +151,7 @@ export class DomainAdministrationComponent {
     selectedDatabase: any,
     environmentId: number
   ): void {
+    // console.log('[environmentId]: ', environmentId);
     switch (databaseType) {
       case 'databaseServer':
         this.selectedDatabaseServers[environmentId] = selectedDatabase;
