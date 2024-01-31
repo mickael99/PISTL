@@ -17,24 +17,48 @@ namespace Project.Repository
             _context = context;
         }
 
+        /// <summary>
+        /// Retrieves a database from the repository based on the specified ID.
+        /// </summary>
+        /// <param name="id">The ID of the database to retrieve.</param>
+        /// <returns>The database with the specified ID, or null if not found.</returns>
         public Database GetDatabase(int id)
         {
             return _context.Databases.Where(db => db.DatabaseId == id).FirstOrDefault();
         }
 
+        /// <summary>
+        /// Retrieves a database by its name.
+        /// </summary>
+        /// <param name="name">The name of the database.</param>
+        /// <returns>The database object.</returns>
         public Database GetDatabase(string name){
             return _context.Databases.Where(db => db.Name == name).FirstOrDefault();
         }
 
+        /// <summary>
+        /// Retrieves a collection of databases from the repository.
+        /// </summary>
+        /// <returns>A collection of databases.</returns>
         public ICollection<Database> GetDataBases(){
             return _context.Databases.OrderBy(db => db.DatabaseId).ToList();
         }
 
+        /// <summary>
+        /// Checks if a database with the specified Id exists in the repository.
+        /// </summary>
+        /// <param name="Id">The Id of the database to check.</param>
+        /// <returns>True if the database exists, otherwise false.</returns>
         public bool DatabaseExists(int Id)
         {
             return _context.Databases.Any(db => db.DatabaseId == Id);
         }
 
+        /// <summary>
+        /// Checks if a database with the specified name exists.
+        /// </summary>
+        /// <param name="Name">The name of the database to check.</param>
+        /// <returns>True if a database with the specified name exists, otherwise false.</returns>
         public bool DatabaseExists(string Name)
         {
             return _context.Databases.Any(db => db.Name == Name);
@@ -43,35 +67,62 @@ namespace Project.Repository
         
 
 
+        /// <summary>
+        /// Creates a new database in the repository.
+        /// </summary>
+        /// <param name="db">The database to be created.</param>
+        /// <returns>True if the database was created successfully, false otherwise.</returns>
         public bool CreateDatabase(Database db)
         {
             _context.Add(db);
             return Save();
         }
 
+        /// <summary>
+        /// Saves changes made to the database.
+        /// </summary>
+        /// <returns>True if changes were successfully saved, otherwise false.</returns>
         public bool Save()
         {
             var saved = _context.SaveChanges();
             return saved > 0 ? true : false;
         }
 
+        /// <summary>
+        /// Updates the specified database in the repository.
+        /// </summary>
+        /// <param name="db">The database to be updated.</param>
+        /// <returns>True if the update was successful, false otherwise.</returns>
         public bool UpdateDatabase(Database db)
         {
             _context.Update(db);
             return Save();
         }
 
+        /// <summary>
+        /// Deletes a database from the repository.
+        /// </summary>
+        /// <param name="db">The database to be deleted.</param>
+        /// <returns>True if the database was successfully deleted, false otherwise.</returns>
         public bool DeleteDatabase(Database db)
         {
             _context.Remove(db);
             return Save();
         }
 
+        /// <summary>
+        /// Gets the count of databases in the repository.
+        /// </summary>
+        /// <returns>The count of databases.</returns>
         public int GetDatabaseCount()
         {
             return _context.Databases.Count();
         }
 
+        /// <summary>
+        /// Gets the minimum unused database ID.
+        /// </summary>
+        /// <returns>The minimum unused database ID.</returns>
         public int GetUnusedMinDatabaseId()
         {
             int minDatabaseId = 1;

@@ -26,6 +26,10 @@ public class ServerController : Controller
         this.context = context;
     }
 
+    /// <summary>
+    /// Retrieves a list of servers.
+    /// </summary>
+    /// <returns>An IActionResult representing the HTTP response.</returns>
     [HttpGet]
     [ProducesResponseType(200, Type = (typeof(IEnumerable<Server>)))]
     [ProducesResponseType(400)]
@@ -41,6 +45,11 @@ public class ServerController : Controller
         return Ok(servers);
     }
 
+    /// <summary>
+    /// Retrieves a server by its ID.
+    /// </summary>
+    /// <param name="id">The ID of the server to retrieve.</param>
+    /// <returns>The server with the specified ID.</returns>
     [HttpGet("{id}")]
     [ProducesResponseType(200, Type = (typeof(Server)))]
     [ProducesResponseType(400)]
@@ -60,6 +69,10 @@ public class ServerController : Controller
         return Ok(server);
     }
 
+    /// <summary>
+    /// Represents an action result that performs a HTTP POST operation and returns a response with no content.
+    /// </summary>
+    /// <returns>An <see cref="IActionResult"/> that performs a HTTP POST operation and returns a response with no content.</returns>
     [HttpPost]
     [ProducesResponseType(204)]
     [ProducesResponseType(400)]
@@ -106,6 +119,16 @@ public class ServerController : Controller
         }
     }
 
+    /// <summary>
+    /// Deletes a server with the specified ID.
+    /// </summary>
+    /// <param name="id">The ID of the server to delete.</param>
+    /// <returns>
+    /// Returns an <see cref="IActionResult"/> representing the result of the delete operation.
+    /// If the server is successfully deleted, returns an HTTP 200 OK status code with the updated list of servers.
+    /// If the server does not exist, returns an HTTP 404 Not Found status code.
+    /// If the request is invalid, returns an HTTP 400 Bad Request status code with the validation errors.
+    /// </returns>
     [HttpDelete("{id}")]
     [ProducesResponseType(400)]
     [ProducesResponseType(204)]
@@ -134,6 +157,12 @@ public class ServerController : Controller
     }
 
 
+    /// <summary>
+    /// Updates a server with the specified ID.
+    /// </summary>
+    /// <param name="id">The ID of the server to update.</param>
+    /// <param name="serverUpdate">The updated server object.</param>
+    /// <returns>An IActionResult representing the result of the update operation.</returns>
     [HttpPut("{id}")]
     [ProducesResponseType(204)]
     [ProducesResponseType(400)]
