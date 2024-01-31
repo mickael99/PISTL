@@ -26,6 +26,9 @@ export class ServerComponent {
   // Table used for data display
   dataSource: any;
 
+  // Database form the DB
+  database: any;
+
   // Form data used to create a new server
   formDataCreate = {
     ServerId: 0,
@@ -168,6 +171,26 @@ export class ServerComponent {
       }
     );
 
+    this.http.get('http://localhost:5050/api/database', options).subscribe(
+      (data: any) => {
+        this.database = data;
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sortingDataAccessor = (item, property) => {
+          switch (property) {
+            case 'databaseId':
+              console.log('databaseId: ', item.databaseId);
+              return item.databaseId;
+            default:
+              return item[property];
+          }
+        };
+        this.dataSource.sort = this.sort;
+      },
+      (error) => {
+        this.showErrorPopup(error.error);
+      }
+    );
+
     console.log('server: ', this.server);
     console.log('dataSource: ', this.dataSource);
   }
@@ -180,6 +203,8 @@ export class ServerComponent {
   showErrorPopup(message: string) {
     this.showPopupError = true;
     this.popupMessage = message;
+    console.log('showPopupError: ', this.showPopupError);
+    console.log('popupMessage: ', this.popupMessage);
   }
 
   /***************************************************************************************/
@@ -498,6 +523,16 @@ export class ServerComponent {
   onDeleteConfirm() {
     this.showDeleteConfirmation = false;
     console.log('onDeleteConfirm: ', this.showDeleteConfirmation);
+
+    const serverIdToDelete = this.serverSelected.ServerId;
+    const databases = this.database;
+
+    for (const database of databases) {
+      if (database.serverId === serverIdToDelete) {
+        this.showErrorPopup('Cannot delete server with associated databases.');
+        return;
+      }
+    }    
 
     let JWTToken = localStorage.getItem('token');
 

@@ -550,6 +550,14 @@ export class DatabaseComponent {
   }
 
   /***************************************************************************************/
+  /**
+   * Retrieves the details of a database and assigns them to the 'databaseSelected' object.
+   * Activates the 'Edit', 'Delete' buttons.
+   * Sets the 'databaseClicked' variable to the ID of the selected database.
+   * Sets the 'isHovered' variable to true.
+   * 
+   * @param database - The database object containing the details to be retrieved.
+   */
   getDatabase(database: any) {
     this.databaseSelected.DatabaseId = database.databaseId;
     this.databaseSelected.Name = database.name;
@@ -596,7 +604,7 @@ export class DatabaseComponent {
       Context: 0,
     };
 
-    // Disable the 'Edit', 'Delete', 'Reset Password' and 'Unlock' buttons
+    // Disable the 'Edit', 'Delete' buttons
     this.isClicked = false;
     this.databaseClicked = 0;
 
@@ -643,6 +651,12 @@ export class DatabaseComponent {
   }
 
   /***************************************************************************************/
+  /**
+   * Opens the delete confirmation dialog.
+   * Sets the showDeleteConfirmation flag to true, logs the value of showDeleteConfirmation,
+   * sets the confirmation message to a formatted string, logs the confirmation message,
+   * and triggers change detection.
+   */
   openDeleteConfirmation() {
     this.showDeleteConfirmation = true;
     console.log('showDeleteConfirmation: ', this.showDeleteConfirmation);
@@ -655,6 +669,9 @@ export class DatabaseComponent {
   }
 
   /***************************************************************************************/
+  /**
+   * Opens the copy confirmation dialog.
+   */
   openCopyConfirmation() {
     this.showCopyConfirmation = true;
     console.log('showCopyConfirmation: ', this.showDeleteConfirmation);
