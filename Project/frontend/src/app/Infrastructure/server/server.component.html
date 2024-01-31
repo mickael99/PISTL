@@ -49,7 +49,7 @@
               [ngClass]="{
                 'server--selected' : (server.serverId == serverSelected.ServerId),
                 '' : !(server.serverId == serverSelected.ServerId),
-                hovered: server.serverId == serverHovered ? isHovered : false,
+                hovered: (server.serverId == serverHovered) || (server.serverId == serverClicked) ? isHovered : false,
               }"
             >
               {{ server.serverId }}
@@ -67,7 +67,7 @@
               [ngClass]="{
                 'server--selected' : (server.serverId == serverSelected.ServerId),
                 '' : !(server.serverId == serverSelected.ServerId),
-                hovered: server.serverId == serverHovered ? isHovered : false,
+                hovered: (server.serverId == serverHovered) || (server.serverId == serverClicked) ? isHovered : false,
               }"
             >
               {{ server.address }}
@@ -85,7 +85,7 @@
               [ngClass]="{
                 'server--selected' : (server.serverId == serverSelected.ServerId),
                 '' : !(server.serverId == serverSelected.ServerId),
-                hovered: server.serverId == serverHovered ? isHovered : false,
+                hovered: (server.serverId == serverHovered) || (server.serverId == serverClicked) ? isHovered : false,
               }"
             >
               {{ server.name }}
@@ -103,7 +103,7 @@
               [ngClass]="{
                 'server--selected' : (server.serverId == serverSelected.ServerId),
                 '' : !(server.serverId == serverSelected.ServerId),
-                hovered: server.serverId == serverHovered ? isHovered : false,
+                hovered: (server.serverId == serverHovered) || (server.serverId == serverClicked) ? isHovered : false,
               }"
             >
               <span
@@ -155,7 +155,7 @@
               [ngClass]="{
                 'server--selected' : (server.serverId == serverSelected.ServerId),
                 '' : !(server.serverId == serverSelected.ServerId),
-                hovered: server.serverId == serverHovered ? isHovered : false,
+                hovered: (server.serverId == serverHovered) || (server.serverId == serverClicked) ? isHovered : false,
               }"
             >
               {{ server.type }}

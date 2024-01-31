@@ -573,7 +573,6 @@ export class DatabaseComponent {
 
     this.isHovered = true;
 
-    this.databaseHovered = database.databaseId;
   }
 
   /***************************************************************************************/
@@ -602,7 +601,6 @@ export class DatabaseComponent {
     this.databaseClicked = 0;
 
     this.isHovered = false;
-    this.databaseHovered = 0;
 
     // Disable the 'Edit' button
     this.editEnabled = false;
@@ -709,8 +707,9 @@ export class DatabaseComponent {
   onMouseEnter(databaseHovered: number) {
     if (this.isClicked == false) {
       this.isHovered = true;
-      this.databaseHovered = databaseHovered;
     }
+    this.databaseHovered = databaseHovered;
+
   }
 
   /***************************************************************************************/
@@ -720,8 +719,8 @@ export class DatabaseComponent {
   onMouseLeave() {
     if (this.isClicked == false) {
       this.isHovered = false;
-      this.databaseHovered = 0;
     }
+    this.databaseHovered = 0;
   }
 
   /***************************************************************************************/

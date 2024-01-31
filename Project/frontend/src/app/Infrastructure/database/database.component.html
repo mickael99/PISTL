@@ -57,7 +57,7 @@
               [ngClass]="{
                 'database--selected' : (database.databaseId == databaseSelected.databaseId),
                 '' : !(database.databaseId == databaseSelected.databaseId),
-                hovered: database.databaseId == databaseHovered ? isHovered : false,
+                hovered: (database.databaseId == databaseHovered) || (database.databaseId == databaseClicked) ? isHovered : false,
               }"
             >
               {{ database.databaseId }}
@@ -75,7 +75,7 @@
               [ngClass]="{
                 'database--selected' : (database.name == databaseSelected.name),
                 '' : !(database.name == databaseSelected.name),
-                hovered: database.databaseId == databaseHovered ? isHovered : false,
+                hovered: (database.databaseId == databaseHovered) || (database.databaseId == databaseClicked) ? isHovered : false,
               }"
             >
               {{ database.name }}
@@ -93,7 +93,7 @@
               [ngClass]="{
                 'database--selected' : (database.userName == databaseSelected.userName),
                 '' : !(database.userName == databaseSelected.userName),
-                hovered: database.databaseId == databaseHovered ? isHovered : false,
+                hovered: (database.databaseId == databaseHovered) || (database.databaseId == databaseClicked) ? isHovered : false,
               }"
             >
               {{ database.userName }}
@@ -111,7 +111,7 @@
               [ngClass]="{
                 'database--selected' : (database.context == databaseSelected.context),
                 '' : !(database.context == databaseSelected.context),
-                hovered: database.databaseId == databaseHovered ? isHovered : false,
+                hovered: (database.databaseId == databaseHovered) || (database.databaseId == databaseClicked) ? isHovered : false,
               }"
             >
               <span
@@ -163,7 +163,7 @@
               [ngClass]="{
                 'database--selected' : (database.serverId == databaseSelected.serverId),
                 '' : !(database.serverId == databaseSelected.serverId),
-                hovered: database.databaseId == databaseHovered ? isHovered : false,
+                hovered: (database.databaseId == databaseHovered) || (database.databaseId == databaseClicked) ? isHovered : false,
               }"
             >
               {{ database.serverId }}
