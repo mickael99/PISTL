@@ -1,0 +1,4 @@
+{
+  "dotnet-test-explorer.testProjectPath": "./Project/backend/test/Tests.csproj",
+  "angular.enable-strict-mode-prompt": false
+}

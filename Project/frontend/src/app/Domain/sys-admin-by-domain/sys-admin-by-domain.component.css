@@ -1,14 +1,101 @@
-.centertest {
-  padding: 10px;
-  border-radius: 10px;
-  background-color: green;
-  font-weight: 900;
+@import '~@angular/material/prebuilt-themes/indigo-pink.css';
+
+.title {
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: #3d59a7;
+}
+
+.container {
+  margin: 1rem 0 0 2rem;
+}
+
+.body {
+  margin: 20px;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.dropdown-container {
+  position: relative;
+  left: 0;
+  background-color: rgb(255, 255, 255);
+  font-weight: 700;
+  font-size: 2rem;
+  padding: 8px;
+}
+
+.dropdown-container select {
+  margin-left: 10px;
+  margin-right: 10px;
+  background-color: rgb(255, 255, 255);
+  font-weight: 700;
   font-size: 2rem;
 }
 
-.centre {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
+.table-container {
+  position: relative;
+  left: 0;
+  background-color: rgb(255, 255, 255);
+  font-weight: 700;
+  font-size: 2rem;
+  margin-left: 2.7rem;
+  padding: 8px;
+  width: 1300px;
+}
+
+.sysadmin_form {
+  left: 50px;
+  background-color: rgb(255, 255, 255);
+  font-weight: 700;
+  font-size: 2rem;
+  padding: 8px;
+  width: 200px;
+}
+
+button{
+  margin: 8px 8px 8px 0;
+}
+
+.mat-mdc-raised-button.color-button {
+  background-color: #37b24d;
+  color: #fff;
+  font-size: 1.2rem;
+}
+
+.drowndown_content_dev {
+  background-color: #f5a82a;
+  margin-right: 5px;
+  color: white;
+}
+
+.drowndown_content_prod {
+  background-color: #4557a2;
+  margin-right: 5px;
+  color: white;
+}
+
+.drowndown_content_test {
+  background-color: #50c63e;
+  margin-right: 5px;
+  color: white;
+}
+
+.drowndown_content_preprod {
+  background-color: #c125f2;
+  margin-right: 5px;
+  color: white;
+}
+
+.drowndown_content_prodcopy {
+  background-color: #956248;
+  margin-right: 5px;
+  color: white;
+}
+
+.drowndown_content_staging {
+  background-color: #f5f334;
+  margin-right: 5px;
+  color: white;
 }

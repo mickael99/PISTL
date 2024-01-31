@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: dat-api-pod
+spec:
+  containers:
+  - name: backend-container
+    image: walty13/dat_repo:backend-image
+    imagePullPolicy: Always
+    ports:
+    - containerPort: 5050
+    env:
+      - name: ConnectionStrings__DefaultConnection
+        value: "Server=database-container,1434;Database=DAT;User Id=sa;Password=Daniel123;TrustServerCertificate=true;"
+
+
+  - name: frontend-container
+    image: walty13/dat_repo:frontend-image
+    ports:
+    - containerPort: 4200
+
+  - name: database-container
+    image: walty13/dat_repo:sql_dat
+    ports:
+    - containerPort: 1433
+    env:
+    - name: dbo
+      value: DAT
+    - name: U
+      value: sa
+    - name: SA_PASSWORD
+      value: Daniel123

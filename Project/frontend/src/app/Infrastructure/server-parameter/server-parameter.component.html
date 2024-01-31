@@ -1,0 +1,264 @@
+<h1 class="title">Server Parameter</h1>
+<div class="container">
+  <button
+    mat-raised-button
+    color="primary"
+    class="btn"
+    (click)="newForm()"
+    [disabled]="
+      showPopupError ||
+      showInformPopup ||
+      showDeleteConfirmation ||
+      showResetPasswordConfirmation
+    "
+  >
+    New
+  </button>
+  <button
+    mat-raised-button
+    color="primary"
+    [disabled]="
+      !show_edit ||
+      showPopupError ||
+      showInformPopup ||
+      showDeleteConfirmation ||
+      showResetPasswordConfirmation
+    "
+    (click)="editForm()"
+    class="btn"
+  >
+    Edit
+  </button>
+  <button
+    mat-raised-button
+    color="primary"
+    [disabled]="
+      !show_edit ||
+      showPopupError ||
+      showInformPopup ||
+      showDeleteConfirmation ||
+      showResetPasswordConfirmation
+    "
+    (click)="copy()"
+    class="btn"
+  >
+    Copy
+  </button>
+  <button
+    mat-raised-button
+    color="primary"
+    [disabled]="
+      !show_edit ||
+      showPopupError ||
+      showInformPopup ||
+      showDeleteConfirmation ||
+      showResetPasswordConfirmation
+    "
+    (click)="delete()"
+    class="btn"
+  >
+    Delete
+  </button>
+</div>
+<div style="display: flex">
+  <mat-card class="table-container">
+    <div class="dropdown-container">
+      <mat-form-field appearance="fill" style="width: 500px">
+        <mat-label>Select server</mat-label>
+        <mat-select
+          [(value)]="selected_server"
+          (selectionChange)="onChange($event)"
+        >
+          <mat-option
+            *ngFor="let server of servers | keyvalue"
+            [value]="server.value"
+          >
+            <span>{{ server.value.name }} [{{ server.value.serverId }}] </span>
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <mat-card-content>
+      <table matSort mat-table [dataSource]="data_source">
+        <ng-container matColumnDef="parameterKey">
+          <th mat-header-cell *matHeaderCellDef>
+            <span style="margin: 5px; padding: 3px">Parameter Key</span>
+          </th>
+          <td
+            mat-cell
+            *matCellDef="let element"
+            (click)="changeParameter(element)"
+            (mouseenter)="onMouseEnter(element[0])"
+            (mouseleave)="onMouseLeave()"
+            [ngClass]="{
+                            'user--selected' : (selected_parameter[0] == element[0]),
+                            '' : !(selected_parameter[0] == element[0]),
+                            hovered: selected_parameter[0] == element[0] ? isHovered : false,
+                        }"
+          >
+            {{ element[0] }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="parameterValue">
+          <th mat-header-cell *matHeaderCellDef>
+            <span style="margin: 5px; padding: 3px">Parameter Value</span>
+          </th>
+          <td
+            mat-cell
+            *matCellDef="let element"
+            (click)="changeParameter(element)"
+            (mouseenter)="onMouseEnter(element[0])"
+            (mouseleave)="onMouseLeave()"
+            [ngClass]="{
+                            'user--selected' : (selected_parameter[0] == element[0]),
+                            '' : !(selected_parameter[0] == element[0]),
+                            hovered: selected_parameter[0] == element[0] ? isHovered : false,
+                        }"
+          >
+            {{ element[1] }}
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayed_columns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayed_columns"></tr>
+      </table>
+      <br />
+      <mat-card-footer>
+        <mat-paginator
+          [pageSizeOptions]="[5, 10]"
+          showFirstLastButtons
+        ></mat-paginator>
+      </mat-card-footer>
+    </mat-card-content>
+  </mat-card>
+
+  <!---------------------------------->
+  <!-- Create a new Parameter       -->
+  <!---------------------------------->
+  <ng-container *ngIf="show_new_form == true">
+    <div class="formCreate">
+      <form class="form--users">
+        <mat-form-field class="example-full-width">
+          <mat-label>Server ID</mat-label>
+          <input
+            matInput
+            required
+            [(ngModel)]="selected_server.serverId"
+            name="serverId"
+            [disabled]="true"
+          />
+        </mat-form-field>
+        <mat-form-field class="example-full-width">
+          <mat-label>Parameter Key</mat-label>
+          <input
+            matInput
+            placeholder="Key"
+            required
+            [(ngModel)]="selected_parameter[0]"
+            name="parameterKey"
+          />
+        </mat-form-field>
+        <mat-form-field class="example-full-width">
+          <mat-label>Parameter Value</mat-label>
+          <input
+            matInput
+            placeholder="Value"
+            required
+            [(ngModel)]="selected_parameter[1]"
+            name="parameterValue"
+          />
+        </mat-form-field>
+        <div class="container" style="margin-bottom: 10%">
+          <button
+            mat-raised-button
+            (click)="createParameter()"
+            [ngClass]="{ 'color-button': edit_enabled, btn: true }"
+            [disabled]="!edit_enabled"
+          >
+            Save
+          </button>
+          <button
+            mat-raised-button
+            color="primary"
+            class="btn"
+            (click)="reinitaliseParameterSelectedForm()"
+          >
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </ng-container>
+
+  <!---------------------------------->
+  <!-- Edit an existing Parameter   -->
+  <!---------------------------------->
+  <ng-container *ngIf="show_edit_form == true">
+    <div class="formCreate">
+      <form class="form--users">
+        <mat-form-field class="example-full-width">
+          <mat-label>Server ID</mat-label>
+          <input
+            matInput
+            required
+            [(ngModel)]="selected_server.serverId"
+            name="serverId"
+            [disabled]="true"
+          />
+        </mat-form-field>
+        <mat-form-field class="example-full-width">
+          <mat-label>Parameter Key</mat-label>
+          <input
+            matInput
+            placeholder="Key"
+            required
+            [(ngModel)]="selected_parameter[0]"
+            name="parameterKey"
+            [disabled]="true"
+          />
+        </mat-form-field>
+        <mat-form-field class="example-full-width">
+          <mat-label>Parameter Value</mat-label>
+          <input
+            matInput
+            placeholder="Value"
+            required
+            [(ngModel)]="selected_parameter[1]"
+            name="parameterValue"
+            [disabled]="!edit_enabled"
+          />
+        </mat-form-field>
+        <div class="button-container" style="margin-bottom: 10%">
+          <button
+            mat-raised-button
+            (click)="editParameter()"
+            [ngClass]="{ 'color-button': edit_enabled, btn: true }"
+            [disabled]="
+              !edit_enabled ||
+              showPopupError ||
+              showInformPopup ||
+              showDeleteConfirmation ||
+              showResetPasswordConfirmation
+            "
+          >
+            Save
+          </button>
+          <button
+            mat-raised-button
+            color="primary"
+            class="btn"
+            (click)="reinitaliseParameterSelectedForm()"
+            [disabled]="
+              showPopupError ||
+              showInformPopup ||
+              showDeleteConfirmation ||
+              showResetPasswordConfirmation
+            "
+          >
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </ng-container>
+</div>

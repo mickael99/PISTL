@@ -1,23 +1,388 @@
-.centertest {
-  padding: 10px;
-  border-radius: 10px;
-  background-color: green;
-  font-weight: 900;
-  font-size: 2rem;
+.element {
+  width: 50%;
+  height: 50vh;
 }
+/* 
+body {
+  background-color: #ececec;
+  margin: 0;
+  font-family: Arial, sans-serif;
+} */
 
-.centre {
+/* Partie superieur */
+
+.list {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  height: 100%;
+  padding: 10px;
+  font-size: 16px;
 }
 
-.add-domain {
-  margin-top: 3rem;
+.list > * {
+  margin-right: 20px;
+}
+
+/* .button {
+  margin-right: 10px;
+  padding: 10px 20px;
+  background-color: #4caf50;
+  color: white;
+  border: 1px solid #4caf50;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.button:hover {
+  transform: scale(1.1);
+} */
+
+/* .buttonCancel {
+  margin-right: 10px;
+  padding: 10px 20px;
+  background-color: blue;
+  color: white;
+  border: 1px solid blue;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+} */
+
+.buttonCancel:hover {
+  transform: scale(1.1);
+}
+
+.toggle-label {
+  width: 30px;
+  height: 15px;
+  display: inline-block;
+  position: relative;
+}
+
+input[disabled] {
+  cursor: not-allowed;
+  user-select: text;
+}
+
+.label-container {
   display: flex;
-  flex-direction: column;
-  font-weight: 800;
+  align-items: center;
+}
+
+label {
+  display: inline-block;
+  width: 80px;
+  text-align: left;
+  margin-right: 10px;
+}
+
+/* Partie inferieur */
+
+input[type="radio"]:checked + label {
+  background-color: #fff;
+}
+
+.ongletName {
+  margin-top: 60px;
+  margin-left: 20px;
+  display: flex;
+}
+
+.ongletName input[type="radio"]:checked + label {
+  transform: scale(1.2);
+  box-shadow: 0 0 10px rgba(52, 152, 219, 0.8);
+}
+
+.ongletName input[type="radio"]:disabled + label {
+  opacity: 0.2;
+  cursor: not-allowed;
+}
+
+.ongletName label {
+  display: inline-block;
+  padding: 10px 20px;
+  color: white;
+  border-radius: 5px 5px 0 0;
+  cursor: pointer;
+}
+
+.ongletName input[type="radio"] {
+  display: none;
+}
+
+.ongletName #dev:checked + label {
+  background-color: orange;
+}
+
+.ongletName #dev:not(:checked) + label {
+  background-color: orange;
+}
+
+.ongletName #preprod:not(:checked) + label {
+  background-color: purple;
+}
+
+.ongletName #preprod:checked + label {
+  background-color: purple;
+}
+
+.ongletName #prod:not(:checked) + label {
+  background-color: blue;
+}
+
+.ongletName #prod:checked + label {
+  background-color: blue;
+}
+
+.ongletName #test:not(:checked) + label {
+  background-color: green;
+}
+
+.ongletName #test:checked + label {
+  background-color: green;
+}
+
+.ongletName #prodcopy:not(:checked) + label {
+  background-color: maroon;
+}
+
+.ongletName #prodcopy:checked + label {
+  background-color: maroon;
+}
+
+.ongletName #staging:not(:checked) + label {
+  background-color: yellow;
+}
+
+.ongletName #staging:checked + label {
+  background-color: yellow;
+}
+
+.ongletName #deve:checked + label {
+  background-color: orange;
+}
+
+.ongletName #deve:not(:checked) + label {
+  background-color: orange;
+}
+
+.ongletName #preprode:not(:checked) + label {
+  background-color: purple;
+}
+
+.ongletName #preprode:checked + label {
+  background-color: purple;
+}
+
+.ongletName #prode:not(:checked) + label {
+  background-color: blue;
+}
+
+.ongletName #prode:checked + label {
+  background-color: blue;
+}
+
+.ongletName #teste:not(:checked) + label {
+  background-color: green;
+}
+
+.ongletName #teste:checked + label {
+  background-color: green;
+}
+
+.ongletName #prodcopye:not(:checked) + label {
+  background-color: maroon;
+}
+
+.ongletName #prodcopye:checked + label {
+  background-color: maroon;
+}
+
+.ongletName #staginge:not(:checked) + label {
+  background-color: yellow;
+}
+
+.ongletName #staginge:checked + label {
+  background-color: yellow;
+}
+
+input[type="radio"]:checked + label + div {
+  display: block;
+}
+
+.ongletName .stagingColor {
+  color: black;
+  font-weight: 500;
+}
+
+.ongletName label:hover :enabled {
+  transform: scale(1.2);
+}
+
+.ongletContent {
+  margin-top: 2rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 10rem;
+  row-gap: 2rem;
+}
+
+/** Ajouter un domaine */
+.headerAddDomain {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+/*****************************************************************************************/
+/******************************* GENERAL *************************************************/
+/*****************************************************************************************/
+@import "@angular/material/prebuilt-themes/indigo-pink.css";
+
+.container {
+  margin: 0 0 0 2rem;
+  width: 55%;
+  /* box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5); */
+  background-color: #fff;
+  padding: 2rem;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
+  border-radius: 5px;
+  margin-top: 1rem;
+}
+
+.btns--dropdown {
+  width: 100%;
+  display: flex;
+  gap: 3rem;
+}
+
+.mat-mdc-raised-button.color-button {
+  background-color: #3d59a7;
+  color: #fff;
+  font-size: 1.2rem;
+}
+
+.title {
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: #3d59a7;
+}
+
+.grid--name {
+  height: 70%;
+  margin-top: 2.5rem;
+}
+
+.form--domain {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  /* width: 70%; */
+  column-gap: 10rem;
+  row-gap: 2rem;
+}
+
+.btns {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   gap: 1rem;
 }
+
+.btns button {
+  transform: translateY(-25%);
+}
+
+.domainLogo {
+  max-width: 100%;
+}
+
+/*****************************************************************************************/
+/********************************** Edit et New ******************************************/
+/*****************************************************************************************/
+
+.flex--logo {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  margin-left: 15rem;
+}
+
+.btns--save--cancel {
+  display: flex;
+  gap: 1rem;
+}
+
+.mat-mdc-raised-button.color-button--save {
+  background-color: #5cb85c;
+  color: #fff;
+  font-size: 1.2rem;
+}
+
+.custom-file-upload {
+  background-color: red;
+}
+
+.no-logo {
+  border: 1px solid #000;
+  width: 10rem;
+  height: 10rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/*****************************************************************************************/
+/********************************** Environments *****************************************/
+/*****************************************************************************************/
+
+::ng-deep .mdc-tab.mdc-tab--active {
+  /* background-color: green !important; */
+  /* font-weight: 900; */
+}
+/* 
+:host ::ng-deep .mat-mdc-tab.mdc-tab .mdc-tab__text-label {
+  background-color: #ff4500;
+  color: #000 !important;
+  padding: 1rem;
+} */
+
+.dev {
+  background-color: #ff4500;
+  color: #000;
+  padding: 1rem;
+}
+
+.preprod {
+  background-color: #000000;
+  color: #fff;
+  padding: 1rem;
+}
+
+.prod {
+  background-color: #ffffff;
+  color: #000;
+  padding: 1rem;
+}
+
+.test {
+  background-color: #ffa500;
+  color: #000;
+  padding: 1rem;
+}
+
+.prodcopy {
+  background-color: #a0522d;
+  color: #000;
+  padding: 1rem;
+}
+
+.staging {
+  background-color: #cc00ff;
+  color: #000;
+  padding: 1rem;
+}
+
+/*****************************************************************************************/
+/*****************************************************************************************/
+/*****************************************************************************************/

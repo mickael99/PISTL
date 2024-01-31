@@ -5,7 +5,9 @@
   width: 100vw;
   height: 100vh;
   max-width: 100%;
-  background: linear-gradient(to bottom, white, #1f2d54);
+  background: #f0f0f0;
+  overflow: auto;
+  padding: 0;
 }
 
 .container--2 {
@@ -33,12 +35,14 @@ header {
   height: 8rem;
   padding: 0 1.2rem;
   position: relative;
+  background-color: #e0e0e0;
 }
 
 .main-nav-list {
   list-style: none;
   display: flex;
   gap: 8rem;
+  padding-top: 2rem;
 }
 
 .logo {
@@ -60,12 +64,10 @@ header {
 
 .btn--1:hover {
   color: #2b3e75;
-  cursor: default;
+  cursor: pointer;
 }
 
 .btn--1::after {
-  content: "Soon";
-  background-color: green;
   color: #fff;
   padding: 0.25rem 0.5rem;
   border-radius: 11px;
@@ -90,8 +92,6 @@ header {
 }
 
 .btn--2::after {
-  content: "Soon";
-  background-color: green;
   color: #fff;
   padding: 0.25rem 0.5rem;
   border-radius: 11px;
@@ -99,6 +99,18 @@ header {
   font-size: 1.2rem;
 
   right: 2%;
+}
+
+.btn--in-progress::after {
+  content: "In Progress";
+  white-space: nowrap;
+  background-color: orange;
+}
+
+.btn--completed::after {
+  content: "Completed";
+  white-space: nowrap;
+  background-color: #3bc9db;
 }
 
 .list {
@@ -129,7 +141,7 @@ header {
   text-decoration: none;
   background-color: #dc143c;
   padding: 2rem 4rem;
-  color: #444;
+  color: #fff;
   font-weight: 700;
   font-size: 1.6rem;
   border-radius: 11px;
@@ -143,6 +155,13 @@ header {
   font-size: 1.8rem;
   font-weight: 500;
   color: #3d59a7;
+}
+
+/***********************************************************************************/
+/******************************* HELPER ********************************************/
+/***********************************************************************************/
+.btn--margin-right {
+  margin-right: 6rem;
 }
 
 /***********************************************************************************/

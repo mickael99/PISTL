@@ -1,5 +1,4 @@
 {
-  "dataworkspace.excludedProjects": [
-    "Project/DatabaseProjectDatabaseFirstDemo/DatabaseProjectDatabaseFirstDemo.sqlproj"
-  ]
+    "angular.enable-strict-mode-prompt": false,
+    "dotnet-test-explorer.testProjectPath": "**/*Tests.@(csproj|vbproj|fsproj)"
 }

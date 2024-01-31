@@ -1,0 +1,408 @@
+<div class="container">
+  <h1 class="title">Sys Admin Users</h1>
+  <button
+    mat-raised-button
+    color="primary"
+    class="btn"
+    (click)="showFormCreateUser()"
+  >
+    New
+  </button>
+  <button
+    mat-raised-button
+    color="primary"
+    (click)="editEnable()"
+    [disabled]="
+      !isClicked ||
+      showPopupError ||
+      showInformPopup ||
+      showDeleteConfirmation ||
+      showResetPasswordConfirmation
+    "
+    class="btn"
+  >
+    Edit
+  </button>
+  <button
+    mat-raised-button
+    color="primary"
+    (click)="openDeleteConfirmation()"
+    [disabled]="
+      !isClicked ||
+      showPopupError ||
+      showInformPopup ||
+      showDeleteConfirmation ||
+      showResetPasswordConfirmation
+    "
+    class="btn"
+  >
+    Delete
+  </button>
+  <button
+    mat-raised-button
+    color="primary"
+    (click)="openResetPasswordConfirmation()"
+    [disabled]="
+      !isClicked ||
+      showPopupError ||
+      showInformPopup ||
+      showDeleteConfirmation ||
+      showResetPasswordConfirmation
+    "
+    class="btn"
+  >
+    Reset Password
+  </button>
+  <button
+    mat-raised-button
+    color="primary"
+    (click)="check_if_user_blocked()"
+    [disabled]="
+      !isClicked ||
+      showPopupError ||
+      showInformPopup ||
+      showDeleteConfirmation ||
+      showResetPasswordConfirmation
+    "
+    class="btn"
+  >
+    Unlock
+  </button>
+  <div class="listes">
+    <div class="table">
+      <mat-card-content>
+        <hr />
+        <table
+          matSort
+          mat-table
+          [dataSource]="dataSource"
+          class="custom-table"
+          #tableElement
+        >
+          <ng-container matColumnDef="email">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
+            <td
+              mat-cell
+              *matCellDef="let user"
+              (click)="getUser(user)"
+              (mouseenter)="onMouseEnter(user.email)"
+              (mouseleave)="onMouseLeave()"
+              [ngClass]="{
+                'user--selected' : (user.email == userSelected.email),
+                '' : !(user.email == userSelected.email),
+                hovered: user.email == userHovered ? isHovered : false,
+              }"
+            >
+              {{ user.email }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="DAT">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>DAT</th>
+            <td
+              mat-cell
+              *matCellDef="let user"
+              (click)="getUser(user)"
+              class="dat"
+              (mouseenter)="onMouseEnter(user.email)"
+              (mouseleave)="onMouseLeave()"
+              [ngClass]="{
+                'user--selected' : (user.email == userSelected.email),
+                '' : !(user.email == userSelected.email),
+                hovered: user.email == userHovered ? isHovered : false,
+            }"
+            >
+              <span
+                [ngClass]="{
+                  'green-text': user.datenabled,
+                  'red-text': !user.datenabled
+                }"
+              >
+                {{ user.datenabled ? "✔" : "✘" }}
+              </span>
+            </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let user; columns: displayedColumns"></tr>
+        </table>
+
+        <mat-paginator
+          [pageSizeOptions]="[5, 10]"
+          showFirstLastButtons
+          [length]="dataSource && dataSource.data.length"
+        ></mat-paginator>
+      </mat-card-content>
+    </div>
+
+    <!---------------------------->
+    <!-- Create a new Sys Admin -->
+    <!---------------------------->
+    <div class="formCreate">
+      <ng-container *ngIf="showFormCreate">
+        <form class="form--users">
+          <mat-form-field class="example-full-width">
+            <mat-label>Name</mat-label>
+            <input
+              matInput
+              placeholder="Name"
+              required
+              [(ngModel)]="formDataCreate.name"
+              name="name"
+            />
+          </mat-form-field>
+
+          <mat-form-field class="example-full-width">
+            <mat-label>Email</mat-label>
+            <input
+              matInput
+              placeholder="Email"
+              required
+              [(ngModel)]="formDataCreate.email"
+              name="email"
+            />
+          </mat-form-field>
+
+          <mat-form-field class="example-full-width">
+            <mat-label>Phone</mat-label>
+            <input
+              matInput
+              type="tel"
+              placeholder="Phone"
+              required
+              [(ngModel)]="formDataCreate.phone"
+              name="phone"
+            />
+          </mat-form-field>
+          <mat-form-field class="example-full-width">
+            <mat-label>Last Login Date</mat-label>
+            <input
+              matInput
+              type="text"
+              placeholder="Last Login Date"
+              required
+              [disabled]="true"
+            />
+          </mat-form-field>
+
+          <mat-form-field class="example-full-width">
+            <mat-label>Invalid Attempt Count</mat-label>
+            <input
+              matInput
+              type="number"
+              placeholder="Invalid Attempt Count"
+              required
+              [disabled]="true"
+            />
+          </mat-form-field>
+
+          <mat-form-field class="example-full-width">
+            <mat-label>Modified By</mat-label>
+            <input
+              matInput
+              type="email"
+              placeholder="Modified By"
+              required
+              [disabled]="true"
+            />
+          </mat-form-field>
+
+          <mat-form-field class="example-full-width">
+            <mat-label>Password Modified Date</mat-label>
+            <input
+              matInput
+              type="text"
+              placeholder="Password Modified Date"
+              required
+              [disabled]="true"
+            />
+          </mat-form-field>
+
+          <mat-form-field class="example-full-width">
+            <mat-label>Created Date</mat-label>
+
+            <input
+              matInput
+              type="text"
+              placeholder="Created Date"
+              required
+              [disabled]="true"
+            />
+          </mat-form-field>
+
+          <mat-checkbox
+            color="primary"
+            [(ngModel)]="formDataCreate.DATEnabled"
+            name="DATEnabled"
+            >DAT Enabled</mat-checkbox
+          >
+
+          <mat-checkbox
+            color="primary"
+            [(ngModel)]="formDataCreate.locked"
+            name="locked"
+            >Locked (Invalid Attempts)</mat-checkbox
+          >
+          <div class="button-container" style="margin-bottom: 10%">
+            <button
+              mat-raised-button
+              (click)="newUserFormCreateUser()"
+              [ngClass]="{ 'color-button': editEnabled, btn: true }"
+            >
+              Save
+            </button>
+            <button
+              mat-raised-button
+              color="primary"
+              class="btn"
+              (click)="showFormCreateUser()"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </ng-container>
+
+      <!---------------------------------->
+      <!-- Access an existing Sys Admin -->
+      <!-- Edit an existing Sys Admin   -->
+      <!---------------------------------->
+      <div class="">
+        <ng-container *ngIf="userSelected.email">
+          <form class="form--users">
+            <mat-form-field class="example-full-width">
+              <mat-label>Name</mat-label>
+              <input
+                matInput
+                placeholder="Name"
+                required
+                [(ngModel)]="userSelected.name"
+                name="name"
+                [disabled]="true"
+              />
+            </mat-form-field>
+            <mat-form-field class="example-full-width">
+              <mat-label>Email</mat-label>
+              <input
+                matInput
+                placeholder="Email"
+                required
+                [(ngModel)]="userSelected.email"
+                name="email"
+                [disabled]="true"
+              />
+            </mat-form-field>
+            <mat-form-field class="example-full-width">
+              <mat-label>Phone</mat-label>
+              <input
+                matInput
+                type="tel"
+                placeholder="Phone"
+                required
+                [(ngModel)]="userSelected.phone"
+                name="phone"
+                [disabled]="!editEnabled"
+              />
+            </mat-form-field>
+            <mat-form-field class="example-full-width">
+              <mat-label>Last Login Date</mat-label>
+              <input
+                matInput
+                type="text"
+                placeholder="Last Login Date"
+                required
+                [(ngModel)]="userSelected.lastLoginDate"
+                name="lastLoginDate"
+                [disabled]="true"
+              />
+            </mat-form-field>
+
+            <mat-form-field class="example-full-width">
+              <mat-label>Invalid Attempt Count</mat-label>
+              <input
+                matInput
+                type="number"
+                placeholder="Invalid Attempt Count"
+                [(ngModel)]="userSelected.invalidAttemptCount"
+                required
+                [disabled]="true"
+                name="invalidAttemptCount"
+              />
+            </mat-form-field>
+
+            <mat-form-field class="example-full-width">
+              <mat-label>Modified By</mat-label>
+              <input
+                matInput
+                type="email"
+                placeholder="Modified By"
+                [(ngModel)]="userSelected.modifiedBy"
+                required
+                [disabled]="true"
+                name="modifiedBy"
+              />
+            </mat-form-field>
+
+            <mat-form-field class="example-full-width">
+              <mat-label>Password Modified Date</mat-label>
+              <input
+                matInput
+                type="text"
+                placeholder="Password Modified Date"
+                [(ngModel)]="userSelected.passwordModifiedDate"
+                required
+                [disabled]="true"
+                name="passwordModifiedDate"
+              />
+            </mat-form-field>
+
+            <mat-form-field class="example-full-width">
+              <mat-label>Created Date</mat-label>
+              <input
+                matInput
+                type="text"
+                placeholder="Created Date"
+                [(ngModel)]="userSelected.createdDate"
+                required
+                [disabled]="true"
+                name="createdDate"
+              />
+            </mat-form-field>
+
+            <mat-checkbox
+              color="primary"
+              [(ngModel)]="userSelected.DATEnabled"
+              name="DATEnabled"
+              [disabled]="!editEnabled"
+              >DAT Enabled</mat-checkbox
+            >
+
+            <mat-checkbox
+              color="primary"
+              [(ngModel)]="userSelected.locked"
+              name="locked"
+              [disabled]="!editEnabled"
+              >Locked (Invalid Attempts)</mat-checkbox
+            >
+
+            <div class="button-container" style="margin-bottom: 10%">
+                <button
+                mat-raised-button
+                (click)="editUser()"
+                [ngClass]="{ 'color-button': editEnabled, 'margin--right': true }"
+                [disabled]="!editEnabled"
+                >
+                  Save
+                </button>
+                <button
+                  mat-raised-button
+                  color="primary"
+                  class="btn"
+                  (click)="reinitaliseUserSelectedForm()"
+                >
+                  Cancel
+                </button>
+              </div>
+          </form>
+        </ng-container>
+      </div>
+  </div>
+</div>

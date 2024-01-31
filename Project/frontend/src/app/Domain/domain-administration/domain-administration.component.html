@@ -1,58 +1,549 @@
-<div class="centre">
-  <p class="centertest">domain-administration works!</p>
-  <table class="table">
-    <thead>
-      <tr>
-        <th>Domain ID</th>
-        <th>Name</th>
-        <th>Logo</th>
-        <th>Edition</th>
-        <th>Is SSO Enabled</th>
-        <th>Comment</th>
-        <th>Parent Company</th>
-        <th>Created Date</th>
-        <th>Created By</th>
-        <th>Modified Date</th>
-        <th>Modified By</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let domain of domains">
-        <td>{{ domain.domainId }}</td>
-        <td>{{ domain.name }}</td>
-        <td><img src="" alt="Logo" /></td>
-        <td>{{ domain.edition }}</td>
-        <td>{{ domain.isSsoEnabled }}</td>
-        <td>{{ domain.comment }}</td>
-        <td>{{ domain.parentCompany }}</td>
-        <td>{{ domain.createdDate | date }}</td>
-        <td>{{ domain.createdBy }}</td>
-        <td>{{ domain.modifiedDate | date }}</td>
-        <td>{{ domain.modifiedBy }}</td>
-      </tr>
-    </tbody>
-  </table>
-  <div class="add-domain">
-    <h2>Ajouter un domaine</h2>
-    <div>
-      <label for="domainName">Nom du domaine:</label>
-      <input type="text" id="domainName" [(ngModel)]="domainName" />
+<div class="container">
+  <h1 class="title">Domain Administration</h1>
+
+  <div>
+    <div class="btns--dropdown">
+      <div class="dropdown-container">
+        <mat-form-field appearance="fill" style="width: 500px">
+          <mat-label>Select domain</mat-label>
+          <mat-select
+            [(value)]="selectedDomain"
+            (selectionChange)="onSelect(selectedDomain)"
+            [disabled]="isNewDomainMode || isEditDomainMode"
+          >
+            <ng-container *ngIf="isNewDomainMode == false">
+              <mat-option
+                *ngFor="let domain of domains | keyvalue"
+                [value]="domain.value"
+              >
+                <span
+                  >{{ domain.value.name }} [{{ domain.value.domainId }}]
+                  <span *ngFor="let env of domainEnvironments; let i = index">
+                    <span
+                      *ngIf="
+                        env &&
+                        env.environment == 2 &&
+                        env.domainId == domain.value.domainId
+                      "
+                      style="
+                        background-color: #ff4500;
+                        margin-right: 5px;
+                        color: white;
+                      "
+                    >
+                      Dev
+                    </span>
+                    <span
+                      *ngIf="
+                        env &&
+                        env.environment == 4 &&
+                        env.domainId == domain.value.domainId
+                      "
+                      style="
+                        background-color: #000000;
+                        margin-right: 5px;
+                        color: white;
+                      "
+                    >
+                      Preprod
+                    </span>
+                    <span
+                      *ngIf="
+                        env &&
+                        env.environment == 8 &&
+                        env.domainId == domain.value.domainId
+                      "
+                      style="
+                        background-color: #ffffff;
+                        margin-right: 5px;
+                        color: black;
+                      "
+                    >
+                      Prod
+                    </span>
+                    <span
+                      *ngIf="
+                        env &&
+                        env.environment == 16 &&
+                        env.domainId == domain.value.domainId
+                      "
+                      style="
+                        background-color: #ffa500;
+                        margin-right: 5px;
+                        color: white;
+                      "
+                    >
+                      Test
+                    </span>
+                    <span
+                      *ngIf="
+                        env &&
+                        env.environment == 32 &&
+                        env.domainId == domain.value.domainId
+                      "
+                      style="
+                        background-color: #a0522d;
+                        margin-right: 5px;
+                        color: white;
+                      "
+                    >
+                      ProdCopy
+                    </span>
+                    <span
+                      *ngIf="
+                        env &&
+                        env.environment == 256 &&
+                        env.domainId == domain.value.domainId
+                      "
+                      style="
+                        background-color: #cc00ff;
+                        margin-right: 5px;
+                        color: white;
+                      "
+                    >
+                      Staging
+                    </span>
+                  </span>
+                </span>
+              </mat-option>
+            </ng-container>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <ng-container
+        *ngIf="isEditDomainMode == false && isNewDomainMode == false"
+      >
+        <div class="btns">
+          <button
+            mat-raised-button
+            color="primary"
+            class="btn color-button"
+            (click)="startNewDomainMode()"
+          >
+            New
+          </button>
+          <button
+            mat-raised-button
+            color="primary"
+            class="btn color-button"
+            (click)="editDomain()"
+          >
+            Edit
+          </button>
+          <button
+            mat-raised-button
+            color="primary"
+            class="btn color-button"
+            (click)="copyDomain()"
+          >
+            Copy
+          </button>
+          <button
+            mat-raised-button
+            color="primary"
+            class="btn color-button"
+            (click)="deleteDomain()"
+          >
+            Delete
+          </button>
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="isEditDomainMode || isNewDomainMode">
+        <div class="btns btns--save--cancel">
+          <button
+            mat-raised-button
+            color="primary"
+            class="btn color-button--save"
+            (click)="confirmSave()"
+          >
+            Save
+          </button>
+          <button
+            mat-raised-button
+            color="primary"
+            class="btn color-button"
+            (click)="cancel()"
+          >
+            Cancel
+          </button>
+        </div>
+      </ng-container>
     </div>
 
-    <div>
-      <label for="createdBy">Créé par:</label>
-      <input type="text" id="createdBy" [(ngModel)]="createdBy" />
-    </div>
+    <ng-container>
+      <form class="form--domain">
+        <!-- <div class="grid--name"> -->
+        <mat-form-field class="grid--name">
+          <mat-label>Domain Name</mat-label>
+          <input
+            matInput
+            name="Name"
+            [(ngModel)]="selectedDomain && selectedDomain.name"
+            [disabled]="!isNewDomainMode"
+          />
+        </mat-form-field>
 
-    <div>
-      <label for="edition">Édition:</label>
-      <input type="text" id="edition" [(ngModel)]="edition" />
-    </div>
+        <div class="flex--logo">
+          <ng-container *ngIf="!isNewDomainMode || newLogoPresent">
+            <img
+              src="{{ logoToDisplay }}"
+              alt="Logo"
+              style="width: 10rem; height: 10rem"
+            />`
+            <!-- <div id="printLogo" class="domainLogo"></div> -->
+          </ng-container>
 
-    <div class="btn--center">
-      <button class="btn btn-primary btn-lg" (click)="addDomain()">
-        Valider l'ajout
-      </button>
+          <ng-container *ngIf="isNewDomainMode && !newLogoPresent">
+            <div class="no-logo"><p>No Image</p></div>
+          </ng-container>
+
+          <ng-container *ngIf="isEditDomainMode || isNewDomainMode">
+            <button type="button" mat-raised-button (click)="fileInput.click()">
+              Choose File
+            </button>
+            <input
+              type="file"
+              id="logo"
+              name="logo"
+              (change)="onLogoChange($event)"
+              #fileInput
+              hidden
+            />
+          </ng-container>
+        </div>
+
+        <mat-form-field>
+          <mat-label>Edition</mat-label>
+          <mat-select
+            name="Edition"
+            [disabled]="!(isEditDomainMode || isNewDomainMode)"
+            [ngModel]="selectedDomain && selectedDomain.edition"
+            (ngModelChange)="updateSelectedEdition($event)"
+          >
+            <ng-container *ngIf="isEditDomainMode || isNewDomainMode">
+              <mat-option value="Standard">Standard</mat-option>
+              <mat-option value="Light">Light</mat-option>
+            </ng-container>
+
+            <ng-container *ngIf="!isEditDomainMode && !isNewDomainMode">
+              <mat-option [value]="selectedDomain && selectedDomain.edition">{{
+                selectedDomain && selectedDomain.edition
+              }}</mat-option>
+            </ng-container>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Comment</mat-label>
+          <input
+            matInput
+            name="ParentCompany"
+            [(ngModel)]="selectedDomain && selectedDomain.comment"
+            [disabled]="!(isEditDomainMode || isNewDomainMode)"
+          />
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Parent Company</mat-label>
+          <input
+            matInput
+            name="Comment"
+            [(ngModel)]="selectedDomain && selectedDomain.parentCompany"
+            [disabled]="!(isEditDomainMode || isNewDomainMode)"
+          />
+        </mat-form-field>
+
+        <mat-checkbox
+          color="primary"
+          name="SSO"
+          [(ngModel)]="selectedDomain && selectedDomain.isSsoEnabled"
+          [disabled]="!(isEditDomainMode || isNewDomainMode)"
+          >SSO</mat-checkbox
+        >
+      </form>
+    </ng-container>
+
+    <!-- Access Environments -->
+    <ng-container *ngIf="!isNewDomainMode && !isEditDomainMode">
+      <mat-tab-group (selectedTabChange)="onEnvironmentSelectEvent($event)">
+        <mat-tab
+          *ngFor="let environment of environments"
+          [disabled]="!isEnvironmentEnabled(environment.id)"
+        >
+          <ng-template mat-tab-label>
+            <span class="{{ environment.name.toLowerCase() }}">{{
+              environment.name
+            }}</span>
+          </ng-template>
+
+          <form class="ongletContent">
+            <mat-checkbox
+              color="primary"
+              name="BP5"
+              [(ngModel)]="
+                selectedDomainEnvironment &&
+                selectedDomainEnvironment.isBp5Enabled
+              "
+              disabled
+              >BP5</mat-checkbox
+            >
+
+            <mat-form-field>
+              <mat-label>Database Server</mat-label>
+              <input
+                matInput
+                name="DatabaseServer"
+                [(ngModel)]="
+                  serversAndDatabasesName &&
+                  serversAndDatabasesName.nameBpDatabase
+                "
+                disabled
+              />
+            </mat-form-field>
+
+            <mat-form-field>
+              <mat-label>Web Server</mat-label>
+              <input
+                matInput
+                required
+                name="WebServer"
+                [(ngModel)]="
+                  serversAndDatabasesName &&
+                  serversAndDatabasesName.nameBpwebServer
+                "
+                disabled
+              />
+            </mat-form-field>
+
+            <mat-form-field>
+              <mat-label>EAI FTP</mat-label>
+              <input
+                matInput
+                name="EAI_FTP"
+                [(ngModel)]="
+                  serversAndDatabasesName &&
+                  serversAndDatabasesName.nameEaiftpServer
+                "
+                disabled
+              />
+            </mat-form-field>
+
+            <mat-form-field>
+              <mat-label>Tableau Server</mat-label>
+              <input
+                matInput
+                name="TableauServer"
+                [(ngModel)]="
+                  serversAndDatabasesName &&
+                  serversAndDatabasesName.nameTableauServer
+                "
+                disabled
+              />
+            </mat-form-field>
+
+            <mat-form-field>
+              <mat-label>SSRS Server</mat-label>
+              <input
+                matInput
+                name="SSRSServer"
+                [(ngModel)]="
+                  serversAndDatabasesName &&
+                  serversAndDatabasesName.nameSsrsServer
+                "
+                disabled
+              />
+            </mat-form-field>
+          </form>
+        </mat-tab>
+      </mat-tab-group>
+    </ng-container>
+
+    <!-- Edit / Add domain -->
+    <div *ngIf="isNewDomainMode || isEditDomainMode">
+      <mat-tab-group (selectedTabChange)="setEnvironmentEvent($event)">
+        <mat-tab
+          *ngFor="let environment of environments"
+          [checked]="idEnvSelected == environment.id"
+        >
+          <ng-template mat-tab-label>
+            <span class="{{ environment.name.toLowerCase() }}">
+              {{ environment.name }}
+            </span>
+          </ng-template>
+
+          <form class="ongletContent">
+            <mat-checkbox
+              color="primary"
+              name="Enabled"
+              [(ngModel)]="selectedEnabled && selectedEnabled[idEnvSelected]"
+              >Enabled</mat-checkbox
+            >
+
+            <mat-checkbox
+              color="primary"
+              name="BP5"
+              [(ngModel)]="selectedBp5 && selectedBp5[idEnvSelected]"
+              [disabled]="!selectedEnabled[idEnvSelected]"
+              >BP5</mat-checkbox
+            >
+
+            <mat-form-field>
+              <mat-label>Database Server</mat-label>
+              <mat-select
+                name="Database"
+                [ngModel]="
+                  selectedDatabaseServers &&
+                  selectedDatabaseServers[idEnvSelected]
+                "
+                (ngModelChange)="
+                  onSelectDatabase(
+                    'databaseServer',
+                    selectedDatabaseServers[idEnvSelected],
+                    idEnvSelected
+                  )
+                "
+                [disabled]="!selectedEnabled[idEnvSelected]"
+              >
+                <mat-option
+                  [value]="undefined"
+                  [selected]="
+                    selectedDatabaseServers &&
+                    selectedDatabaseServers[idEnvSelected] === undefined
+                  "
+                >
+                  No Database
+                </mat-option>
+                <mat-option *ngFor="let db of databases" [value]="db">
+                  {{ db.name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field>
+              <mat-label>Web Server</mat-label>
+              <mat-select
+                required
+                name="Web"
+                [(ngModel)]="
+                  selectedWebServers && selectedWebServers[idEnvSelected]
+                "
+                (ngModelChange)="
+                  onSelectServer(
+                    'webServer',
+                    selectedWebServers[idEnvSelected],
+                    idEnvSelected
+                  )
+                "
+                [disabled]="!selectedEnabled[idEnvSelected]"
+              >
+                <mat-option
+                  [value]="undefined"
+                  [selected]="selectedWebServers[idEnvSelected] === undefined"
+                >
+                  No Server
+                </mat-option>
+                <mat-option *ngFor="let server of servers" [value]="server">
+                  {{ server.name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field>
+              <mat-label>EAI FTP</mat-label>
+              <mat-select
+                name="EAI"
+                [(ngModel)]="
+                  selectedEaiFtpServers && selectedEaiFtpServers[idEnvSelected]
+                "
+                [disabled]="!selectedEnabled[idEnvSelected]"
+                (ngModelChange)="
+                  onSelectServer(
+                    'eaiFtpServer',
+                    selectedEaiFtpServers[idEnvSelected],
+                    idEnvSelected
+                  )
+                "
+                [disabled]="!selectedEnabled[idEnvSelected]"
+              >
+                <mat-option
+                  [value]="undefined"
+                  [selected]="
+                    selectedEaiFtpServers[idEnvSelected] === undefined
+                  "
+                >
+                  No Database
+                </mat-option>
+                <mat-option *ngFor="let server of servers" [value]="server">
+                  {{ server.name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field>
+              <mat-label>Tableau Server</mat-label>
+              <mat-select
+                name="Tableau"
+                [(ngModel)]="
+                  selectedTableauServers &&
+                  selectedTableauServers[idEnvSelected]
+                "
+                [disabled]="!selectedEnabled[idEnvSelected]"
+                (ngModelChange)="
+                  onSelectServer(
+                    'tableauServer',
+                    selectedTableauServers[idEnvSelected],
+                    idEnvSelected
+                  )
+                "
+                [disabled]="!selectedEnabled[idEnvSelected]"
+              >
+                <mat-option
+                  [value]="undefined"
+                  [selected]="
+                    selectedTableauServers[idEnvSelected] === undefined
+                  "
+                >
+                  No Database
+                </mat-option>
+                <mat-option *ngFor="let server of servers" [value]="server">
+                  {{ server.name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field>
+              <mat-label>SSRS Server</mat-label>
+              <mat-select
+                name="SSRS"
+                [(ngModel)]="
+                  selectedSsrsServers && selectedSsrsServers[idEnvSelected]
+                "
+                [disabled]="!selectedEnabled[idEnvSelected]"
+                (ngModelChange)="
+                  onSelectServer(
+                    'ssrsServer',
+                    selectedSsrsServers[idEnvSelected],
+                    idEnvSelected
+                  )
+                "
+                [disabled]="!selectedEnabled[idEnvSelected]"
+              >
+                <mat-option
+                  [value]="undefined"
+                  [selected]="selectedSsrsServers[idEnvSelected] === undefined"
+                >
+                  No Database
+                </mat-option>
+                <mat-option *ngFor="let server of servers" [value]="server">
+                  {{ server.name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </form>
+        </mat-tab>
+      </mat-tab-group>
     </div>
   </div>
 </div>

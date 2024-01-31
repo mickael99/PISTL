@@ -1,0 +1,6 @@
+# Compilation
+bin/
+obj/
+
+
+.fake

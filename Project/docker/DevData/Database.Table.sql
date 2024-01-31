@@ -1,0 +1,1 @@
+insert [dbo].[Database] ([DatabaseID], [Name], [UserName], [Password], [Context], [ServerID], [CreatedDate], [CreatedBy], [ModifiedDate], [ModifiedBy]) values (236, N'BPT', N'sa', N'<devdata password>', 1, 236, CAST(N'2018-04-21T14:06:46.237' as DateTime), N'migration', null, null)
