@@ -311,8 +311,6 @@ export class UsersComponent {
       DATEnabled: false,
       locked: false,
     };
-
-    this.editEnabled = false;
   }
 
   /***************************************************************************************/
@@ -421,7 +419,7 @@ export class UsersComponent {
       datenabled: this.userSelected.DATEnabled, // Not used
       termsAccepted: this.userSelected.locked, // Not used
     };
-
+    console.log(requestBody);
     this.http
       .post('http://localhost:5050/api/users/delete', requestBody, options)
       .subscribe({

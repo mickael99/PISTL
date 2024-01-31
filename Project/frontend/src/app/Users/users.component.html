@@ -70,8 +70,8 @@
   </button>
   <div class="listes">
     <div class="table">
+      <hr />
       <mat-card-content>
-        <hr />
         <table
           matSort
           mat-table
@@ -138,6 +138,21 @@
     <!---------------------------->
     <div class="formCreate">
       <ng-container *ngIf="showFormCreate">
+        <button
+          mat-raised-button
+          class="color-button margin--right"
+          (click)="newUserFormCreateUser()"
+        >
+          Save
+        </button>
+        <button
+          mat-raised-button
+          color="primary"
+          class="btn"
+          (click)="showFormCreateUser()"
+        >
+          Cancel
+        </button>
         <form class="form--users">
           <mat-form-field class="example-full-width">
             <mat-label>Name</mat-label>
@@ -241,23 +256,6 @@
             name="locked"
             >Locked (Invalid Attempts)</mat-checkbox
           >
-          <div class="button-container" style="margin-bottom: 10%">
-            <button
-              mat-raised-button
-              (click)="newUserFormCreateUser()"
-              [ngClass]="{ 'color-button': editEnabled, btn: true }"
-            >
-              Save
-            </button>
-            <button
-              mat-raised-button
-              color="primary"
-              class="btn"
-              (click)="showFormCreateUser()"
-            >
-              Cancel
-            </button>
-          </div>
         </form>
       </ng-container>
 
@@ -267,6 +265,22 @@
       <!---------------------------------->
       <div class="">
         <ng-container *ngIf="userSelected.email">
+          <button
+            mat-raised-button
+            (click)="editUser()"
+            [ngClass]="{ 'color-button': editEnabled, 'margin--right': true }"
+            [disabled]="!editEnabled"
+          >
+            Save
+          </button>
+          <button
+            mat-raised-button
+            color="primary"
+            class="btn"
+            (click)="reinitaliseUserSelectedForm()"
+          >
+            Cancel
+          </button>
           <form class="form--users">
             <mat-form-field class="example-full-width">
               <mat-label>Name</mat-label>
@@ -382,27 +396,44 @@
               [disabled]="!editEnabled"
               >Locked (Invalid Attempts)</mat-checkbox
             >
-
-            <div class="button-container" style="margin-bottom: 10%">
-                <button
-                mat-raised-button
-                (click)="editUser()"
-                [ngClass]="{ 'color-button': editEnabled, 'margin--right': true }"
-                [disabled]="!editEnabled"
-                >
-                  Save
-                </button>
-                <button
-                  mat-raised-button
-                  color="primary"
-                  class="btn"
-                  (click)="reinitaliseUserSelectedForm()"
-                >
-                  Cancel
-                </button>
-              </div>
           </form>
         </ng-container>
       </div>
+
+      <!-- Error pop-up -->
+      <div>
+        <app-error-popup
+          *ngIf="showPopupError"
+          [errorMessage]="popupMessage"
+          (close)="closeErrorPopup()"
+        ></app-error-popup>
+      </div>
+
+      <!-- Inform pop-up -->
+      <div>
+        <app-inform-popup
+          *ngIf="showInformPopup"
+          [informationMessage]="popupMessage"
+          [passwordReseted]="passwordReseted"
+          (close)="close_inform_popup()"
+        ></app-inform-popup>
+      </div>
+
+      <!-- Delete confirmation -->
+      <app-confirm-popup
+        *ngIf="showDeleteConfirmation"
+        [confirmationMessage]="confirmationMessage"
+        (confirm)="onDeleteConfirm()"
+        (close)="onDeleteClose()"
+      ></app-confirm-popup>
+
+      <!-- Reset password confirmation -->
+      <app-confirm-popup
+        *ngIf="showResetPasswordConfirmation"
+        [confirmationMessage]="confirmationMessage"
+        (confirm)="onResetPasswordConfirm()"
+        (close)="onResetPasswordClose()"
+      ></app-confirm-popup>
+    </div>
   </div>
 </div>

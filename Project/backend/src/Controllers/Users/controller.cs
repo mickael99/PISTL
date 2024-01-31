@@ -209,6 +209,7 @@ public class UsersPageController : ControllerBase // TODO change name
   [HttpPost("delete")]
   public IActionResult Delete_New_DAT_User([FromHeader(Name = "Authorization")] string authorizationHeader, [FromBody] UserSelectedEdit model)
   {
+    Console.WriteLine("Delete_New_DAT_User");
     try
     {
       var token = authorizationHeader?.Replace("Bearer ", "");
