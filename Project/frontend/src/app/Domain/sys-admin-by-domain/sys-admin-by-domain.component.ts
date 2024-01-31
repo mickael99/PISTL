@@ -22,7 +22,7 @@ import { forkJoin } from 'rxjs';
  */
 export class SysAdminByDomainComponent {
   // domains : dictionnary key is domain_id and value is the domain object
-  domains:  { [domain_id: number]: any } = {};
+  domains:  any[] = [];
   // logins : array of login objects
   logins: any[] = [];
   // users : array of user objects
@@ -75,17 +75,20 @@ export class SysAdminByDomainComponent {
    * @param all - A boolean indicating whether to retrieve all domain users.
    */
   getSysAdminByDomain(domain_id: any, all: boolean): void {
-    this.domains = {};
+    this.domains = [];
     this.logins = [];
     this.users = [];
 
     this.http.get('http://localhost:5050/api/sysadminbydomain/' + domain_id).subscribe(
       (data: any) => {
+        data.domains.sort((a: any, b: any) => { return a.name.localeCompare(b.name); });
         for (const domain of data.domains) {
-          this.domains[domain.domainId] = domain;
+          this.domains.push(domain);
+          if (domain.domainId === domain_id) {
+            this.selected_domain = domain;
+          }
         }
 
-        this.selected_domain = this.domains[domain_id];
 
         for (const login of data.logins) {
           this.logins.push(login);
@@ -151,6 +154,20 @@ export class SysAdminByDomainComponent {
         this.data_domain_table.push(line);
       }
     }
+
+    this.data_domain_table.sort((a, b) => {
+      const nameA = a[1].toLowerCase();
+      const nameB = b[1].toLowerCase();
+      if (nameA < nameB) {
+        return -1;
+      }
+      if (nameA > nameB) {
+        return 1;
+      }
+      return 0;
+    });
+
+    
 
     if(Object.keys(this.show_calendar).length === 0){
 
@@ -408,7 +425,6 @@ export class SysAdminByDomainComponent {
    * @returns True if all users are checked for the given environment, false otherwise.
    */
   allChecked(env: any): boolean {
-    console.log(this.login_users);
     for (const loginId of Object.keys(this.login_users)) {
       if(this.login_users[loginId].length == 0) 
         return false;
@@ -462,6 +478,8 @@ export class SysAdminByDomainComponent {
       }
     }
     this.data_source.sort = this.sort;
+
+    this.updateOneChecked();
   }
 
   /**
@@ -493,6 +511,8 @@ export class SysAdminByDomainComponent {
         this.login_users[loginId][1][env] = true;
 
       }
+
+      this.updateOneChecked();
     }
 
     this.data_domain_table = [];

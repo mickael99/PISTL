@@ -25,7 +25,7 @@ export class DomainBySysAdminComponent {
   // users : list of users
   users:  any[] = [];
   // logins : list of logins
-  logins: {[login_id: number]: any} = {};
+  logins: any[] = [];
   // data_login_table : data for the table
   data_login_table: any[] = [];
   // connectedUser : the email of the connected user
@@ -41,6 +41,9 @@ export class DomainBySysAdminComponent {
 
   // show_add : boolean value indicating whether to show the add button or not
   show_add = true;
+  addButton: any;
+  saveButton: any;
+  cancelButton: any;
   // show_calendar : list of boolean values indicating whether to show the calendar for a given environment or not
   show_calendar: { [domainId: number]: any } = {};
 
@@ -72,17 +75,20 @@ export class DomainBySysAdminComponent {
    */
   getDomainBySysAdmin(login_id: any, all: boolean = true): void {
     this.domains = [];
-    this.logins = {};
+    this.logins = [];
     this.users = [];
 
     this.http.get('http://localhost:5050/api/domainbysysadmin/' + login_id).subscribe(
       (data: any) => {
-        //console.log('data', data);
+        data.logins.sort((a: any, b: any) => a.email.localeCompare(b.email));
+
         for(const login of data.logins){
-          this.logins[login.loginId] = login;
+          this.logins.push(login);
+          if(login.loginId === login_id)
+            this.selected_login = login;
         }
 
-        this.selected_login = this.logins[login_id];
+        
 
         for(const domain of data.domains){
           this.domains.push(domain);
@@ -164,6 +170,18 @@ export class DomainBySysAdminComponent {
       }
     }
 
+    this.data_login_table.sort((a, b) => {
+      const nameA = a[1].toLowerCase();
+      const nameB = b[1].toLowerCase();
+      if (nameA < nameB) {
+        return -1;
+      }
+      if (nameA > nameB) {
+        return 1;
+      }
+      return 0;
+    });
+
     if(Object.keys(this.show_calendar).length === 0){
 
       for (const domainId of Object.keys(this.domain_users)) {
@@ -212,8 +230,6 @@ export class DomainBySysAdminComponent {
     dialogConfig.autoFocus = true;
 
     if(this.domain_users[domainId][2][env]){
-      console.log("User found");
-
       dialogConfig.data = {user: this.domain_users[domainId][2][env], name: this.domain_users[domainId][0]};
 
       const dialogRef = this.dialog.open(DomainBySysAdminComponentDialog, dialogConfig);
@@ -221,7 +237,6 @@ export class DomainBySysAdminComponent {
       dialogRef.afterClosed().subscribe(result => {
 
         if(result.from === null && result.to === null && result.comment === null){
-          console.log("User not added");
           this.domain_users[domainId][1][env] = false;
           this.show_add = true;
           localStorage.setItem('show_add_domainby', 'true');
@@ -250,7 +265,6 @@ export class DomainBySysAdminComponent {
     }
 
     else {
-      console.log("User not found");
 
       var new_user = {
         domainId: domainId,
@@ -266,7 +280,6 @@ export class DomainBySysAdminComponent {
       dialogRef.afterClosed().subscribe(result => {
 
         if(result.from === null && result.to === null && result.comment === null){
-          console.log("User not added");
           this.domain_users[domainId][1][env] = false;
           this.show_add = true;
           localStorage.setItem('show_add_domainby', 'true');
@@ -322,8 +335,15 @@ export class DomainBySysAdminComponent {
    */
   addDomain(): void {
     this.show_add = false;
+    this.showingAdd();
+
     localStorage.setItem('show_add_domainby', 'false');
     this.getDomainBySysAdmin(this.selected_login.loginId, true);
+
+    const addButton = document.getElementById('addButton');
+    if (addButton) {
+      addButton.style.display = 'none';
+    }
   }
 
   /**
@@ -332,6 +352,8 @@ export class DomainBySysAdminComponent {
    */
   saveDomain(): void {
     this.show_add = true;
+    this.showingAdd();
+
     localStorage.setItem('show_add_domainby', 'true');
     // TODO : send request to backend to save all users in context
     const requests = [];
@@ -372,6 +394,8 @@ export class DomainBySysAdminComponent {
    */
   cancelDomain(): void {
     this.show_add = true;
+    this.showingAdd();
+
     localStorage.setItem('show_add_domainby', 'true');
 
     this.getDomainBySysAdmin(this.selected_login.loginId, false);
@@ -388,9 +412,6 @@ export class DomainBySysAdminComponent {
     this.all_checked = {1: this.allChecked(1), 2: this.allChecked(2),
       3: this.allChecked(3), 4: this.allChecked(4),
       5: this.allChecked(5), 6: this.allChecked(6)}
-
-    console.log('one_checked', this.one_checked);
-    console.log('all_checked', this.all_checked);
   }
 
   /**
@@ -548,5 +569,19 @@ export class DomainBySysAdminComponent {
       return this.show_calendar[domainId][env];
     }
     return false;
+  }
+
+  showingAdd() {
+    if (this.addButton && this.saveButton && this.cancelButton) {
+      if (this.show_add == true) {
+        this.addButton.style.display = 'block';
+        this.saveButton.style.display = 'none';
+        this.cancelButton.style.display = 'none';
+      } else {
+        this.addButton.style.display = 'none';
+        this.saveButton.style.display = 'block';
+        this.cancelButton.style.display = 'block';
+      }
+    }
   }
 }

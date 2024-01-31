@@ -16,7 +16,7 @@
         (selectionChange)="onChange($event)"
       >
         <mat-option
-          *ngFor="let domain of domains | keyvalue"
+            *ngFor="let domain of domains | keyvalue "
           [value]="domain.value"
         >
           <span
@@ -91,7 +91,7 @@
   <mat-card-content>
     <table matSort mat-table [dataSource]="data_source">
       <ng-container matColumnDef="email">
-        <th mat-header-cell *matHeaderCellDef>
+        <th mat-header-cell *matHeaderCellDef style="width: 30rem;">
           <div *ngIf="show_add">
             <button
               mat-raised-button
