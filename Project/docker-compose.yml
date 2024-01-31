@@ -7,10 +7,9 @@ services:
       dockerfile: Dockerfile
     ports:
       - "5050:5050"
-    depends_on:
-      - database
     environment:
-      ConnectionStrings__DefaultConnection: "Server=database,1434;Database=DAT;User Id=sa;Password=Daniel123;TrustServerCertificate=true;"
+      # ConnectionStrings__DefaultConnection: "Server=database,1434;Database=DAT;User Id=sa;Password=Daniel123;TrustServerCertificate=true;"
+      ConnectionStrings__AzureDatabase: "Server=tcp:datserver2.database.windows.net,1433;Initial Catalog=DAT;Persist Security Info=False;User ID=walter;Password=Daniel123;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
 
   frontend:
     build:
@@ -20,14 +19,3 @@ services:
       - "4200:4200"
     depends_on:
       - backend
-
-  database:
-    build:
-      context: ./docker
-      dockerfile: Dockerfile
-    ports:
-      - "1433:1434"
-    environment:
-      SA_PASSWORD: "Daniel123"
-      ACCEPT_EULA: "Y"
-      MSSQL_DB_NAME: "DAT"

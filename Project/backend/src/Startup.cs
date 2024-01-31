@@ -41,7 +41,8 @@ public class Startup
         services.AddDbContext<DatContext>(options =>
         {
             // options.UseSqlServer("Server=tcp:datserver2.database.windows.net,1433;Initial Catalog=DAT;Persist Security Info=False;User ID=walter;Password=Daniel123;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Authentication=Active Directory Password;");
-            options.UseSqlServer(Configuration?.GetConnectionString("DefaultConnection"));
+            // options.UseSqlServer(Configuration?.GetConnectionString("DefaultConnection"));
+            options.UseSqlServer(Configuration.GetConnectionString("AzureDatabase"));
         });
 
 

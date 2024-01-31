@@ -64,7 +64,7 @@ export class DomainBySysAdminComponent {
    * @param dialog - The MatDialog used for displaying dialogs.
    */
   constructor(private http: HttpClient, private dialog: MatDialog) {
-    this.getDomainBySysAdmin(26996, false);
+    this.getDomainBySysAdmin(1, false);
   }
 
   /**

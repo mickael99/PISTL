@@ -65,7 +65,7 @@ export class SysAdminByDomainComponent {
    */
   constructor(private http: HttpClient, private dialog: MatDialog) {
     console.log('connectedUser', this.connectedUser);
-    this.getSysAdminByDomain(351, false);
+    this.getSysAdminByDomain(1, false);
   }
 
   /**
