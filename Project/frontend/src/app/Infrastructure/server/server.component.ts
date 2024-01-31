@@ -39,7 +39,7 @@ export class ServerComponent {
     CreatedBy: '',
   };
 
-  // Bool used for the 'Edit', 'Delete', 'Reset Password' and 'Unlock' buttons
+  // Bool used for the 'Edit', 'Delete' buttons
   isClicked: boolean = false;
 
   serverClicked: number = 0;
@@ -315,6 +315,12 @@ export class ServerComponent {
   }
 
   /***************************************************************************************/
+  /**
+   * Retrieves the details of a server and updates the serverSelected object with the retrieved data.
+   * Also performs additional actions such as reinitializing the server creation form and activating certain buttons.
+   * 
+   * @param server - The server object containing the server details.
+   */
   getServer(server: any) {
     this.serverSelected.ServerId = server.serverId;
     this.serverSelected.Name = server.name;
@@ -497,6 +503,12 @@ export class ServerComponent {
   }
 
   /***************************************************************************************/
+  /**
+   * Opens the delete confirmation dialog.
+   * Sets the showDeleteConfirmation flag to true, logs the value of showDeleteConfirmation,
+   * sets the confirmation message to prompt the user for server deletion,
+   * logs the confirmation message, and triggers change detection.
+   */
   openDeleteConfirmation() {
     this.showDeleteConfirmation = true;
     console.log('showDeleteConfirmation: ', this.showDeleteConfirmation);
@@ -585,6 +597,13 @@ export class ServerComponent {
   }
 
   /***************************************************************************************/
+  /**
+   * Opens the copy confirmation dialog.
+   * Sets the showCopyConfirmation flag to true.
+   * Logs the value of showCopyConfirmation and confirmationMessage to the console.
+   * Sets the confirmationMessage to a string containing the name of the selected server.
+   * Calls changeDetectorRef.detectChanges() to trigger change detection.
+   */
   openCopyConfirmation() {
     this.showCopyConfirmation = true;
     console.log('showCopyConfirmation: ', this.showDeleteConfirmation);
