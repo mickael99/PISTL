@@ -2,10 +2,18 @@
   <div class="popup-content">
     <p>{{ confirmationMessage }}</p>
     <div class="buttons">
-      <button mat-raised-button color="primary" class="btn" (click)="onClose()">
+      <button
+        mat-raised-button
+        class="btn color-button--default"
+        (click)="onClose()"
+      >
         Cancel
       </button>
-      <button mat-raised-button color="warn" class="btn" (click)="onConfirm()">
+      <button
+        mat-raised-button
+        class="btn color-button--submit"
+        (click)="onConfirm()"
+      >
         Confirm
       </button>
     </div>

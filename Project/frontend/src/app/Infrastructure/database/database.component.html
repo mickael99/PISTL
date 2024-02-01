@@ -2,12 +2,14 @@
   <h1 class="title">Database</h1>
   <button
     mat-raised-button
+    name = "new"
     color="primary"
     class="btn"
     (click)="showFormCreateDatabase()"
   >
     New
   </button>
+  <p>{{ formDataCreate.UserName }}</p>
   <button
     mat-raised-button
     color="primary"
@@ -39,13 +41,8 @@
   <div class="listes">
     <div class="table">
       <mat-card-content>
-        <hr />
-        <table
-          matSort
-          mat-table
-          [dataSource]="dataSource"
-          #tableElement
-        >
+        <br />
+        <table matSort mat-table [dataSource]="dataSource" #tableElement>
           <ng-container matColumnDef="databaseId">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
             <td
@@ -201,7 +198,6 @@
             <input
               matInput
               placeholder="UserName"
-              required
               [(ngModel)]="formDataCreate.UserName"
               name="userName"
             />
@@ -266,6 +262,7 @@
           <br />
           <div class="button-container" style="margin-bottom: 10%">
             <button
+            name="save"
             mat-raised-button
             class="color-button margin--right"
             (click)="newDatabaseFormDatabase()"
@@ -378,11 +375,11 @@
               [(ngModel)]="databaseSelected.PasswordModified"
               name="Password"
               [disabled]="!editEnabled"
-            >
+            />
           </mat-form-field>
           <br />
           <div class="button-container" style="margin-bottom: 10%">
-              <button
+            <button
               mat-raised-button
               (click)="editDatabase()"
               [ngClass]="{ 'color-button': editEnabled, 'margin--right': true }"
