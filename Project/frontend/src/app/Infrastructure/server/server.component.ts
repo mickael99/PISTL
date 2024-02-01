@@ -167,7 +167,7 @@ export class ServerComponent {
         this.dataSource.sort = this.sort;
       },
       (error) => {
-        console.error(error);
+        this.showErrorPopup(error.error.message);
       }
     );
 
@@ -240,16 +240,6 @@ export class ServerComponent {
    * Function used to POST the user's information from the form.
    */
   newServerFormCreateServer() {
-    console.log('creating new server');
-    if (
-      this.formDataCreate.Name == '' ||
-      this.formDataCreate.Address == '' ||
-      this.formDataCreate.Context == '' ||
-      this.formDataCreate.Type == ''
-    ) {
-      this.showErrorPopup('Please fill all the fields.');
-      return;
-    }
 
     this.formDataCreate.CreatedBy = localStorage.getItem('email');
 
@@ -309,7 +299,7 @@ export class ServerComponent {
           this.reinitaliseServerCreatedForm();
         },
         error: (error: any) => {
-          console.error(error.error.message);
+          this.showErrorPopup(error.error.message);
         },
       });
   }
@@ -497,7 +487,7 @@ export class ServerComponent {
           this.dataSource.sort = this.sort;
         },
         error: (error: any) => {
-          console.error(error.error.message);
+          this.showErrorPopup(error.error.message);
         },
       });
   }
@@ -534,7 +524,6 @@ export class ServerComponent {
    */
   onDeleteConfirm() {
     this.showDeleteConfirmation = false;
-    console.log('onDeleteConfirm: ', this.showDeleteConfirmation);
 
     const serverIdToDelete = this.serverSelected.ServerId;
     const databases = this.database;
@@ -591,7 +580,7 @@ export class ServerComponent {
           this.dataSource.sort = this.sort;
         },
         error: (error: any) => {
-          console.log(error);
+          this.showErrorPopup(error.error.message);
         },
       });
   }
@@ -629,7 +618,6 @@ export class ServerComponent {
    */
   onCopyConfirm() {
     this.showCopyConfirmation = false;
-    console.log('onCopyConfirm: ', this.showCopyConfirmation);
 
     let JWTToken = localStorage.getItem('token');
 
@@ -683,7 +671,7 @@ export class ServerComponent {
         this.dataSource.sort = this.sort;
       },
       error: (error: any) => {
-        console.log(error);
+        this.showErrorPopup(error.error.message);
       },
     });
   }

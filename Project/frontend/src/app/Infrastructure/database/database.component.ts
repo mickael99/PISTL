@@ -273,7 +273,6 @@ export class DatabaseComponent {
           this.dataSource.sort = this.sort;
         },
         error: (error: any) => {
-          console.error(error.error.message);
           this.showErrorPopup(error.error.message);
         },
       });
@@ -332,7 +331,6 @@ export class DatabaseComponent {
           this.dataSource.sort = this.sort;
         },
         error: (error: any) => {
-          console.error(error.error.message);
           this.showErrorPopup(error.error.message);
         },
       });
@@ -412,7 +410,6 @@ export class DatabaseComponent {
           this.dataSource.sort = this.sort;
         },
         error: (error: any) => {
-          console.error(error.error.message);
           this.showErrorPopup(error.error.message);
         },
       });
@@ -520,7 +517,6 @@ export class DatabaseComponent {
           this.dataSource.sort = this.sort;
         },
         error: (error: any) => {
-          console.error(error.error.message);
           this.showErrorPopup(error.error.message);
         },
       });

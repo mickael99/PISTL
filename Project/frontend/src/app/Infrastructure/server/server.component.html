@@ -367,5 +367,23 @@
           </div>
         </form>
       </ng-container>
+
+      <div>
+        <app-error-popup
+          *ngIf="showPopupError"
+          [errorMessage]="popupMessage"
+          (close)="closeErrorPopup()"
+        ></app-error-popup>
+      </div>
+
+      <!-- Delete confirmation -->
+      <app-confirm-popup
+      *ngIf="showDeleteConfirmation"
+      [confirmationMessage]="confirmationMessage"
+      (confirm)="onDeleteConfirm()"
+      (close)="onDeleteClose()"
+      ></app-confirm-popup>
+
+
     </div>
 </div>
