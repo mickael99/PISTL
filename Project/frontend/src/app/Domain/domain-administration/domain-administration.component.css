@@ -110,102 +110,6 @@ input[type="radio"]:checked + label {
   display: none;
 }
 
-.ongletName #dev:checked + label {
-  background-color: orange;
-}
-
-.ongletName #dev:not(:checked) + label {
-  background-color: orange;
-}
-
-.ongletName #preprod:not(:checked) + label {
-  background-color: purple;
-}
-
-.ongletName #preprod:checked + label {
-  background-color: purple;
-}
-
-.ongletName #prod:not(:checked) + label {
-  background-color: blue;
-}
-
-.ongletName #prod:checked + label {
-  background-color: blue;
-}
-
-.ongletName #test:not(:checked) + label {
-  background-color: green;
-}
-
-.ongletName #test:checked + label {
-  background-color: green;
-}
-
-.ongletName #prodcopy:not(:checked) + label {
-  background-color: maroon;
-}
-
-.ongletName #prodcopy:checked + label {
-  background-color: maroon;
-}
-
-.ongletName #staging:not(:checked) + label {
-  background-color: yellow;
-}
-
-.ongletName #staging:checked + label {
-  background-color: yellow;
-}
-
-.ongletName #deve:checked + label {
-  background-color: orange;
-}
-
-.ongletName #deve:not(:checked) + label {
-  background-color: orange;
-}
-
-.ongletName #preprode:not(:checked) + label {
-  background-color: purple;
-}
-
-.ongletName #preprode:checked + label {
-  background-color: purple;
-}
-
-.ongletName #prode:not(:checked) + label {
-  background-color: blue;
-}
-
-.ongletName #prode:checked + label {
-  background-color: blue;
-}
-
-.ongletName #teste:not(:checked) + label {
-  background-color: green;
-}
-
-.ongletName #teste:checked + label {
-  background-color: green;
-}
-
-.ongletName #prodcopye:not(:checked) + label {
-  background-color: maroon;
-}
-
-.ongletName #prodcopye:checked + label {
-  background-color: maroon;
-}
-
-.ongletName #staginge:not(:checked) + label {
-  background-color: yellow;
-}
-
-.ongletName #staginge:checked + label {
-  background-color: yellow;
-}
-
 input[type="radio"]:checked + label + div {
   display: block;
 }
@@ -336,51 +240,50 @@ input[type="radio"]:checked + label + div {
 /********************************** Environments *****************************************/
 /*****************************************************************************************/
 
-::ng-deep .mdc-tab.mdc-tab--active {
-  /* background-color: green !important; */
-  /* font-weight: 900; */
+.env--dropdown {
+  padding: 0.5rem !important;
+  margin-right: 0.5rem;
 }
-/* 
-:host ::ng-deep .mat-mdc-tab.mdc-tab .mdc-tab__text-label {
-  background-color: #ff4500;
-  color: #000 !important;
-  padding: 1rem;
-} */
 
 .dev {
-  background-color: #ff4500;
-  color: #000;
+  background-color: #f5a82a !important;
+  color: #fff;
   padding: 1rem;
 }
 
 .preprod {
-  background-color: #000000;
+  background-color: #c125f2;
   color: #fff;
   padding: 1rem;
 }
 
 .prod {
-  background-color: #ffffff;
-  color: #000;
+  background-color: #4557a2;
+  color: #fff;
   padding: 1rem;
 }
 
 .test {
-  background-color: #ffa500;
-  color: #000;
+  background-color: #50c63e;
+  color: #fff;
   padding: 1rem;
 }
 
 .prodcopy {
-  background-color: #a0522d;
-  color: #000;
+  background-color: #956248;
+  color: #fff;
   padding: 1rem;
 }
 
 .staging {
-  background-color: #cc00ff;
+  background-color: #f5f334;
   color: #000;
   padding: 1rem;
+}
+
+.enabled-and-BPT5 {
+  display: flex;
+  justify-content: space-between;
 }
 
 /*****************************************************************************************/

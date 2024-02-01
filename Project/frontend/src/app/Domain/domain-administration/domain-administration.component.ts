@@ -102,6 +102,15 @@ export class DomainAdministrationComponent {
     { id: 256, name: 'Staging' },
   ];
 
+  // Bool used to display the delete confirmation popup
+  showDeleteConfirmation: boolean = false;
+
+  // Bool used to display the copy confirmation popup
+  showCopyConfirmation: boolean = false;
+
+  // Confirmation message to display
+  confirmationMessage: string = '';
+
   /***************************************************************************************/
   /*
    *  Update the selected domain from the list and print the dev information.
@@ -110,6 +119,12 @@ export class DomainAdministrationComponent {
    * @selectedDomain the selected domain
    */
   onSelect(selectedDomain: any): void {
+    this.logoToDisplay = '';
+    let firstEnvironmentAvailable = this.domainEnvironments
+      .filter((env) => selectedDomain.domainId == env.domainId)
+      .sort((a, b) => a.environment - b.environment)[0];
+    this.idEnvSelected =
+      (firstEnvironmentAvailable && firstEnvironmentAvailable.environment) ?? 2;
     this.selectedDomain = selectedDomain;
     if (selectedDomain && selectedDomain.logo) {
       this.logoToDisplay = selectedDomain.logo;
@@ -127,7 +142,6 @@ export class DomainAdministrationComponent {
     selectedServer: any,
     environmentId: number
   ): void {
-    console.log('selectedWebServers: ', this.selectedWebServers);
     switch (serverType) {
       case 'webServer':
         this.selectedWebServers[environmentId] = selectedServer;
@@ -148,16 +162,17 @@ export class DomainAdministrationComponent {
 
   onSelectDatabase(
     databaseType: string,
-    selectedDatabase: any,
+    event: any,
     environmentId: number
   ): void {
-    // console.log('[environmentId]: ', environmentId);
     switch (databaseType) {
       case 'databaseServer':
-        this.selectedDatabaseServers[environmentId] = selectedDatabase;
+        this.selectedDatabaseServers[environmentId] = this.findDatabaseFromId(
+          event.databaseId
+        );
         break;
       case 'elasticPool':
-        this.selectedElasticPools[environmentId] = selectedDatabase;
+        this.selectedElasticPools[environmentId] = event.name;
         break;
       default:
         break;
@@ -203,8 +218,11 @@ export class DomainAdministrationComponent {
             domain.logo = atob(domain.logo);
           });
 
-          if (this.domains.length) this.idEnvSelected = 2;
           this.onSelect(this.domains[0]);
+          let firstEnvironmentAvailable = this.domainEnvironments
+            .filter((env) => this.domains[0].domainId == env.domainId)
+            .sort((a, b) => a.environment - b.environment)[0];
+          this.idEnvSelected = firstEnvironmentAvailable.environment ?? 2;
         },
         (error) => {
           alert('Connection error: ' + error.message);
@@ -329,13 +347,11 @@ export class DomainAdministrationComponent {
   setEnvironmentEvent(event: any): void {
     const selectedTabIndex = event.index;
     const selectedEnvironment = this.environments[selectedTabIndex];
-    console.log('selectedEnvironment ', selectedEnvironment);
     this.setEnvironment(selectedEnvironment.id);
   }
 
   /***************************************************************************************/
   setEnvironment(environmentId: number): void {
-    console.log('setEnvironment');
     this.idEnvSelected = environmentId;
   }
 
@@ -362,7 +378,6 @@ export class DomainAdministrationComponent {
   onEnvironmentSelectEvent(event: any): void {
     const selectedTabIndex = event.index;
     const selectedEnvironment = this.environments[selectedTabIndex];
-    console.log('selectedEnvironment ', selectedEnvironment);
     this.onEnvironmentSelect(selectedEnvironment.id);
   }
 
@@ -403,7 +418,6 @@ export class DomainAdministrationComponent {
   displayLogo(encodingLogoPath: string, id: string): void {
     // const imagePreview = document.getElementById(id) as HTMLDivElement;
     const imagePreview = document.getElementById(id);
-    console.log('imagePreview ', imagePreview);
     if (imagePreview) {
       if (encodingLogoPath !== 'undefined') {
         imagePreview.innerHTML = `<img src="${encodingLogoPath}" alt="Logo" style="width: 10rem; height: 10rem;">`;
@@ -432,7 +446,8 @@ export class DomainAdministrationComponent {
   }
 
   cancel(): void {
-    if (this.selectedDomain.name === '') {
+    // if (this.selectedDomain.name === '') {
+    if (this.domainSelectedBeforeNew !== undefined) {
       // this.selectedDomain = this.domainSelectedBeforeNew;
       this.domains.map((domain) => {
         if (domain.domainId === this.domainSelectedBeforeNew.domainId) {
@@ -572,33 +587,7 @@ export class DomainAdministrationComponent {
   }
 
   confirmSave(): void {
-    // if (!this.isNewDomainMode && !this.isEditDomainMode)
-    //   throw new Error('problem while domain adding');
-
     var error = false;
-    if (
-      (this.selectedEnabled[2] && this.selectedWebServers[2] === undefined) ||
-      (this.selectedEnabled[2] && this.selectedWebServers[2] === 'undefined') ||
-      (this.selectedEnabled[4] && this.selectedWebServers[4] === undefined) ||
-      (this.selectedEnabled[4] && this.selectedWebServers[4] === 'undefined') ||
-      (this.selectedEnabled[8] && this.selectedWebServers[8] === undefined) ||
-      (this.selectedEnabled[8] && this.selectedWebServers[8] === 'undefined') ||
-      (this.selectedEnabled[16] && this.selectedWebServers[16] === undefined) ||
-      (this.selectedEnabled[16] &&
-        this.selectedWebServers[16] === 'undefined') ||
-      (this.selectedEnabled[32] && this.selectedWebServers[32] === undefined) ||
-      (this.selectedEnabled[32] &&
-        this.selectedWebServers[32] === 'undefined') ||
-      (this.selectedEnabled[256] &&
-        this.selectedWebServers[256] === undefined) ||
-      (this.selectedEnabled[256] &&
-        this.selectedWebServers[256] === 'undefined')
-    ) {
-      window.alert(
-        'You have selected an environment without assigning a web server to it!'
-      );
-      error = true;
-    }
 
     if (
       this.selectedDomain.name === undefined ||
@@ -611,13 +600,11 @@ export class DomainAdministrationComponent {
     if (!error) {
       //ajouter un domaine
       if (!this.isEditDomainMode) {
-        const isConfirmed = window.confirm('Are you sure to add the domain ?');
-        if (isConfirmed) this.addDomain();
+        this.addDomain();
       }
       //modifier un domaine
       else {
-        const isConfirmed = window.confirm('Are you sure to edit the domain ?');
-        if (isConfirmed) this.update();
+        this.update();
       }
     }
   }
@@ -962,19 +949,16 @@ export class DomainAdministrationComponent {
     };
 
     if (this.selectedDomain) {
-      const isConfirmed = window.confirm('Are you sure to copy the domain?');
-      if (isConfirmed) {
-        const newDomain = {
-          Name: 'Copy - ' + this.selectedDomain.name,
-          Logo: btoa(this.selectedDomain.logo),
-          Edition: this.selectedDomain.edition,
-          IsSsoEnabled: this.isSsoEnabled,
-          Comment: this.comment,
-          ParentCompany: this.parentCompany,
-        };
+      const newDomain = {
+        Name: 'Copy - ' + this.selectedDomain.name,
+        Logo: btoa(this.selectedDomain.logo),
+        Edition: this.selectedDomain.edition,
+        IsSsoEnabled: this.isSsoEnabled,
+        Comment: this.comment,
+        ParentCompany: this.parentCompany,
+      };
 
-        postDomain(newDomain);
-      }
+      postDomain(newDomain);
     }
   }
 
@@ -1026,22 +1010,13 @@ export class DomainAdministrationComponent {
     };
 
     if (this.selectedDomain) {
-      const isConfirmed = window.confirm(
-        'Are you sure to delete this domain ?'
+      const domainIdToDelete = this.selectedDomain.domainId;
+
+      const domainEnvironmentsToDelete = this.domainEnvironments.filter(
+        (e) => e.domainId == domainIdToDelete
       );
-      if (isConfirmed) {
-        const domainIdToDelete = this.selectedDomain.domainId;
 
-        const domainEnvironmentsToDelete = this.domainEnvironments.filter(
-          (e) => e.domainId == domainIdToDelete
-        );
-
-        deleteDomainEnvironment(
-          domainEnvironmentsToDelete,
-          0,
-          domainIdToDelete
-        );
-      }
+      deleteDomainEnvironment(domainEnvironmentsToDelete, 0, domainIdToDelete);
     }
   }
 
@@ -1054,6 +1029,82 @@ export class DomainAdministrationComponent {
     if (this.selectedDomain) {
       this.selectedDomain.edition = selectedValue;
     }
+  }
+
+  /***************************************************************************************/
+  /**
+   * Changes environment number to index number for the front.
+   * @param environmentNb number of the environment (2, 4, 8...)
+   */
+  environementsToNumber(environmentNb: number) {
+    switch (environmentNb) {
+      case 2:
+        return 0;
+      case 4:
+        return 1;
+      case 8:
+        return 2;
+      case 16:
+        return 3;
+      case 32:
+        return 4;
+      case 256:
+        return 5;
+      default:
+        return undefined;
+    }
+  }
+
+  /***************************************************************************************/
+  /**
+   * Function used to open the Delete domain confirmation popup.
+   */
+  openDeleteConfirmation() {
+    this.showDeleteConfirmation = true;
+    this.confirmationMessage = 'Are you sure you want to delete this domain?';
+  }
+
+  /***************************************************************************************/
+  /**
+   * Function used to close the delete confirmation popup.
+   */
+  onDeleteClose() {
+    this.showDeleteConfirmation = false;
+  }
+
+  /***************************************************************************************/
+  /**
+   * Function used to confirm the delete action.
+   */
+  onDeleteConfirm() {
+    this.showDeleteConfirmation = false;
+    this.deleteDomain();
+  }
+
+  /***************************************************************************************/
+  /**
+   * Function used to open the Copy domain confirmation popup.
+   */
+  openCopyConfirmation() {
+    this.showCopyConfirmation = true;
+    this.confirmationMessage = 'Are you sure you want to copy this domain?';
+  }
+
+  /***************************************************************************************/
+  /**
+   * Function used to close the copy confirmation popup.
+   */
+  onCloseCopy() {
+    this.showCopyConfirmation = false;
+  }
+
+  /***************************************************************************************/
+  /**
+   * Function used to confirm the copy action.
+   */
+  onConfirmCopy() {
+    this.showCopyConfirmation = false;
+    this.copyDomain();
   }
 }
 /***************************************************************************************/

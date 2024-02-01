@@ -1,4 +1,4 @@
-@import '~@angular/material/prebuilt-themes/indigo-pink.css';
+@import "@angular/material/prebuilt-themes/indigo-pink.css";
 
 .title {
   font-size: 2.4rem;
@@ -54,7 +54,7 @@
   width: 200px;
 }
 
-button{
+button {
   margin: 8px 8px 8px 0;
 }
 
@@ -97,5 +97,5 @@ button{
 .drowndown_content_staging {
   background-color: #f5f334;
   margin-right: 5px;
-  color: white;
+  color: #000;
 }

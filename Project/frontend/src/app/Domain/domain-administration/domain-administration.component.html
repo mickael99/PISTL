@@ -25,11 +25,7 @@
                         env.environment == 2 &&
                         env.domainId == domain.value.domainId
                       "
-                      style="
-                        background-color: #ff4500;
-                        margin-right: 5px;
-                        color: white;
-                      "
+                      class="dev env--dropdown"
                     >
                       Dev
                     </span>
@@ -39,11 +35,7 @@
                         env.environment == 4 &&
                         env.domainId == domain.value.domainId
                       "
-                      style="
-                        background-color: #000000;
-                        margin-right: 5px;
-                        color: white;
-                      "
+                      class="preprod env--dropdown"
                     >
                       Preprod
                     </span>
@@ -53,11 +45,7 @@
                         env.environment == 8 &&
                         env.domainId == domain.value.domainId
                       "
-                      style="
-                        background-color: #ffffff;
-                        margin-right: 5px;
-                        color: black;
-                      "
+                      class="prod env--dropdown"
                     >
                       Prod
                     </span>
@@ -67,11 +55,7 @@
                         env.environment == 16 &&
                         env.domainId == domain.value.domainId
                       "
-                      style="
-                        background-color: #ffa500;
-                        margin-right: 5px;
-                        color: white;
-                      "
+                      class="test env--dropdown"
                     >
                       Test
                     </span>
@@ -81,11 +65,7 @@
                         env.environment == 32 &&
                         env.domainId == domain.value.domainId
                       "
-                      style="
-                        background-color: #a0522d;
-                        margin-right: 5px;
-                        color: white;
-                      "
+                      class="prodcopy env--dropdown"
                     >
                       ProdCopy
                     </span>
@@ -95,11 +75,7 @@
                         env.environment == 256 &&
                         env.domainId == domain.value.domainId
                       "
-                      style="
-                        background-color: #cc00ff;
-                        margin-right: 5px;
-                        color: white;
-                      "
+                      class="staging env--dropdown"
                     >
                       Staging
                     </span>
@@ -135,7 +111,7 @@
             mat-raised-button
             color="primary"
             class="btn color-button"
-            (click)="copyDomain()"
+            (click)="openCopyConfirmation()"
           >
             Copy
           </button>
@@ -143,7 +119,7 @@
             mat-raised-button
             color="primary"
             class="btn color-button"
-            (click)="deleteDomain()"
+            (click)="openDeleteConfirmation()"
           >
             Delete
           </button>
@@ -157,6 +133,34 @@
             color="primary"
             class="btn color-button--save"
             (click)="confirmSave()"
+            [disabled]="
+              (selectedDomain && selectedDomain.name == '') ||
+              ((isEditDomainMode || isNewDomainMode) &&
+                ((selectedEnabled &&
+                  this.selectedEnabled[2] &&
+                  selectedWebServers &&
+                  !this.selectedWebServers[2]) ||
+                  (selectedEnabled &&
+                    this.selectedEnabled[4] &&
+                    selectedWebServers &&
+                    !this.selectedWebServers[4]) ||
+                  (selectedEnabled &&
+                    this.selectedEnabled[8] &&
+                    selectedWebServers &&
+                    !this.selectedWebServers[8]) ||
+                  (selectedEnabled &&
+                    this.selectedEnabled[16] &&
+                    selectedWebServers &&
+                    !this.selectedWebServers[16]) ||
+                  (selectedEnabled &&
+                    this.selectedEnabled[32] &&
+                    selectedWebServers &&
+                    !this.selectedWebServers[32]) ||
+                  (selectedEnabled &&
+                    this.selectedEnabled[256] &&
+                    selectedWebServers &&
+                    !this.selectedWebServers[256])))
+            "
           >
             Save
           </button>
@@ -174,11 +178,11 @@
 
     <ng-container>
       <form class="form--domain">
-        <!-- <div class="grid--name"> -->
         <mat-form-field class="grid--name">
           <mat-label>Domain Name</mat-label>
           <input
             matInput
+            required
             name="Name"
             [(ngModel)]="selectedDomain && selectedDomain.name"
             [disabled]="!isNewDomainMode"
@@ -267,7 +271,10 @@
 
     <!-- Access Environments -->
     <ng-container *ngIf="!isNewDomainMode && !isEditDomainMode">
-      <mat-tab-group (selectedTabChange)="onEnvironmentSelectEvent($event)">
+      <mat-tab-group
+        (selectedTabChange)="onEnvironmentSelectEvent($event)"
+        [selectedIndex]="environementsToNumber(idEnvSelected)"
+      >
         <mat-tab
           *ngFor="let environment of environments"
           [disabled]="!isEnvironmentEnabled(environment.id)"
@@ -307,7 +314,6 @@
               <mat-label>Web Server</mat-label>
               <input
                 matInput
-                required
                 name="WebServer"
                 [(ngModel)]="
                   serversAndDatabasesName &&
@@ -362,7 +368,10 @@
 
     <!-- Edit / Add domain -->
     <div *ngIf="isNewDomainMode || isEditDomainMode">
-      <mat-tab-group (selectedTabChange)="setEnvironmentEvent($event)">
+      <mat-tab-group
+        (selectedTabChange)="setEnvironmentEvent($event)"
+        [selectedIndex]="environementsToNumber(idEnvSelected)"
+      >
         <mat-tab
           *ngFor="let environment of environments"
           [checked]="idEnvSelected == environment.id"
@@ -373,177 +382,161 @@
             </span>
           </ng-template>
 
-          <form class="ongletContent">
-            <mat-checkbox
-              color="primary"
-              name="Enabled"
-              [(ngModel)]="selectedEnabled && selectedEnabled[idEnvSelected]"
-              >Enabled</mat-checkbox
-            >
+          <form>
+            <div class="ongletContent">
+              <div class="enabled-and-BPT5">
+                <mat-checkbox
+                  color="primary"
+                  name="Enabled"
+                  [(ngModel)]="
+                    selectedEnabled && selectedEnabled[idEnvSelected]
+                  "
+                  >Enabled</mat-checkbox
+                >
 
-            <mat-checkbox
-              color="primary"
-              name="BP5"
-              [(ngModel)]="selectedBp5 && selectedBp5[idEnvSelected]"
-              [disabled]="!selectedEnabled[idEnvSelected]"
-              >BP5</mat-checkbox
-            >
+                <mat-checkbox
+                  color="primary"
+                  name="BP5"
+                  [(ngModel)]="selectedBp5 && selectedBp5[idEnvSelected]"
+                  [disabled]="!selectedEnabled[idEnvSelected]"
+                  >BP5</mat-checkbox
+                >
+              </div>
 
-            <mat-form-field>
-              <mat-label>Database Server</mat-label>
-              <mat-select
-                name="Database"
-                [ngModel]="
-                  selectedDatabaseServers &&
-                  selectedDatabaseServers[idEnvSelected]
-                "
-                (ngModelChange)="
-                  onSelectDatabase(
-                    'databaseServer',
-                    selectedDatabaseServers[idEnvSelected],
-                    idEnvSelected
-                  )
-                "
-                [disabled]="!selectedEnabled[idEnvSelected]"
-              >
-                <mat-option
-                  [value]="undefined"
-                  [selected]="
+              <mat-form-field>
+                <mat-label>Database Server</mat-label>
+                <mat-select
+                  name="Database"
+                  [ngModel]="
                     selectedDatabaseServers &&
-                    selectedDatabaseServers[idEnvSelected] === undefined
+                    selectedDatabaseServers[idEnvSelected]
+                  "
+                  (ngModelChange)="
+                    onSelectDatabase('databaseServer', $event, idEnvSelected)
+                  "
+                  [disabled]="
+                    !selectedEnabled[idEnvSelected] || isEditDomainMode
                   "
                 >
-                  No Database
-                </mat-option>
-                <mat-option *ngFor="let db of databases" [value]="db">
-                  {{ db.name }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
+                  <mat-option *ngFor="let db of databases" [value]="db">
+                    {{ db.name }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
 
-            <mat-form-field>
-              <mat-label>Web Server</mat-label>
-              <mat-select
-                required
-                name="Web"
-                [(ngModel)]="
-                  selectedWebServers && selectedWebServers[idEnvSelected]
-                "
-                (ngModelChange)="
-                  onSelectServer(
-                    'webServer',
-                    selectedWebServers[idEnvSelected],
-                    idEnvSelected
-                  )
-                "
-                [disabled]="!selectedEnabled[idEnvSelected]"
-              >
-                <mat-option
-                  [value]="undefined"
-                  [selected]="selectedWebServers[idEnvSelected] === undefined"
-                >
-                  No Server
-                </mat-option>
-                <mat-option *ngFor="let server of servers" [value]="server">
-                  {{ server.name }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-
-            <mat-form-field>
-              <mat-label>EAI FTP</mat-label>
-              <mat-select
-                name="EAI"
-                [(ngModel)]="
-                  selectedEaiFtpServers && selectedEaiFtpServers[idEnvSelected]
-                "
-                [disabled]="!selectedEnabled[idEnvSelected]"
-                (ngModelChange)="
-                  onSelectServer(
-                    'eaiFtpServer',
-                    selectedEaiFtpServers[idEnvSelected],
-                    idEnvSelected
-                  )
-                "
-                [disabled]="!selectedEnabled[idEnvSelected]"
-              >
-                <mat-option
-                  [value]="undefined"
-                  [selected]="
-                    selectedEaiFtpServers[idEnvSelected] === undefined
+              <mat-form-field>
+                <mat-label>Web Server</mat-label>
+                <mat-select
+                  name="Web"
+                  required
+                  [(ngModel)]="
+                    selectedWebServers && selectedWebServers[idEnvSelected]
                   "
-                >
-                  No Database
-                </mat-option>
-                <mat-option *ngFor="let server of servers" [value]="server">
-                  {{ server.name }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-
-            <mat-form-field>
-              <mat-label>Tableau Server</mat-label>
-              <mat-select
-                name="Tableau"
-                [(ngModel)]="
-                  selectedTableauServers &&
-                  selectedTableauServers[idEnvSelected]
-                "
-                [disabled]="!selectedEnabled[idEnvSelected]"
-                (ngModelChange)="
-                  onSelectServer(
-                    'tableauServer',
-                    selectedTableauServers[idEnvSelected],
-                    idEnvSelected
-                  )
-                "
-                [disabled]="!selectedEnabled[idEnvSelected]"
-              >
-                <mat-option
-                  [value]="undefined"
-                  [selected]="
-                    selectedTableauServers[idEnvSelected] === undefined
+                  (ngModelChange)="
+                    onSelectServer(
+                      'webServer',
+                      selectedWebServers[idEnvSelected],
+                      idEnvSelected
+                    )
                   "
+                  [disabled]="!selectedEnabled[idEnvSelected]"
                 >
-                  No Database
-                </mat-option>
-                <mat-option *ngFor="let server of servers" [value]="server">
-                  {{ server.name }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
+                  <mat-option *ngFor="let server of servers" [value]="server">
+                    {{ server.name }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
 
-            <mat-form-field>
-              <mat-label>SSRS Server</mat-label>
-              <mat-select
-                name="SSRS"
-                [(ngModel)]="
-                  selectedSsrsServers && selectedSsrsServers[idEnvSelected]
-                "
-                [disabled]="!selectedEnabled[idEnvSelected]"
-                (ngModelChange)="
-                  onSelectServer(
-                    'ssrsServer',
-                    selectedSsrsServers[idEnvSelected],
-                    idEnvSelected
-                  )
-                "
-                [disabled]="!selectedEnabled[idEnvSelected]"
-              >
-                <mat-option
-                  [value]="undefined"
-                  [selected]="selectedSsrsServers[idEnvSelected] === undefined"
+              <mat-form-field>
+                <mat-label>EAI FTP</mat-label>
+                <mat-select
+                  name="EAI"
+                  [(ngModel)]="
+                    selectedEaiFtpServers &&
+                    selectedEaiFtpServers[idEnvSelected]
+                  "
+                  [disabled]="!selectedEnabled[idEnvSelected]"
+                  (ngModelChange)="
+                    onSelectServer(
+                      'eaiFtpServer',
+                      selectedEaiFtpServers[idEnvSelected],
+                      idEnvSelected
+                    )
+                  "
+                  [disabled]="!selectedEnabled[idEnvSelected]"
                 >
-                  No Database
-                </mat-option>
-                <mat-option *ngFor="let server of servers" [value]="server">
-                  {{ server.name }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
+                  <mat-option *ngFor="let server of servers" [value]="server">
+                    {{ server.name }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field>
+                <mat-label>Tableau Server</mat-label>
+                <mat-select
+                  name="Tableau"
+                  [(ngModel)]="
+                    selectedTableauServers &&
+                    selectedTableauServers[idEnvSelected]
+                  "
+                  [disabled]="!selectedEnabled[idEnvSelected]"
+                  (ngModelChange)="
+                    onSelectServer(
+                      'tableauServer',
+                      selectedTableauServers[idEnvSelected],
+                      idEnvSelected
+                    )
+                  "
+                  [disabled]="!selectedEnabled[idEnvSelected]"
+                >
+                  <mat-option *ngFor="let server of servers" [value]="server">
+                    {{ server.name }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field>
+                <mat-label>SSRS Server</mat-label>
+                <mat-select
+                  name="SSRS"
+                  [(ngModel)]="
+                    selectedSsrsServers && selectedSsrsServers[idEnvSelected]
+                  "
+                  [disabled]="!selectedEnabled[idEnvSelected]"
+                  (ngModelChange)="
+                    onSelectServer(
+                      'ssrsServer',
+                      selectedSsrsServers[idEnvSelected],
+                      idEnvSelected
+                    )
+                  "
+                  [disabled]="!selectedEnabled[idEnvSelected]"
+                >
+                  <mat-option *ngFor="let server of servers" [value]="server">
+                    {{ server.name }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
           </form>
         </mat-tab>
       </mat-tab-group>
     </div>
   </div>
+
+  <!-- Delete confirmation -->
+  <app-confirm-popup
+    *ngIf="showDeleteConfirmation"
+    [confirmationMessage]="confirmationMessage"
+    (confirm)="onDeleteConfirm()"
+    (close)="onDeleteClose()"
+  ></app-confirm-popup>
+
+  <!-- Copy confirmation -->
+  <app-confirm-popup
+    *ngIf="showCopyConfirmation"
+    [confirmationMessage]="confirmationMessage"
+    (confirm)="onConfirmCopy()"
+    (close)="onCloseCopy()"
+  ></app-confirm-popup>
 </div>
