@@ -42,7 +42,16 @@ export class DomainAdministrationComponent {
   serversAndDatabasesName: ServersAndDatabasesName;
 
   /* domain selected from the list */
-  selectedDomain: any;
+  selectedDomain = {
+    domainId: 0,
+    name: '',
+    logo: '',
+    edition: '',
+    isSsoEnabled: false,
+    comment: '',
+    parentCompany: '',
+  };
+
   selectedDomainEnvironments: any[];
   selectedDomainEnvironment: any;
 
@@ -125,7 +134,7 @@ export class DomainAdministrationComponent {
       .sort((a, b) => a.environment - b.environment)[0];
     this.idEnvSelected =
       (firstEnvironmentAvailable && firstEnvironmentAvailable.environment) ?? 2;
-    this.selectedDomain = selectedDomain;
+    this.selectedDomain = selectedDomain ?? this.selectedDomain;
     if (selectedDomain && selectedDomain.logo) {
       this.logoToDisplay = selectedDomain.logo;
     }
@@ -222,7 +231,10 @@ export class DomainAdministrationComponent {
           let firstEnvironmentAvailable = this.domainEnvironments
             .filter((env) => this.domains[0].domainId == env.domainId)
             .sort((a, b) => a.environment - b.environment)[0];
-          this.idEnvSelected = firstEnvironmentAvailable.environment ?? 2;
+          this.idEnvSelected =
+            (firstEnvironmentAvailable &&
+              firstEnvironmentAvailable.environment) ??
+            2;
         },
         (error) => {
           alert('Connection error: ' + error.message);

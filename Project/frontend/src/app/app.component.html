@@ -17,20 +17,14 @@
 
   <ng-container *ngIf="!show2FA && !showForm">
     <header>
-      <a routerLink="/account">
-        <picture>
-          <img src="../assets/logo.png" class="logo" alt="Logo DAT UpClear" />
-        </picture>
-      </a>
+      <picture>
+        <img src="../assets/logo.png" class="logo" alt="Logo DAT UpClear" />
+      </picture>
       <nav class="main-nav">
         <ul class="main-nav-list">
           <li class="list">
             <div ngbDropdown class="d-inline-block dropdown">
-              <a
-                class="btn--1"
-                id="dropdownBasic1"
-                ngbDropdownToggle
-              >
+              <a class="btn--1" id="dropdownBasic1" ngbDropdownToggle>
                 Domain
               </a>
               <div
@@ -61,11 +55,7 @@
           </li>
           <li>
             <div ngbDropdown class="d-inline-block dropdown">
-              <a
-                class="btn--1"
-                id="dropdownBasic1"
-                ngbDropdownToggle
-              >
+              <a class="btn--1" id="dropdownBasic1" ngbDropdownToggle>
                 Infrastructure
               </a>
               <div
@@ -102,10 +92,14 @@
           </li>
 
           <li>
-            <p class="text nav-end">
-              Hello <strong>{{ email }}</strong
-              >!
-            </p>
+            <a routerLink="/account">
+              <!-- <div class="account--link"> -->
+              <p class="text nav-end account--link">
+                Hello <strong>{{ email }}</strong
+                >!
+              </p>
+              <!-- </div> -->
+            </a>
           </li>
           <li>
             <a href="#" class="btn--log-off nav-end--2" (click)="deconnexion()"

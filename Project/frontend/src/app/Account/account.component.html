@@ -1,8 +1,58 @@
 <div class="container--2FA">
-  <p>Account works!</p>
   <ng-container *ngIf="!hidden2FA">
-    <img src="{{ qrCodeUrl }}" alt="2FA QR Code" />
-    <p>Code: {{ manualEntryKey }}</p>
-    <button class="btn--added2FA" (click)="added2FA()">2FA added</button>
+    <h1>Configure your two-factor authentication for better security!</h1>
+    <h2>
+      Before you start, make sure you have the Google Authenticator app or an
+      equivalent app/extension to scan the QR code.
+    </h2>
+    <ng-contaginer *ngIf="showQrCode">
+      <img class="QR" src="{{ qrCodeUrl }}" alt="2FA QR Code" />
+      <!-- <p>Code: {{ manualEntryKey }}</p> -->
+      <div class="form--fa form-floating mb-3">
+        <input
+          type="text"
+          inputmode="numeric"
+          class="form-control"
+          id="floatingInput"
+          placeholder=""
+          required
+          [(ngModel)]="code"
+          name="code"
+        />
+        <label for="floatingInput">Code</label>
+      </div>
+      <div class="container--btn2FA">
+        <button
+          mat-raised-button
+          class="color-button-confirm"
+          (click)="added2FA()"
+        >
+          Add 2FA
+        </button>
+      </div>
+    </ng-contaginer>
+    <ng-container *ngIf="!showQrCode">
+      <button
+        mat-raised-button
+        class="btn color-button"
+        (click)="toggleQrCode()"
+      >
+        Generate QR Code
+      </button>
+    </ng-container>
+  </ng-container>
+
+  <ng-container *ngIf="hidden2FA">
+    <h1>You have configured your two-factor authentication!</h1>
+    <h2>If you want to reset the configuration, click below &darr;</h2>
+    <button mat-raised-button class="btn color-button" (click)="delete2FA()">
+      Reset configuration
+    </button>
+  </ng-container>
+
+  <ng-container *ngIf="showError">
+    <div class="error--text alert alert-danger" role="alert">
+      {{ messageError }}
+    </div>
   </ng-container>
 </div>

@@ -112,6 +112,12 @@ public class DomainAdministrationController : ControllerBase
             //delete login domains
             var loginDomainToDelete = context.LoginDomainUsers.Where(l => l.DomainId == id).ToList();
             context.LoginDomainUsers.RemoveRange(loginDomainToDelete);
+            var ssoDomainToDelete = context.SingleSignOnCredentialMappings.Where(s => s.DomainId == id).ToList();
+            context.SingleSignOnCredentialMappings.RemoveRange(ssoDomainToDelete);
+            var singleSignOnSaml2IdentityProviderInfoDomainToDelete = context.SingleSignOnSaml2IdentityProviderInfoDomains.Where(s => s.DomainId == id).ToList();
+            context.SingleSignOnSaml2IdentityProviderInfoDomains.RemoveRange(singleSignOnSaml2IdentityProviderInfoDomainToDelete);
+            var loginDomainUser = context.LoginDomainUsers.Where(l => l.DomainId == id).ToList();
+            context.LoginDomainUsers.RemoveRange(loginDomainUser);
 
             //delete domain
             var domainToDelete = context.Domains.FirstOrDefault(d => d.DomainId == id);

@@ -35,8 +35,6 @@ public class RegisterController : ControllerBase
         return BadRequest(new { message = "Token JWT missing in the Header." });
       }
 
-      // string secretKey = "super secret key"; // TODO AV
-
       var handler = new JwtSecurityTokenHandler();
       var jsonToken = handler.ReadToken(token) as JwtSecurityToken;
       if (jsonToken != null)
@@ -53,7 +51,6 @@ public class RegisterController : ControllerBase
             {
               if (login.Email == userEmail)
               {
-                Console.WriteLine($"Email : {userEmail}");
                 email = userEmail;
                 if (login.ResetPasswordKey != null)
                 {
@@ -87,8 +84,13 @@ public class RegisterController : ControllerBase
     return Ok(data);
   }
 
-  // /***************************************************************************************/
-  public IActionResult OnPost([FromHeader(Name = "Authorization")] string authorizationHeader, [FromBody] ManualEntryKeyModel model)
+  /***************************************************************************************/
+  /// <summary>
+  /// HTTP request to conif 2FA to a user.
+  /// </summary>
+  /// <returns>An <see cref="IActionResult"/> object that performs a HTTP response.</returns>
+  [HttpPost]
+  public IActionResult Add2FA_User([FromHeader(Name = "Authorization")] string authorizationHeader, [FromBody] ManualEntryKeyModel model)
   {
     try
     {
@@ -105,31 +107,41 @@ public class RegisterController : ControllerBase
       var jsonToken = handler.ReadToken(token) as JwtSecurityToken;
       if (jsonToken != null)
       {
-        bool found = false;
+        Login loginFound = null;
+        bool result = false;
         foreach (var claim in jsonToken.Claims)
         {
-          if (claim.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name") // TODO AR 
+          if (claim.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name")
           {
             string userEmail = claim.Value;
-            Console.WriteLine($"====> Email : {userEmail}");
             var context = new DatContext();
             var logins = context.Logins;
             foreach (var login in logins)
             {
               if (login.Email == userEmail)
               {
-                login.ResetPasswordKey = model.ManualEntryKey; // TODO Need to be changed !! 
-                found = true;
+
+                loginFound = login;
+                TwoFactorAuthenticator tfa = new TwoFactorAuthenticator();
+                result = tfa.ValidateTwoFactorPIN(model.ManualEntryKey, model.Code, true); // new column to add in the DB in the future
               }
             }
-            if (found)
+            if (loginFound != null)
             {
-              context.SaveChanges();
-              return Ok(new { message = "2FA is now enabled for this user." });
+              if (result)
+              {
+                loginFound.ResetPasswordKey = model.ManualEntryKey; // TODO Need to be changed !! 
+                context.SaveChanges();
+                return Ok(new { message = "2FA is now enabled for this user." });
+              }
+              else
+              {
+                return BadRequest(new { message = "Wrong code, 2FA not enabled for this user." });
+              }
             }
             else
             {
-              return Ok(new { message = "User not found." });
+              return BadRequest(new { message = "User not found." });
             }
           }
         }
@@ -148,6 +160,73 @@ public class RegisterController : ControllerBase
   }
 
   /***************************************************************************************/
+  /// <summary>
+  /// HTTP request to conif 2FA to a user.
+  /// </summary>
+  /// <returns>An <see cref="IActionResult"/> object that performs a HTTP response.</returns>
+  [HttpDelete]
+  public IActionResult Delete2FA_User([FromHeader(Name = "Authorization")] string authorizationHeader)
+  {
+    try
+    {
+      var token = authorizationHeader?.Replace("Bearer ", "");
+
+      if (string.IsNullOrEmpty(token))
+      {
+        return BadRequest("Token JWT missing in the Header.");
+      }
+
+      var handler = new JwtSecurityTokenHandler();
+      var jsonToken = handler.ReadToken(token) as JwtSecurityToken;
+      if (jsonToken != null)
+      {
+        Login loginFound = null;
+        foreach (var claim in jsonToken.Claims)
+        {
+          if (claim.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name")
+          {
+            string userEmail = claim.Value;
+            var context = new DatContext();
+            var logins = context.Logins;
+            foreach (var login in logins)
+            {
+              if (login.Email == userEmail)
+              {
+                loginFound = login;
+              }
+            }
+            if (loginFound != null)
+            {
+              loginFound.ResetPasswordKey = null;
+              context.SaveChanges();
+              return Ok(new { message = "2FA is now removed for this user." });
+            }
+            else
+            {
+              return BadRequest(new { message = "User not found." });
+            }
+          }
+        }
+      }
+      else
+      {
+        return BadRequest(new { message = "Invalid JWT token." });
+      }
+    }
+    catch (Exception ex)
+    {
+      return BadRequest(new { message = $"Error while decoding the JWT : {ex.Message}" });
+    }
+
+    return Ok(new { message = "User not found." });
+  }
+
+  /***************************************************************************************/
+  /// <summary>
+  /// HTTP request to validate the 2FA code.
+  /// </summary>
+  /// <param name="model">The Code2FA model containing the email and code.</param>
+  /// <returns>An IActionResult representing the wresult of the setup two-factor authentication operation.</returns>
   [HttpPost("2fa")]
   public IActionResult SetupTwoFactorAuth([FromBody] Code2FA model)
   {
@@ -162,8 +241,7 @@ public class RegisterController : ControllerBase
         if (login.Email == model.email)
         {
           TwoFactorAuthenticator tfa = new TwoFactorAuthenticator();
-          result = tfa.ValidateTwoFactorPIN(login.ResetPasswordKey, model.code, true); // Preciser qu'il faut ajouter une nouvelle colonne dans la DB 
-          string[] pinsWithOneHourTolerance = tfa.GetCurrentPINs(login.ResetPasswordKey);
+          result = tfa.ValidateTwoFactorPIN(login.ResetPasswordKey, model.code, true); // new column to add in the DB in the future
           loginFound = login;
         }
       }
@@ -177,7 +255,7 @@ public class RegisterController : ControllerBase
       }
       else
       {
-        return Ok(new { message = "failed" });
+        return BadRequest(new { message = "failed" });
       }
     }
     catch (Exception ex)
@@ -188,16 +266,26 @@ public class RegisterController : ControllerBase
   }
 
   /***************************************************************************************/
+
+  /// <summary>
+  /// Represents a model for manual entry key and code forthe 2FA configuration.
+  /// </summary>
   public class ManualEntryKeyModel
   {
     public required string ManualEntryKey { get; set; }
+
+    public string? Code { get; set; }
   }
 
   /***************************************************************************************/
+  /// <summary>
+  /// Represents the model for a two-factor authentication.
+  /// </summary>
   public class Code2FA
   {
     public required string code { get; set; }
-    public required string email { get; set; }
+
+    public required string? email { get; set; }
   }
 }
 /***************************************************************************************/
