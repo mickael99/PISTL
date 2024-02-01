@@ -16,7 +16,7 @@
         (selectionChange)="onChange($event)"
       >
         <mat-option
-            *ngFor="let domain of domains | keyvalue "
+          *ngFor="let domain of domains | keyvalue"
           [value]="domain.value"
         >
           <span
@@ -25,9 +25,10 @@
               <span
                 *ngIf="env && i == 0"
                 style="
-                  background-color: #f5a82a;
                   margin-right: 5px;
-                  color: white;
+                  background-color: #f5a82a;
+                  color: #fff;
+                  padding: 0.5rem;
                 "
               >
                 Dev
@@ -35,9 +36,10 @@
               <span
                 *ngIf="env && i == 1"
                 style="
-                  background-color: #c125f2;
                   margin-right: 5px;
-                  color: white;
+                  background-color: #c125f2;
+                  color: #fff;
+                  padding: 0.5rem;
                 "
               >
                 Preprod
@@ -45,9 +47,10 @@
               <span
                 *ngIf="env && i == 2"
                 style="
-                  background-color: #4557a2;
                   margin-right: 5px;
-                  color: white;
+                  background-color: #4557a2;
+                  color: #fff;
+                  padding: 0.5rem;
                 "
               >
                 Prod
@@ -55,9 +58,10 @@
               <span
                 *ngIf="env && i == 3"
                 style="
-                  background-color: #50c63e;
                   margin-right: 5px;
-                  color: white;
+                  background-color: #50c63e;
+                  color: #fff;
+                  padding: 0.5rem;
                 "
               >
                 Test
@@ -65,9 +69,10 @@
               <span
                 *ngIf="env && i == 4"
                 style="
-                  background-color: #956248;
                   margin-right: 5px;
-                  color: white;
+                  background-color: #956248;
+                  color: #fff;
+                  padding: 0.5rem;
                 "
               >
                 ProdCopy
@@ -75,9 +80,10 @@
               <span
                 *ngIf="env && i == 5"
                 style="
-                  background-color: #f5f334;
                   margin-right: 5px;
-                  color: white;
+                  background-color: #f5f334;
+                  color: #000;
+                  padding: 0.5rem;
                 "
               >
                 Staging
@@ -91,12 +97,12 @@
   <mat-card-content>
     <table matSort mat-table [dataSource]="data_source">
       <ng-container matColumnDef="email">
-        <th mat-header-cell *matHeaderCellDef style="width: 30rem;">
+        <th mat-header-cell *matHeaderCellDef style="width: 30rem">
           <div *ngIf="show_add">
             <button
               mat-raised-button
               name="add"
-              color="primary"
+              class="color-button--default"
               (click)="addSysAdmin(element)"
               style="margin: 8px 8px 8px 0"
             >
@@ -107,7 +113,7 @@
             <button
               name="save"
               mat-raised-button
-              class="color-button"
+              class="color-button--save"
               (click)="saveSysAdmin()"
               style="margin: 8px 8px 8px 0"
             >
@@ -117,6 +123,7 @@
               name="cancel"
               mat-raised-button
               color="primary"
+              class="color-button--default"
               (click)="cancelSysAdmin()"
               style="margin: 8px 8px 8px 0"
             >
@@ -139,8 +146,8 @@
             style="
               margin: 5px;
               background-color: #f5a82a;
-              color: white;
-              padding: 3px;
+              color: #fff;
+              padding: 0.75rem;
             "
           >
             Dev
@@ -181,8 +188,8 @@
             style="
               margin: 5px;
               background-color: #c125f2;
-              color: white;
-              padding: 3px;
+              color: #fff;
+              padding: 0.75rem;
             "
           >
             Preprod
@@ -223,8 +230,8 @@
             style="
               margin: 5px;
               background-color: #4557a2;
-              color: white;
-              padding: 3px;
+              color: #fff;
+              padding: 0.75rem;
             "
           >
             Prod
@@ -256,17 +263,17 @@
       <ng-container matColumnDef="test">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
           <mat-checkbox
-          [(ngModel)]="all_checked[4]"
-          (change)="all_checked[4] ? checkAll(4) : uncheckAll(4)"
-          [indeterminate]="one_checked[4] && !all_checked[4]"
-          color="primary"
-        ></mat-checkbox>
+            [(ngModel)]="all_checked[4]"
+            (change)="all_checked[4] ? checkAll(4) : uncheckAll(4)"
+            [indeterminate]="one_checked[4] && !all_checked[4]"
+            color="primary"
+          ></mat-checkbox>
           <div
             style="
               margin: 5px;
               background-color: #50c63e;
-              color: white;
-              padding: 3px;
+              color: #fff;
+              padding: 0.75rem;
             "
           >
             Test
@@ -307,8 +314,8 @@
             style="
               margin: 5px;
               background-color: #956248;
-              color: white;
-              padding: 3px;
+              color: #fff;
+              padding: 0.75rem;
             "
           >
             ProdCopy
@@ -349,8 +356,8 @@
             style="
               margin: 5px;
               background-color: #f5f334;
-              color: white;
-              padding: 3px;
+              color: #000;
+              padding: 0.75rem;
             "
           >
             Staging

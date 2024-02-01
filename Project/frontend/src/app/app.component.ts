@@ -38,7 +38,6 @@ export class AppComponent {
       this.hideLoginForm();
       this.email = localStorage.getItem('email');
     }
-    console.log('show2FA', this.show2FA);
   }
 
   /***************************************************************************************/
@@ -102,21 +101,27 @@ export class AppComponent {
     console.log('checkActivity');
     console.log('new page: ', page);
 
-    if(this.active_page == 'sys-admin-by-domain') {
+    if (this.active_page == 'sys-admin-by-domain') {
       console.log('active page: sys-admin-by-domain');
-      var show_add_sysadmin = localStorage.getItem('show_add_sysadmin') == 'true';
-      console.log('show_add_sysadmin', show_add_sysadmin)
-      if(!show_add_sysadmin) {
-        this.showErrorPopup('Les modifications ne sont pas encore enregistrées. Veuillez les enregistrer avant de quitter la page.');
+      var show_add_sysadmin =
+        localStorage.getItem('show_add_sysadmin') == 'true';
+      console.log('show_add_sysadmin', show_add_sysadmin);
+      if (!show_add_sysadmin) {
+        this.showErrorPopup(
+          'Les modifications ne sont pas encore enregistrées. Veuillez les enregistrer avant de quitter la page.'
+        );
         return 'sys-admin-by-domain';
       }
     }
-    if(this.active_page == 'domain-by-sys-admin') {
+    if (this.active_page == 'domain-by-sys-admin') {
       console.log('active page: domain-by-sys-admin');
-      var show_add_domainby = localStorage.getItem('show_add_domainby') == 'true';
-      console.log('show_add_domainby', show_add_domainby)
-      if(!show_add_domainby) {
-        this.showErrorPopup('Les modifications ne sont pas encore enregistrées. Veuillez les enregistrer avant de quitter la page.');
+      var show_add_domainby =
+        localStorage.getItem('show_add_domainby') == 'true';
+      console.log('show_add_domainby', show_add_domainby);
+      if (!show_add_domainby) {
+        this.showErrorPopup(
+          'Les modifications ne sont pas encore enregistrées. Veuillez les enregistrer avant de quitter la page.'
+        );
         return 'domain-by-sys-admin';
       }
     }

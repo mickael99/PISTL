@@ -55,15 +55,15 @@ header {
 }
 
 .btn--1 {
-  color: #647ab9;
-  font-weight: 700;
+  color: #3d59a7;
+  font-weight: 500;
   font-size: 2.2rem;
   text-decoration: none;
   position: relative;
 }
 
 .btn--1:hover {
-  color: #2b3e75;
+  text-shadow: 0px 0.5px 1px #3d59a7;
   cursor: pointer;
 }
 
@@ -78,17 +78,17 @@ header {
 }
 
 .btn--2 {
-  color: #647ab9;
+  color: #3d59a7;
   text-decoration: none;
   font-size: 1.8rem;
-  width: 27rem;
+  width: 24rem;
   padding: 0.5rem 2.5rem;
 }
 
 .btn--2:hover {
   cursor: pointer;
-  font-weight: 700;
-  box-shadow: 0 3.2rem 6.4rem rgba(0, 0, 0, 0.1);
+  text-shadow: 0px 0.5px 1px #3d59a7;
+  background-color: #c5cde5;
 }
 
 .btn--2::after {
@@ -139,7 +139,7 @@ header {
 
 .btn--log-off {
   text-decoration: none;
-  background-color: #dc143c;
+  background-color: #d9534f;
   padding: 2rem 4rem;
   color: #fff;
   font-weight: 700;
@@ -149,6 +149,14 @@ header {
 
 .btn--log-off:hover {
   background-color: #c61236;
+}
+
+.mat-mdc-raised-button.color-button--log-off {
+  background-color: #d9534f;
+  color: #fff;
+  font-size: 1.8rem;
+  padding: 2rem 3rem;
+  margin-right: 2rem;
 }
 
 .text {
@@ -173,6 +181,10 @@ header {
 /***********************************************************************************/
 .btn--margin-right {
   margin-right: 6rem;
+}
+
+.btn--less--width {
+  width: 19.5rem;
 }
 
 /***********************************************************************************/

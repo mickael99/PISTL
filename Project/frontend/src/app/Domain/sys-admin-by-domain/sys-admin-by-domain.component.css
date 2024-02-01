@@ -58,9 +58,21 @@ button {
   margin: 8px 8px 8px 0;
 }
 
-.mat-mdc-raised-button.color-button {
-  background-color: #37b24d;
+.mat-mdc-raised-button.color-button--save {
+  background-color: #5cb85c;
   color: #fff;
+  font-size: 1.2rem;
+}
+
+.mat-mdc-raised-button.color-button--default {
+  background-color: #3d59a7;
+  color: #fff;
+  font-size: 1.2rem;
+}
+
+.mat-mdc-raised-button.color-button--submit {
+  background-color: #fff;
+  color: #000;
   font-size: 1.2rem;
 }
 

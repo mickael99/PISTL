@@ -40,8 +40,8 @@ public class Startup
 
         services.AddDbContext<DatContext>(options =>
         {
-            options.UseSqlServer(Configuration?.GetConnectionString("DefaultConnection"));
-            // options.UseSqlServer(Configuration.GetConnectionString("AzureDatabase"));
+            // options.UseSqlServer(Configuration?.GetConnectionString("DefaultConnection"));
+            options.UseSqlServer(Configuration.GetConnectionString("AzureDatabase"));
         });
 
 

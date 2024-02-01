@@ -161,6 +161,7 @@ export class DatabaseComponent {
               return item[property];
           }
         };
+
         this.dataSource.sort = this.sort;
         // this.dataSource.sortName = this.sortName;
         this.dataSource.sortServerId = this.sortServerId;
@@ -173,6 +174,7 @@ export class DatabaseComponent {
     this.http.get('http://localhost:5050/api/server', options).subscribe(
       (data: any) => {
         this.server = data;
+        this.dataSource = new MatTableDataSource(this.database); //
         this.dataSource.paginator = this.paginator;
         this.dataSource.sortingDataAccessor = (item, property) => {
           switch (property) {
@@ -531,7 +533,7 @@ export class DatabaseComponent {
    * Function used to display the database's information in the form.
    */
   showFormCreateDatabase() {
-    this.showFormCreate = !this.showFormCreate;
+    // console.log('AV this.formDataCreate: ', this.formDataCreate);
 
     // Reinitialize the form if reclicked
     this.formDataCreate = {
@@ -546,7 +548,22 @@ export class DatabaseComponent {
       Context: null,
     };
 
-    this.reinitaliseDatabaseSelectedForm();
+    this.showFormCreate = true;
+
+    this.formDataCreate = {
+      DatabaseId: 0,
+      Name: '',
+      UserName: '',
+      Password: '',
+      Server: null,
+      ServerId: 0,
+      CreatedBy: '',
+      ModifiedBy: '',
+      Context: null,
+    };
+    // console.log('AP this.formDataCreate: ', this.formDataCreate);
+
+    // this.reinitaliseDatabaseSelectedForm();
   }
 
   /***************************************************************************************/
@@ -555,7 +572,7 @@ export class DatabaseComponent {
    * Activates the 'Edit', 'Delete' buttons.
    * Sets the 'databaseClicked' variable to the ID of the selected database.
    * Sets the 'isHovered' variable to true.
-   * 
+   *
    * @param database - The database object containing the details to be retrieved.
    */
   getDatabase(database: any) {
@@ -580,7 +597,6 @@ export class DatabaseComponent {
     this.databaseClicked = database.databaseId;
 
     this.isHovered = true;
-
   }
 
   /***************************************************************************************/
@@ -726,7 +742,6 @@ export class DatabaseComponent {
       this.isHovered = true;
     }
     this.databaseHovered = databaseHovered;
-
   }
 
   /***************************************************************************************/

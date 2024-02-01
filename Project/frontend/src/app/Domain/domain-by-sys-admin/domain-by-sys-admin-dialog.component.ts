@@ -7,16 +7,18 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { from } from 'rxjs';
 
 @Component({
-  selector: 'app-domain-by-sys-admin-dialog', 
-  providers: [DatePipe, MatDatepicker, { provide: DateAdapter, useClass: NativeDateAdapter }],
+  selector: 'app-domain-by-sys-admin-dialog',
+  providers: [
+    DatePipe,
+    MatDatepicker,
+    { provide: DateAdapter, useClass: NativeDateAdapter },
+  ],
   styleUrls: ['./domain-by-sys-admin.component.css'],
   template: `
-    <h2 mat-dialog-title>
-      System Administration rights for {{ data.name }}
-    </h2>
+    <h2 mat-dialog-title>System Administration rights for {{ data.name }}</h2>
     <mat-dialog-content>
       <form [formGroup]="newAdminForm" (ngSubmit)="onSubmit()">
-        <div> 
+        <div>
           <mat-form-field>
             <mat-label>From</mat-label>
             <input matInput type="date" formControlName="from" />
@@ -32,22 +34,45 @@ import { from } from 'rxjs';
             <textarea matInput formControlName="comment"></textarea>
           </mat-form-field>
         </div>
-        <div *ngIf="newAdminForm.controls.from.value !== '' && newAdminForm.controls.from.value < from_copy" style="color: red;">
+        <div
+          *ngIf="
+            newAdminForm.controls.from.value !== '' &&
+            newAdminForm.controls.from.value < from_copy
+          "
+          style="color: red;"
+        >
           Please enter a valid 'from' date.
         </div>
-        <div *ngIf="newAdminForm.controls.to.value !== '' && newAdminForm.controls.to.value < newAdminForm.controls.from.value" style="color: red;">
+        <div
+          *ngIf="
+            newAdminForm.controls.to.value !== '' &&
+            newAdminForm.controls.to.value < newAdminForm.controls.from.value
+          "
+          style="color: red;"
+        >
           Please enter a valid 'to' date.
         </div>
         <div mat-dialog-actions>
-          <button mat-raised-button color="primary" (click)="onCancel()">Cancel</button>
-          <button mat-raised-button 
-                  class="color-button"
-                  type="submit" 
-                  [disabled]="newAdminForm.controls.to.value !== '' &&
-                            newAdminForm.controls.from.value !== '' &&
-                            (newAdminForm.controls.to.value < newAdminForm.controls.from.value ||
-                            newAdminForm.controls.from.value < from_copy)">
-                    Submit
+          <button
+            mat-raised-button
+            class="color-button--default"
+            (click)="onCancel()"
+          >
+            Cancel
+          </button>
+          <button
+            mat-raised-button
+            class="color-button--submit"
+            type="submit"
+            [disabled]="
+              newAdminForm.controls.to.value !== '' &&
+              newAdminForm.controls.from.value !== '' &&
+              (newAdminForm.controls.to.value <
+                newAdminForm.controls.from.value ||
+                newAdminForm.controls.from.value < from_copy)
+            "
+          >
+            Submit
           </button>
         </div>
       </form>
@@ -65,12 +90,18 @@ export class DomainBySysAdminComponentDialog {
     public datepipe: DatePipe
   ) {
     // Set the default value for "from" to the current date
-    this.from_copy = this.datepipe.transform(data.user.sysAdminStartDate, 'yyyy-MM-dd');
+    this.from_copy = this.datepipe.transform(
+      data.user.sysAdminStartDate,
+      'yyyy-MM-dd'
+    );
     const currentDate = new Date();
     const fromDate =
       this.datepipe.transform(data.user.sysAdminStartDate, 'yyyy-MM-dd') ||
       this.datepipe.transform(currentDate, 'yyyy-MM-dd');
-    const toDate = this.datepipe.transform(data.user.sysAdminEndDate, 'yyyy-MM-dd');
+    const toDate = this.datepipe.transform(
+      data.user.sysAdminEndDate,
+      'yyyy-MM-dd'
+    );
     const comment = data.user.comment;
 
     this.newAdminForm = this.fb.group({
@@ -83,7 +114,7 @@ export class DomainBySysAdminComponentDialog {
 
   setDate(event, dp) {
     this.newAdminForm.patchValue({
-      to: this.datepipe.transform(event, 'yyyy-MM-dd')
+      to: this.datepipe.transform(event, 'yyyy-MM-dd'),
     });
     dp.close();
   }
