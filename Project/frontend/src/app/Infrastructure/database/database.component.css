@@ -1,14 +1,13 @@
 @import "@angular/material/prebuilt-themes/indigo-pink.css";
 
-
 .title {
   font-size: 2.4rem;
   font-weight: 700;
   color: #3d59a7;
 }
-  
+
 .btn {
-  margin: 8px 8px 8px 0;
+  margin: 0px 8px 8px 0;
   font-weight: 600;
 }
 

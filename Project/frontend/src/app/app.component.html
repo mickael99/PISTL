@@ -35,19 +35,19 @@
                 <a
                   ngbDropdownItem
                   routerLink="domain-administration"
-                  class="btn--2 btn--margin-right"
+                  class="btn--2"
                   >Domain Administration</a
                 >
                 <a
                   ngbDropdownItem
                   routerLink="sys-admin-by-domain"
-                  class="btn--2 btn--margin-right"
+                  class="btn--2"
                   >SysAdmin by Domain</a
                 >
                 <a
                   ngbDropdownItem
                   [routerLink]="'domain-by-sys-admin'"
-                  class="btn--2 btn--margin-right"
+                  class="btn--2"
                   >Domain by SysAdmin</a
                 >
               </div>
@@ -66,19 +66,19 @@
                 <a
                   ngbDropdownItem
                   routerLink="database"
-                  class="btn--2 btn--margin-right"
+                  class="btn--2 btn--less--width"
                   >Database</a
                 >
                 <a
                   ngbDropdownItem
                   routerLink="server"
-                  class="btn--2 btn--margin-right"
+                  class="btn--2 btn--less--width"
                   >Server</a
                 >
                 <a
                   ngbDropdownItem
                   routerLink="server-parameter"
-                  class="btn--2 btn--margin-right"
+                  class="btn--2 btn--less--width"
                   >Server Parameter</a
                 >
               </div>
@@ -102,15 +102,23 @@
             </a>
           </li>
           <li>
-            <a href="#" class="btn--log-off nav-end--2" (click)="deconnexion()"
-              >Log off</a
-            >
+            <a href="#">
+              <button
+                mat-raised-button
+                color="primary"
+                class="btn color-button--log-off nav-end--2"
+                (click)="deconnexion()"
+              >
+                Log off
+              </button>
+            </a>
           </li>
         </ul>
       </nav>
     </header>
     <router-outlet></router-outlet>
   </ng-container>
+  <hr />
 </div>
 
 <!-- Error pop-up -->

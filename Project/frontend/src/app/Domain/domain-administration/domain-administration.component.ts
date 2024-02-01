@@ -965,9 +965,9 @@ export class DomainAdministrationComponent {
         Name: 'Copy - ' + this.selectedDomain.name,
         Logo: btoa(this.selectedDomain.logo),
         Edition: this.selectedDomain.edition,
-        IsSsoEnabled: this.isSsoEnabled,
-        Comment: this.comment,
-        ParentCompany: this.parentCompany,
+        IsSsoEnabled: this.selectedDomain.isSsoEnabled,
+        Comment: this.selectedDomain.comment,
+        ParentCompany: this.selectedDomain.parentCompany,
       };
 
       postDomain(newDomain);

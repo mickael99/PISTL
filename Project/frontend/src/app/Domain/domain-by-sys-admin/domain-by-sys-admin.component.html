@@ -29,11 +29,12 @@
     <mat-card-content>
       <table matSort mat-table [dataSource]="dataSource">
         <ng-container matColumnDef="name">
-          <th mat-header-cell *matHeaderCellDef style="width: 20rem;">
+          <th mat-header-cell *matHeaderCellDef style="width: 20rem">
             <div *ngIf="show_add">
               <button
                 mat-raised-button
                 color="primary"
+                class="color-button--default"
                 (click)="addDomain(element)"
                 style="margin: 8px 8px 8px 0"
               >
@@ -43,7 +44,7 @@
             <div *ngIf="!show_add">
               <button
                 mat-raised-button
-                class="color-button"
+                class="color-button--save"
                 (click)="saveDomain()"
                 style="margin: 8px 8px 8px 0"
               >
@@ -51,7 +52,7 @@
               </button>
               <button
                 mat-raised-button
-                color="primary"
+                class="color-button--default"
                 (click)="cancelDomain()"
                 style="margin: 8px 8px 8px 0"
               >
@@ -65,17 +66,17 @@
         <ng-container matColumnDef="dev">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>
             <mat-checkbox
-            [(ngModel)]="all_checked[1]"
-            (change)="all_checked[1] ? checkAll(1) : uncheckAll(1)"
-            [indeterminate]="one_checked[1] && !all_checked[1]"
-            color="primary"
-          ></mat-checkbox>
+              [(ngModel)]="all_checked[1]"
+              (change)="all_checked[1] ? checkAll(1) : uncheckAll(1)"
+              [indeterminate]="one_checked[1] && !all_checked[1]"
+              color="primary"
+            ></mat-checkbox>
             <div
               style="
                 margin: 5px;
                 background-color: #f5a82a;
-                color: white;
-                padding: 3px;
+                color: #fff;
+                padding: 0.75rem;
               "
             >
               Dev
@@ -116,8 +117,8 @@
               style="
                 margin: 5px;
                 background-color: #c125f2;
-                color: white;
-                padding: 3px;
+                color: #fff;
+                padding: 0.75rem;
               "
             >
               Preprod
@@ -158,8 +159,8 @@
               style="
                 margin: 5px;
                 background-color: #4557a2;
-                color: white;
-                padding: 3px;
+                color: #fff;
+                padding: 0.75rem;
               "
             >
               Prod
@@ -200,8 +201,8 @@
               style="
                 margin: 5px;
                 background-color: #50c63e;
-                color: white;
-                padding: 3px;
+                color: #fff;
+                padding: 0.75rem;
               "
             >
               Test
@@ -242,8 +243,8 @@
               style="
                 margin: 5px;
                 background-color: #956248;
-                color: white;
-                padding: 3px;
+                color: #fff;
+                padding: 0.75rem;
               "
             >
               ProdCopy
@@ -284,8 +285,8 @@
               style="
                 margin: 5px;
                 background-color: #f5f334;
-                color: white;
-                padding: 3px;
+                color: #000;
+                padding: 0.75rem;
               "
             >
               Staging

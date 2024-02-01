@@ -30,23 +30,6 @@ namespace DataBaseFirstDemo
           webBuilder.UseUrls("http://*:5050");
           webBuilder.UseStartup<Startup>();
         });
-
-    /***************************************************************************************/
-    /// <summary>
-    /// Creates a password hash and salt using HMACSHA512 algorithm.
-    /// </summary>
-    /// <param name="password">The password to be hashed.</param>
-    /// <param name="passwordHash">The resulting password hash.</param>
-    /// <param name="passwordSalt">The resulting password salt.</param>
-    /// 
-    // private static void _create_password_hash(string password, out byte[] passwordHash, out string passwordSalt)
-    // {
-    //   using (var hmac = new System.Security.Cryptography.HMACSHA512())
-    //   {
-    //     passwordSalt = hmac.Key;
-    //     passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
-    //   }
-    // }
   }
 }
 /***************************************************************************************/

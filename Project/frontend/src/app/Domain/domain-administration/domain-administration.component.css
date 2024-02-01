@@ -145,11 +145,14 @@ input[type="radio"]:checked + label + div {
 @import "@angular/material/prebuilt-themes/indigo-pink.css";
 
 .container {
-  margin: 0 0 0 2rem;
+  margin: 1rem 0 0 2rem;
   width: 55%;
+}
+
+.container--1 {
+  padding: 2rem;
   /* box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5); */
   background-color: #fff;
-  padding: 2rem;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
   border-radius: 5px;
   margin-top: 1rem;
@@ -164,6 +167,12 @@ input[type="radio"]:checked + label + div {
 .mat-mdc-raised-button.color-button {
   background-color: #3d59a7;
   color: #fff;
+  font-size: 1.2rem;
+}
+
+.mat-mdc-raised-button.color-button--choose {
+  background-color: #fff;
+  color: #000;
   font-size: 1.2rem;
 }
 
