@@ -87,8 +87,9 @@ export class DomainBySysAdminComponent {
           if(login.loginId === login_id)
             this.selected_login = login;
         }
-
-        
+        if(this.selected_login === undefined && data.logins.length > 0) {
+          this.selected_login = data.logins[0];
+        }
 
         for(const domain of data.domains){
           this.domains.push(domain);

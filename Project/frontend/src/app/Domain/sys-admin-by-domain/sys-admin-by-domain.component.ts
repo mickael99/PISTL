@@ -114,6 +114,9 @@ export class SysAdminByDomainComponent {
               this.selected_domain = domain;
             }
           }
+          if(this.selected_domain === undefined && this.domains.length > 0) {
+            this.selected_domain = this.domains[0];
+          }
 
           for (const login of data.logins) {
             this.logins.push(login);
