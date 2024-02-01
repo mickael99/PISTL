@@ -1,20 +1,24 @@
 /***********************************************************************************/
-/**************************** FORM *************************************************/
 /***********************************************************************************/
+/***********************************************************************************/
+@import "@angular/material/prebuilt-themes/indigo-pink.css";
+
+.fa2-header {
+  background-color: #f0f0f0;
+}
+
+.mat-mdc-raised-button.color-button-confirm {
+  background-color: #3d59a7;
+  color: #fff;
+  font-size: 1.2rem;
+}
 
 .btn--center {
   display: flex;
   justify-content: center;
-  margin-top: 1rem;
-  gap: 1.5rem;
-}
-
-.btn-secondary {
-  background-color: #c61236;
-}
-
-.btn {
-  padding: 0.5rem 1rem;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
 }
 
 /***********************************************************************************/

@@ -1,6 +1,6 @@
 <div class="container--2">
   <form class="form" (ngSubmit)="connectDB()" #myForm="ngForm">
-    <header>
+    <header class="login--header">
       <a href="#">
         <picture>
           <img
@@ -38,7 +38,15 @@
     </div>
 
     <div class="btn--center">
-      <input type="submit" value="Log in" class="btn btn-primary btn-lg" />
+      <button
+        mat-raised-button
+        color="primary"
+        class="btn color-button"
+        type="submit"
+      >
+        Log in
+      </button>
+      <!-- <input type="submit" value="Log in" class="btn btn-primary btn-lg" /> -->
     </div>
 
     <ng-container *ngIf="showErrorMessage != ''">

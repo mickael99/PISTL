@@ -1,10 +1,23 @@
 /***********************************************************************************/
 /***********************************************************************************/
 /***********************************************************************************/
-.btn--added2FA {
-  padding: 1rem 2rem;
+
+@import "@angular/material/prebuilt-themes/indigo-pink.css";
+
+h1 {
+  font-size: 2.4rem;
+  font-weight: 700;
 }
 
+h2 {
+  font-size: 2rem;
+}
+
+.mat-mdc-raised-button.color-button-confirm {
+  background-color: #3d59a7;
+  color: #fff;
+  font-size: 1.2rem;
+}
 .container--2FA {
   display: flex;
   flex-direction: column;
@@ -18,6 +31,37 @@
 img {
   width: 20rem;
 }
+
+.QR {
+  padding: 1rem;
+}
+
+.mat-mdc-raised-button.color-button {
+  background-color: #3d59a7;
+  color: #fff;
+  font-size: 1.6rem;
+}
+
+.form--fa {
+  width: 20rem;
+  font-size: 1.2rem;
+}
+
+.container--btn2FA {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.form-control {
+  height: 4.5rem;
+  font-size: 1.8rem;
+}
+
+.error--text {
+  font-size: 1.4rem;
+}
+
 /***********************************************************************************/
 /***********************************************************************************/
 /***********************************************************************************/
