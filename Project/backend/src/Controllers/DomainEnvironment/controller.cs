@@ -7,30 +7,39 @@ using System.IO;
 
 [Route("api/domainEnvironment")]
 [ApiController]
-public class DomainEnvironmentController : ControllerBase {
-    
+public class DomainEnvironmentController : ControllerBase
+{
+
     [HttpGet]
-    public IActionResult GetDomainEnvironments()  {
-        try {
+    public IActionResult GetDomainEnvironments()
+    {
+        try
+        {
             var context = new DatContext();
             Console.WriteLine("=> GET /api/domainEnvironment");
 
             var domainEnvironments = context.DomainEnvironments;
 
             return Ok(domainEnvironments);
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             return BadRequest(ex.Message);
         }
     }
 
     [HttpPost]
-    public IActionResult PostDomainEnvironment([FromBody] List<EnvironmentModel> models) {
-        try {
+    public IActionResult PostDomainEnvironment([FromBody] List<EnvironmentModel> models)
+    {
+        try
+        {
             var context = new DatContext();
             Console.WriteLine("=> POST /api/domainEnvironment");
-           
-           foreach(EnvironmentModel model in models) {
-                DomainEnvironment domainEnvironment = new DomainEnvironment {
+
+            foreach (EnvironmentModel model in models)
+            {
+                DomainEnvironment domainEnvironment = new DomainEnvironment
+                {
                     DomainId = model.DomainId,
                     Environment = model.Environment,
                     BpwebServerId = model.BpwebServerId,
@@ -41,28 +50,41 @@ public class DomainEnvironmentController : ControllerBase {
                     EaiftpserverId = model.EaiftpserverId,
                     IsBp5Enabled = model.IsBp5Enabled
                 };
-                    
+
                 context.DomainEnvironments.Add(domainEnvironment);
                 context.SaveChanges();
-           }
+            }
 
-            return Ok( new { env = context.DomainEnvironments });
-        } catch (Exception ex) {
+            return Ok(new { env = context.DomainEnvironments });
+        }
+        catch (Exception ex)
+        {
             Console.WriteLine($"Error in PostDomainEnvironment: {ex.ToString()}");
             return BadRequest(ex.Message);
         }
     }
 
     [HttpPut("{id}")]
-    public IActionResult PutDomainEnvironment(int id, [FromBody] EnvironmentModel model) {
+    public IActionResult PutDomainEnvironment(int id, [FromBody] EnvironmentModel model)
+    {
         Console.WriteLine("===============> PUT /api/domainEnvironment");
-
-         try {
+        try
+        {
             var context = new DatContext();
             var existingEnvironmentDomain = context.DomainEnvironments.FirstOrDefault(e => e.DomainEnvironmentId == id);
 
             if (existingEnvironmentDomain == null)
                 return NotFound($"DomainEnvironment with ID {id} not found.");
+
+            Console.WriteLine("model.DomainId: " + model.DomainId);
+            Console.WriteLine("model.Environment: " + model.Environment);
+            Console.WriteLine("model.BpwebServerId: " + model.BpwebServerId);
+            Console.WriteLine("model.BpdatabaseId: " + model.BpdatabaseId);
+            Console.WriteLine("model.EaidatabaseId: " + model.EaidatabaseId);
+            Console.WriteLine("model.SsrsserverId: " + model.SsrsserverId);
+            Console.WriteLine("model.TableauServerId: " + model.TableauServerId);
+            Console.WriteLine("model.EaiftpserverId: " + model.EaiftpserverId);
+            Console.WriteLine("model.IsBp5Enabled: " + model.IsBp5Enabled);
 
             existingEnvironmentDomain.BpwebServerId = model.BpwebServerId;
             existingEnvironmentDomain.BpdatabaseId = model.BpdatabaseId;
@@ -83,11 +105,13 @@ public class DomainEnvironmentController : ControllerBase {
     }
 
     [HttpDelete("{id}")]
-    public IActionResult DeleteDomainEnvironment(int id) {
-        try{
+    public IActionResult DeleteDomainEnvironment(int id)
+    {
+        try
+        {
             var context = new DatContext();
             Console.WriteLine("===============> DELETE /api/domainEnvironment");
-                        
+
             var domainEnvironmentToDelete = context.DomainEnvironments.FirstOrDefault(e => e.DomainEnvironmentId == id);
 
             //delete login domains
@@ -112,7 +136,8 @@ public class DomainEnvironmentController : ControllerBase {
         }
     }
 
-    public class EnvironmentModel {
+    public class EnvironmentModel
+    {
         public int DomainId { get; set; }
         public int Environment { get; set; }
         public int BpwebServerId { get; set; }

@@ -73,6 +73,7 @@ public class DomainAdministrationController : ControllerBase
         Console.WriteLine("===============> PUT /api/domain");
         try
         {
+
             var context = new DatContext();
             var existingDomain = context.Domains.FirstOrDefault(d => d.DomainId == id);
 
