@@ -3,7 +3,8 @@ using Newtonsoft.Json;
 using Project.Controllers;
 using Project.Models;
 using Project.Models.DTO;
-using NUnit.Framework; // Add missing using statement
+using NUnit.Framework;
+using Project.Repository; // Add missing using statement
 
 namespace backend.Tests;
 
@@ -35,7 +36,23 @@ public class TestServerParameter
     public void TestGetServerParametersByServer()
     {
         // Arrange
+        var context = new DatContext();
+        var serverRepository = new ServerRepository(context);
         var controller = new ServerParametersController();
+        var controller2 = new ServerController(serverRepository, context);
+        var server = new Project.Models.Server
+        {
+            Name = "TestSeverName",
+            Address = "TestAdress",
+            Context = 1,
+            CreatedDate = DateTime.Now,
+            CreatedBy = "TestCreatedBy",
+            ModifiedDate = DateTime.Now,
+            ModifiedBy = "TestModifiedBy",
+            Type = "TestType"
+        };
+        controller2.CreateServer(server);
+        Console.WriteLine(server.ServerId);
 
         // Act
         var response = controller.GetServerParametersByServer(1) as OkObjectResult;
