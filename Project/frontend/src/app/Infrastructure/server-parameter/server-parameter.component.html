@@ -3,7 +3,7 @@
   <button
     mat-raised-button
     color="primary"
-    class="btn"
+    class="btn color-button--default"
     (click)="newForm()"
     [disabled]="
       showPopupError ||
@@ -16,7 +16,6 @@
   </button>
   <button
     mat-raised-button
-    color="primary"
     [disabled]="
       !show_edit ||
       showPopupError ||
@@ -25,13 +24,12 @@
       showResetPasswordConfirmation
     "
     (click)="editForm()"
-    class="btn"
+    class="btn color-button--default"
   >
     Edit
   </button>
   <button
     mat-raised-button
-    color="primary"
     [disabled]="
       !show_edit ||
       showPopupError ||
@@ -39,14 +37,13 @@
       showDeleteConfirmation ||
       showResetPasswordConfirmation
     "
-    (click)="copy()"
-    class="btn"
+    (click)="openCopyConfirmation()"
+    class="btn color-button--default"
   >
     Copy
   </button>
   <button
     mat-raised-button
-    color="primary"
     [disabled]="
       !show_edit ||
       showPopupError ||
@@ -54,8 +51,8 @@
       showDeleteConfirmation ||
       showResetPasswordConfirmation
     "
-    (click)="delete()"
-    class="btn"
+    (click)="openDeleteConfirmation()"
+    class="btn color-button--default"
   >
     Delete
   </button>
@@ -168,19 +165,18 @@
             name="parameterValue"
           />
         </mat-form-field>
-        <div class="container" style="margin-bottom: 10%">
+        <div class="buttons--container">
           <button
             mat-raised-button
             (click)="createParameter()"
-            [ngClass]="{ 'color-button': edit_enabled, btn: true }"
+            [ngClass]="{ 'color-button--save ': edit_enabled, btn: true }"
             [disabled]="!edit_enabled"
           >
             Save
           </button>
           <button
             mat-raised-button
-            color="primary"
-            class="btn"
+            class="color-button--default"
             (click)="reinitaliseParameterSelectedForm()"
           >
             Cancel
@@ -200,7 +196,6 @@
           <mat-label>Server ID</mat-label>
           <input
             matInput
-            required
             [(ngModel)]="selected_server.serverId"
             name="serverId"
             [disabled]="true"
@@ -211,7 +206,6 @@
           <input
             matInput
             placeholder="Key"
-            required
             [(ngModel)]="selected_parameter[0]"
             name="parameterKey"
             [disabled]="true"
@@ -222,17 +216,16 @@
           <input
             matInput
             placeholder="Value"
-            required
             [(ngModel)]="selected_parameter[1]"
             name="parameterValue"
             [disabled]="!edit_enabled"
           />
         </mat-form-field>
-        <div class="button-container" style="margin-bottom: 10%">
+        <div class="buttons--container">
           <button
             mat-raised-button
             (click)="editParameter()"
-            [ngClass]="{ 'color-button': edit_enabled, btn: true }"
+            [ngClass]="{ 'color-button--save': edit_enabled, btn: true }"
             [disabled]="
               !edit_enabled ||
               showPopupError ||
@@ -245,8 +238,7 @@
           </button>
           <button
             mat-raised-button
-            color="primary"
-            class="btn"
+            class="color-button--default"
             (click)="reinitaliseParameterSelectedForm()"
             [disabled]="
               showPopupError ||
@@ -261,4 +253,24 @@
       </form>
     </div>
   </ng-container>
+
+  <!-- Delete confirmation -->
+  <div>
+    <app-confirm-popup
+      *ngIf="showDeleteConfirmation"
+      [confirmationMessage]="popupMessage"
+      (confirm)="delete()"
+      (close)="onDeleteClose()"
+    ></app-confirm-popup>
+  </div>
+
+  <!-- Copy confirmation -->
+  <div>
+    <app-confirm-popup
+      *ngIf="showCopyConfirmation"
+      [confirmationMessage]="popupMessage"
+      (confirm)="copy()"
+      (close)="onCopyClose()"
+    ></app-confirm-popup>
+  </div>
 </div>

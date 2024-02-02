@@ -2,15 +2,13 @@
   <h1 class="title">Sys Admin Users</h1>
   <button
     mat-raised-button
-    color="primary"
-    class="btn"
+    class="btn color-button--default"
     (click)="showFormCreateUser()"
   >
     New
   </button>
   <button
     mat-raised-button
-    color="primary"
     (click)="editEnable()"
     [disabled]="
       !isClicked ||
@@ -19,13 +17,12 @@
       showDeleteConfirmation ||
       showResetPasswordConfirmation
     "
-    class="btn"
+    class="btn color-button--default"
   >
     Edit
   </button>
   <button
     mat-raised-button
-    color="primary"
     (click)="openDeleteConfirmation()"
     [disabled]="
       !isClicked ||
@@ -34,13 +31,12 @@
       showDeleteConfirmation ||
       showResetPasswordConfirmation
     "
-    class="btn"
+    class="btn color-button--default"
   >
     Delete
   </button>
   <button
     mat-raised-button
-    color="primary"
     (click)="openResetPasswordConfirmation()"
     [disabled]="
       !isClicked ||
@@ -49,13 +45,12 @@
       showDeleteConfirmation ||
       showResetPasswordConfirmation
     "
-    class="btn"
+    class="btn color-button--default"
   >
     Reset Password
   </button>
   <button
     mat-raised-button
-    color="primary"
     (click)="check_if_user_blocked()"
     [disabled]="
       !isClicked ||
@@ -64,13 +59,12 @@
       showDeleteConfirmation ||
       showResetPasswordConfirmation
     "
-    class="btn"
+    class="btn color-button--default"
   >
     Unlock
   </button>
   <div class="listes">
     <div class="table">
-      <hr />
       <mat-card-content>
         <table
           matSort
@@ -138,21 +132,6 @@
     <!---------------------------->
     <div class="formCreate">
       <ng-container *ngIf="showFormCreate">
-        <button
-          mat-raised-button
-          class="color-button margin--right"
-          (click)="newUserFormCreateUser()"
-        >
-          Save
-        </button>
-        <button
-          mat-raised-button
-          color="primary"
-          class="btn"
-          (click)="showFormCreateUser()"
-        >
-          Cancel
-        </button>
         <form class="form--users">
           <mat-form-field class="example-full-width">
             <mat-label>Name</mat-label>
@@ -193,7 +172,6 @@
               matInput
               type="text"
               placeholder="Last Login Date"
-              required
               [disabled]="true"
             />
           </mat-form-field>
@@ -204,7 +182,6 @@
               matInput
               type="number"
               placeholder="Invalid Attempt Count"
-              required
               [disabled]="true"
             />
           </mat-form-field>
@@ -215,7 +192,6 @@
               matInput
               type="email"
               placeholder="Modified By"
-              required
               [disabled]="true"
             />
           </mat-form-field>
@@ -226,7 +202,6 @@
               matInput
               type="text"
               placeholder="Password Modified Date"
-              required
               [disabled]="true"
             />
           </mat-form-field>
@@ -238,7 +213,6 @@
               matInput
               type="text"
               placeholder="Created Date"
-              required
               [disabled]="true"
             />
           </mat-form-field>
@@ -256,6 +230,23 @@
             name="locked"
             >Locked (Invalid Attempts)</mat-checkbox
           >
+
+          <div class="buttons--container">
+            <button
+              mat-raised-button
+              class="color-button--save margin--right"
+              (click)="newUserFormCreateUser()"
+            >
+              Save
+            </button>
+            <button
+              mat-raised-button
+              class="color-button--default"
+              (click)="showFormCreateUser()"
+            >
+              Cancel
+            </button>
+          </div>
         </form>
       </ng-container>
 
@@ -265,29 +256,12 @@
       <!---------------------------------->
       <div class="">
         <ng-container *ngIf="userSelected.email">
-          <button
-            mat-raised-button
-            (click)="editUser()"
-            [ngClass]="{ 'color-button': editEnabled, 'margin--right': true }"
-            [disabled]="!editEnabled"
-          >
-            Save
-          </button>
-          <button
-            mat-raised-button
-            color="primary"
-            class="btn"
-            (click)="reinitaliseUserSelectedForm()"
-          >
-            Cancel
-          </button>
           <form class="form--users">
             <mat-form-field class="example-full-width">
               <mat-label>Name</mat-label>
               <input
                 matInput
                 placeholder="Name"
-                required
                 [(ngModel)]="userSelected.name"
                 name="name"
                 [disabled]="true"
@@ -298,7 +272,6 @@
               <input
                 matInput
                 placeholder="Email"
-                required
                 [(ngModel)]="userSelected.email"
                 name="email"
                 [disabled]="true"
@@ -310,7 +283,6 @@
                 matInput
                 type="tel"
                 placeholder="Phone"
-                required
                 [(ngModel)]="userSelected.phone"
                 name="phone"
                 [disabled]="!editEnabled"
@@ -322,7 +294,6 @@
                 matInput
                 type="text"
                 placeholder="Last Login Date"
-                required
                 [(ngModel)]="userSelected.lastLoginDate"
                 name="lastLoginDate"
                 [disabled]="true"
@@ -336,7 +307,6 @@
                 type="number"
                 placeholder="Invalid Attempt Count"
                 [(ngModel)]="userSelected.invalidAttemptCount"
-                required
                 [disabled]="true"
                 name="invalidAttemptCount"
               />
@@ -349,7 +319,6 @@
                 type="email"
                 placeholder="Modified By"
                 [(ngModel)]="userSelected.modifiedBy"
-                required
                 [disabled]="true"
                 name="modifiedBy"
               />
@@ -362,7 +331,6 @@
                 type="text"
                 placeholder="Password Modified Date"
                 [(ngModel)]="userSelected.passwordModifiedDate"
-                required
                 [disabled]="true"
                 name="passwordModifiedDate"
               />
@@ -375,7 +343,6 @@
                 type="text"
                 placeholder="Created Date"
                 [(ngModel)]="userSelected.createdDate"
-                required
                 [disabled]="true"
                 name="createdDate"
               />
@@ -396,6 +363,36 @@
               [disabled]="!editEnabled"
               >Locked (Invalid Attempts)</mat-checkbox
             >
+
+            <div class="buttons--container">
+              <button
+                mat-raised-button
+                (click)="editUser()"
+                [ngClass]="{
+                  'color-button--save': editEnabled,
+                  'margin--right': true
+                }"
+                [disabled]="!editEnabled"
+              >
+                Save
+              </button>
+              <button
+                mat-raised-button
+                class="btn color-button--default"
+                (click)="reinitaliseUserSelectedForm()"
+              >
+                Cancel
+              </button>
+            </div>
+
+            <!-- Inform message -->
+            <div class="unlock--info">
+              <ng-container *ngIf="showInform">
+                <div class="alert alert-success" role="alert">
+                  {{ confirmationMessage }}
+                </div>
+              </ng-container>
+            </div>
           </form>
         </ng-container>
       </div>
@@ -407,16 +404,6 @@
           [errorMessage]="popupMessage"
           (close)="closeErrorPopup()"
         ></app-error-popup>
-      </div>
-
-      <!-- Inform pop-up -->
-      <div>
-        <app-inform-popup
-          *ngIf="showInformPopup"
-          [informationMessage]="popupMessage"
-          [passwordReseted]="passwordReseted"
-          (close)="close_inform_popup()"
-        ></app-inform-popup>
       </div>
 
       <!-- Delete confirmation -->

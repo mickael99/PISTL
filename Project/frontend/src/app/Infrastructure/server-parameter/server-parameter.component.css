@@ -12,7 +12,7 @@
 }
 
 .btn {
-  margin: 8px 8px 8px 0;
+  margin: 0 8px 8px 0;
   font-weight: 600;
 }
 
@@ -40,13 +40,14 @@
 }
 
 .table-container {
+  margin-top: 1rem;
   position: relative;
   left: 0;
   background-color: rgb(255, 255, 255);
   font-weight: 700;
   font-size: 2rem;
   margin-left: 2.7rem;
-  padding: 8px;
+  padding: 2rem;
   width: 700px;
 }
 
@@ -80,8 +81,14 @@ th {
   width: 200px;
 }
 
-.mat-mdc-raised-button.color-button {
-  background-color: #37b24d;
+.mat-mdc-raised-button.color-button--save {
+  background-color: #5cb85c;
+  color: #fff;
+  font-size: 1.2rem;
+}
+
+.mat-mdc-raised-button.color-button--default {
+  background-color: #3d59a7;
   color: #fff;
   font-size: 1.2rem;
 }
@@ -99,20 +106,19 @@ th {
   margin-left: 15rem;
 }
 
-.mat-mdc-raised-button.color-button {
-  background-color: #37b24d;
-  color: #fff;
-  font-size: 1.2rem;
-}
-
 .form--users {
-  background-color: #6878a5;
+  background-color: #fff;
   margin-top: 1rem;
   display: grid;
   gap: 1rem;
   width: 100%;
-  padding: 5rem;
+  padding: 2.5rem;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
+}
+
+.buttons--container {
+  display: flex;
+  justify-content: center;
 }
 
 /**********************************************************************/

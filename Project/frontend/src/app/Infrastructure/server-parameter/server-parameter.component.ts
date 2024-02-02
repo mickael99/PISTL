@@ -7,7 +7,7 @@ import { MatTableDataSource } from '@angular/material/table';
 @Component({
   selector: 'app-server-parameter',
   templateUrl: './server-parameter.component.html',
-  styleUrls: ['./server-parameter.component.css']
+  styleUrls: ['./server-parameter.component.css'],
 })
 export class ServerParameterComponent {
   servers: any[];
@@ -23,19 +23,17 @@ export class ServerParameterComponent {
 
   data_source: any;
   displayed_columns: string[] = ['parameterKey', 'parameterValue'];
-  @ViewChild(MatPaginator) paginator !: MatPaginator;
-  @ViewChild(MatSort) sort !: MatSort;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
   error_message: string;
   selected_parameter_copy: any;
   show_edit: boolean;
 
-
   selected_parameter = {
     parameterKey: '',
     parameterValue: '',
-    serverId: ''
-  }
-
+    serverId: '',
+  };
 
   // Hover the two columns in the table
   isHovered: boolean = false;
@@ -58,46 +56,54 @@ export class ServerParameterComponent {
   // Bool that allows or not to display the error popup
   showPopupError: boolean = false;
 
-  // Error message to display in the popup
+  // Bool used to display the copy confirmation popup
+  showCopyConfirmation: boolean = false;
+
+  // Pop-up message to display
   popupMessage: string = '';
 
   constructor(private http: HttpClient) {
-    this.getServerParameterByServer(227);
+    this.getServerParameterByServer(1); //
   }
 
   getServerParameterByServer(server_id: any) {
     this.servers = [];
     this.server_parameters = [];
 
-    this.http.get('http://localhost:5050/api/serverparameter/' + server_id).subscribe(
-      (data: any) => {
-        console.log(data);
-        for(const server of data.servers) {
-          this.servers.push(server);
-          if(server.serverId === server_id) {
-            this.selected_server = server;
+    this.http
+      .get('http://localhost:5050/api/serverparameter/' + server_id)
+      .subscribe(
+        (data: any) => {
+          console.log(data);
+          for (const server of data.servers) {
+            this.servers.push(server);
+            if (server.serverId === server_id) {
+              this.selected_server = server;
+            }
           }
-        }
-        if(this.selected_server == null && this.servers.length > 0)
-          this.selected_server = this.servers[0];
+          if (this.selected_server == null && this.servers.length > 0)
+            this.selected_server = this.servers[0];
 
-        for(const parameter of data.server_parameters) {
-          this.server_parameters.push(parameter);
-        }
+          for (const parameter of data.server_parameters) {
+            this.server_parameters.push(parameter);
+          }
 
-        this.data_server_table = [];
-        for(const parameter of this.server_parameters) {
-          this.data_server_table.push([parameter.parameterKey, parameter.parameterValue]);
-        }
+          this.data_server_table = [];
+          for (const parameter of this.server_parameters) {
+            this.data_server_table.push([
+              parameter.parameterKey,
+              parameter.parameterValue,
+            ]);
+          }
 
-        this.data_source = new MatTableDataSource(this.data_server_table);
-        this.data_source.paginator = this.paginator;
-        this.data_source.sort = this.sort;    
-      },
-      (error: any) => {
-        console.log(error);
-      }
-    );
+          this.data_source = new MatTableDataSource(this.data_server_table);
+          this.data_source.paginator = this.paginator;
+          this.data_source.sort = this.sort;
+        },
+        (error: any) => {
+          console.log(error);
+        }
+      );
   }
 
   onChange(event: any) {
@@ -107,12 +113,11 @@ export class ServerParameterComponent {
   }
 
   changeParameter(element: any) {
-    if(this.selected_parameter == element) {
+    if (this.selected_parameter == element) {
       this.show_edit = false;
       this.selected_parameter = null;
       return;
-    }
-    else {
+    } else {
       this.reinitaliseParameterSelectedForm();
       this.show_edit = true;
       this.show_edit_form = true;
@@ -121,106 +126,126 @@ export class ServerParameterComponent {
   }
 
   copy() {
-    this.selected_parameter_copy = [this.selected_parameter[0], this.selected_parameter[1]];
-    
+    this.selected_parameter_copy = [
+      this.selected_parameter[0],
+      this.selected_parameter[1],
+    ];
+
     // Check if the last two characters of this.selected_parameter[0] match the pattern "_"+ (number)
     const regex = /_\d$/;
     if (regex.test(this.selected_parameter[0])) {
-      this.selected_parameter_copy[0] = this.selected_parameter_copy[0].slice(0, -1) + (parseInt(this.selected_parameter_copy[0].slice(-1)) + 1).toString();
-    }
-    else {
-      this.selected_parameter_copy[0] = this.selected_parameter_copy[0] + "_1";
+      this.selected_parameter_copy[0] =
+        this.selected_parameter_copy[0].slice(0, -1) +
+        (parseInt(this.selected_parameter_copy[0].slice(-1)) + 1).toString();
+    } else {
+      this.selected_parameter_copy[0] = this.selected_parameter_copy[0] + '_1';
     }
 
-    this.http.post('http://localhost:5050/api/serverparameter', {
-      parameterKey: this.selected_parameter_copy[0],
-      parameterValue: this.selected_parameter_copy[1],
-      serverId: this.selected_server.serverId
-    }).subscribe(
-      (data: any) => {
-        this.server_parameters = [];
-        for(const parameter of data) {
-          this.server_parameters.push(parameter);
-        }
-        this.data_server_table = [];
-        for(const parameter of this.server_parameters) {
-          this.data_server_table.push([parameter.parameterKey, parameter.parameterValue]);
-        }
-        this.data_source = new MatTableDataSource(this.data_server_table);
-        this.data_source.paginator = this.paginator;
-        this.data_source.sort = this.sort;
+    this.http
+      .post('http://localhost:5050/api/serverparameter', {
+        parameterKey: this.selected_parameter_copy[0],
+        parameterValue: this.selected_parameter_copy[1],
+        serverId: this.selected_server.serverId,
+      })
+      .subscribe(
+        (data: any) => {
+          this.server_parameters = [];
+          for (const parameter of data) {
+            this.server_parameters.push(parameter);
+          }
+          this.data_server_table = [];
+          for (const parameter of this.server_parameters) {
+            this.data_server_table.push([
+              parameter.parameterKey,
+              parameter.parameterValue,
+            ]);
+          }
+          this.data_source = new MatTableDataSource(this.data_server_table);
+          this.data_source.paginator = this.paginator;
+          this.data_source.sort = this.sort;
 
-        this.reinitaliseParameterSelectedForm();
-      },
-      (error: any) => {
-        console.log(error);
-        this.show_error = true;
-      }
-    );
+          this.reinitaliseParameterSelectedForm();
+        },
+        (error: any) => {
+          console.log(error);
+          this.show_error = true;
+        }
+      );
   }
 
   delete() {
-    this.http.delete('http://localhost:5050/api/serverparameter/' + this.selected_server.serverId + "/" + this.selected_parameter[0]).subscribe(
-      (data: any) => {
-        this.server_parameters = [];
-        for(const parameter of data) {
-          this.server_parameters.push(parameter);
-        }
-        this.data_server_table = [];
-        for(const parameter of this.server_parameters) {
-          this.data_server_table.push([parameter.parameterKey, parameter.parameterValue]);
-        }
-        this.data_source = new MatTableDataSource(this.data_server_table);
-        this.data_source.paginator = this.paginator;
-        this.data_source.sort = this.sort;
+    this.http
+      .delete(
+        'http://localhost:5050/api/serverparameter/' +
+          this.selected_server.serverId +
+          '/' +
+          this.selected_parameter[0]
+      )
+      .subscribe(
+        (data: any) => {
+          this.server_parameters = [];
+          for (const parameter of data) {
+            this.server_parameters.push(parameter);
+          }
+          this.data_server_table = [];
+          for (const parameter of this.server_parameters) {
+            this.data_server_table.push([
+              parameter.parameterKey,
+              parameter.parameterValue,
+            ]);
+          }
+          this.data_source = new MatTableDataSource(this.data_server_table);
+          this.data_source.paginator = this.paginator;
+          this.data_source.sort = this.sort;
 
-        this.reinitaliseParameterSelectedForm();
-      },
-      (error: any) => {
-        console.log(error);
-        this.show_error = true;
-      }
-    );
+          this.reinitaliseParameterSelectedForm();
+        },
+        (error: any) => {
+          console.log(error);
+          this.show_error = true;
+        }
+      );
   }
 
   editForm() {
     this.edit_enabled = true;
-    this.selected_parameter_copy = [this.selected_parameter[0], this.selected_parameter[1]];
+    this.selected_parameter_copy = [
+      this.selected_parameter[0],
+      this.selected_parameter[1],
+    ];
   }
 
   newForm() {
     this.reinitaliseParameterSelectedForm();
     this.show_new_form = true;
     this.selected_parameter = {
-      parameterKey: "",
-      parameterValue: "",
-      serverId: this.selected_server.serverId
-    }
+      parameterKey: '',
+      parameterValue: '',
+      serverId: this.selected_server.serverId,
+    };
     this.edit_enabled = true;
   }
 
   createParameter() {
-    if (
-      this.selected_parameter[0] == '' ||
-      this.selected_parameter[1] == ''
-    ) {
+    if (this.selected_parameter[0] == '' || this.selected_parameter[1] == '') {
       this.showErrorPopup('Please fill all the fields.');
       return;
     }
-    this.http.post('http://localhost:5050/api/serverparameter', {
-      parameterKey: this.selected_parameter[0],
-      parameterValue: this.selected_parameter[1],
-      serverId: this.selected_server.serverId
-    }).subscribe(
-      (data: any) => {
-
-        this.reinitaliseParameterSelectedForm(data);
-      },
-      (error: any) => {
-        console.log(error);
-        this.show_error = true;
-      }
-    );
+    this.http
+      .post('http://localhost:5050/api/serverparameter', {
+        parameterKey: this.selected_parameter[0],
+        parameterValue: this.selected_parameter[1],
+        serverId: this.selected_server.serverId,
+      })
+      .subscribe(
+        (data: any) => {
+          this.reinitaliseParameterSelectedForm(data);
+        },
+        (error: any) => {
+          console.log(error);
+          this.show_error = true;
+        }
+      );
   }
 
   editParameter() {
@@ -232,20 +257,21 @@ export class ServerParameterComponent {
       this.showErrorPopup('Please do some changes before Save.');
       return;
     }
-    this.http.put('http://localhost:5050/api/serverparameter', {
-      parameterKey: this.selected_parameter[0],
-      parameterValue: this.selected_parameter[1],
-      serverId: this.selected_server.serverId
-    }).subscribe(
-      (data: any) => {
-
-        this.reinitaliseParameterSelectedForm(data);
-      },
-      (error: any) => {
-        console.log(error);
-        this.show_error = true;
-      }
-    );
+    this.http
+      .put('http://localhost:5050/api/serverparameter', {
+        parameterKey: this.selected_parameter[0],
+        parameterValue: this.selected_parameter[1],
+        serverId: this.selected_server.serverId,
+      })
+      .subscribe(
+        (data: any) => {
+          this.reinitaliseParameterSelectedForm(data);
+        },
+        (error: any) => {
+          console.log(error);
+          this.show_error = true;
+        }
+      );
   }
 
   reinitaliseParameterSelectedForm(data: any = this.server_parameters) {
@@ -259,22 +285,25 @@ export class ServerParameterComponent {
 
     // Reset the form
     this.selected_parameter = {
-      parameterKey: "",
-      parameterValue: "",
-      serverId: this.selected_server.serverId
-    }
+      parameterKey: '',
+      parameterValue: '',
+      serverId: this.selected_server.serverId,
+    };
 
     // Hide the error message
     this.show_error = false;
 
-    // Reset table  
+    // Reset table
     this.server_parameters = [];
-    for(const parameter of data) {
+    for (const parameter of data) {
       this.server_parameters.push(parameter);
     }
     this.data_server_table = [];
-    for(const parameter of this.server_parameters) {
-      this.data_server_table.push([parameter.parameterKey, parameter.parameterValue]);
+    for (const parameter of this.server_parameters) {
+      this.data_server_table.push([
+        parameter.parameterKey,
+        parameter.parameterValue,
+      ]);
     }
     this.data_source = new MatTableDataSource(this.data_server_table);
     this.data_source.paginator = this.paginator;
@@ -344,4 +373,52 @@ export class ServerParameterComponent {
     this.popupMessage = '';
     this.passwordReseted = '';
   }
+
+  /***************************************************************************************/
+  /**
+   * Opens the copy confirmation dialog.
+   */
+  openCopyConfirmation() {
+    this.showCopyConfirmation = true;
+    this.popupMessage =
+      'Are you sure you want to copy this server parameter: ' +
+      this.selected_parameter[0] +
+      '?';
+  }
+
+  /***************************************************************************************/
+  /**
+   * Function used to close the copy confirmation popup.
+   */
+  onCopyClose() {
+    this.showCopyConfirmation = false;
+    this.popupMessage = '';
+  }
+
+  /***************************************************************************************/
+  /**
+   * Function used to close the delete confirmation popup.
+   */
+  onDeleteClose() {
+    this.showDeleteConfirmation = false;
+    this.popupMessage = '';
+  }
+
+  /***************************************************************************************/
+  /**
+   * Opens the delete confirmation dialog.
+   * Sets the showDeleteConfirmation flag to true, logs the value of showDeleteConfirmation,
+   * sets the confirmation message to a formatted string, logs the confirmation message,
+   * and triggers change detection.
+   */
+  openDeleteConfirmation() {
+    this.showDeleteConfirmation = true;
+    this.popupMessage =
+      'Are you sure you want to delete this server: ' +
+      this.selected_parameter[0] +
+      '?';
+  }
 }
+/***************************************************************************************/
+/***************************************************************************************/
+/***************************************************************************************/

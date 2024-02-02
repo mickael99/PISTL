@@ -146,19 +146,14 @@ export class ServerComponent {
         this.dataSource.sortingDataAccessor = (item, property) => {
           switch (property) {
             case 'Server ID':
-              console.log('Server ID: ', item);
               return item.serverId;
             case 'Name':
-              console.log('Name: ', item);
               return item.name;
             case 'Address':
-              console.log('Address: ', item);
               return item.address;
             case 'Context':
-              console.log('Context: ', item);
               return item.context;
             case 'Type':
-              console.log('Type: ', item);
               return item.type;
             default:
               return item[property];
@@ -167,7 +162,7 @@ export class ServerComponent {
         this.dataSource.sort = this.sort;
       },
       (error) => {
-        console.log('error: ', error);
+        console.error('error: ', error);
       }
     );
 
@@ -178,7 +173,6 @@ export class ServerComponent {
         this.dataSource.sortingDataAccessor = (item, property) => {
           switch (property) {
             case 'databaseId':
-              console.log('databaseId: ', item.databaseId);
               return item.databaseId;
             default:
               return item[property];
@@ -187,12 +181,9 @@ export class ServerComponent {
         this.dataSource.sort = this.sort;
       },
       (error) => {
-        console.log('error: ', error);
+        console.error('error: ', error);
       }
     );
-
-    console.log('server: ', this.server);
-    console.log('dataSource: ', this.dataSource);
   }
 
   /***************************************************************************************/
@@ -203,8 +194,6 @@ export class ServerComponent {
   showErrorPopup(message: string) {
     this.showPopupError = true;
     this.popupMessage = message;
-    console.log('showPopupError: ', this.showPopupError);
-    console.log('popupMessage: ', this.popupMessage);
   }
 
   /***************************************************************************************/
@@ -254,9 +243,6 @@ export class ServerComponent {
     this.formDataCreate.ServerId = parseInt(
       this.formDataCreate.ServerId.toString()
     );
-    console.log(typeof this.formDataCreate.ServerId);
-
-    console.log('requestBody: ', this.formDataCreate);
 
     this.http
       .post('http://localhost:5050/api/server', {
@@ -276,19 +262,14 @@ export class ServerComponent {
           this.dataSource.sortingDataAccessor = (item, property) => {
             switch (property) {
               case 'Server ID':
-                console.log('Server ID: ', item);
                 return item.serverId;
               case 'Name':
-                console.log('Name: ', item);
                 return item.name;
               case 'Address':
-                console.log('Address: ', item);
                 return item.address;
               case 'Context':
-                console.log('Context: ', item);
                 return item.context;
               case 'Type':
-                console.log('Type: ', item);
                 return item.type;
               default:
                 return item[property];
@@ -298,7 +279,7 @@ export class ServerComponent {
           this.reinitaliseServerCreatedForm();
         },
         error: (error: any) => {
-          console.log('error: ', error);
+          console.error('error: ', error);
         },
       });
   }
@@ -449,8 +430,6 @@ export class ServerComponent {
       Type: this.serverSelected.Type,
     };
 
-    console.log('requestBody: ', requestBody);
-
     this.http
       .put(
         'http://localhost:5050/api/server/' + requestBody.ServerId,
@@ -465,19 +444,14 @@ export class ServerComponent {
           this.dataSource.sortingDataAccessor = (item, property) => {
             switch (property) {
               case 'Server ID':
-                console.log('Server ID: ', item);
                 return item.serverId;
               case 'Name':
-                console.log('Name: ', item);
                 return item.name;
               case 'Address':
-                console.log('Address: ', item);
                 return item.address;
               case 'Context':
-                console.log('Context: ', item);
                 return item.context;
               case 'Type':
-                console.log('Type: ', item);
                 return item.type;
               default:
                 return item[property];
@@ -486,7 +460,7 @@ export class ServerComponent {
           this.dataSource.sort = this.sort;
         },
         error: (error: any) => {
-          console.log('error: ', error);
+          console.error('error: ', error);
         },
       });
   }
@@ -500,12 +474,10 @@ export class ServerComponent {
    */
   openDeleteConfirmation() {
     this.showDeleteConfirmation = true;
-    console.log('showDeleteConfirmation: ', this.showDeleteConfirmation);
     this.confirmationMessage =
       'Are you sure you want to delete this server: ' +
       this.serverSelected.Name +
       '?';
-    console.log('confirmationMessage: ', this.confirmationMessage);
     this.changeDetectorRef.detectChanges();
   }
 
@@ -543,8 +515,6 @@ export class ServerComponent {
       }),
     };
 
-    console.log('Delete server:', this.serverSelected.ServerId);
-
     this.http
       .delete(
         `http://localhost:5050/api/server/${this.serverSelected.ServerId}`
@@ -558,19 +528,14 @@ export class ServerComponent {
           this.dataSource.sortingDataAccessor = (item, property) => {
             switch (property) {
               case 'Server ID':
-                console.log('Server ID: ', item);
                 return item.serverId;
               case 'Name':
-                console.log('Name: ', item);
                 return item.name;
               case 'Address':
-                console.log('Address: ', item);
                 return item.address;
               case 'Context':
-                console.log('Context: ', item);
                 return item.context;
               case 'Type':
-                console.log('Type: ', item);
                 return item.type;
               default:
                 return item[property];
@@ -579,7 +544,7 @@ export class ServerComponent {
           this.dataSource.sort = this.sort;
         },
         error: (error: any) => {
-          console.log('error: ', error);
+          console.error('error: ', error);
         },
       });
   }
@@ -594,12 +559,10 @@ export class ServerComponent {
    */
   openCopyConfirmation() {
     this.showCopyConfirmation = true;
-    console.log('showCopyConfirmation: ', this.showDeleteConfirmation);
     this.confirmationMessage =
       'Are you sure you want to copy this server: ' +
       this.serverSelected.Name +
       '?';
-    console.log('confirmationMessage: ', this.confirmationMessage);
     this.changeDetectorRef.detectChanges();
   }
 
@@ -627,8 +590,6 @@ export class ServerComponent {
       }),
     };
 
-    console.log('Copy server:', this.serverSelected.ServerId);
-
     // Create the request body
     const requestBody = {
       Name: this.serverSelected.Name,
@@ -637,8 +598,6 @@ export class ServerComponent {
       Type: this.serverSelected.Type,
       CreatedBy: localStorage.getItem('email'),
     };
-
-    console.log('requestBody: ', requestBody);
 
     this.http.post('http://localhost:5050/api/server', requestBody).subscribe({
       next: (data: any) => {
@@ -649,19 +608,14 @@ export class ServerComponent {
         this.dataSource.sortingDataAccessor = (item, property) => {
           switch (property) {
             case 'Server ID':
-              console.log('Server ID: ', item);
               return item.serverId;
             case 'Name':
-              console.log('Name: ', item);
               return item.name;
             case 'Address':
-              console.log('Address: ', item);
               return item.address;
             case 'Context':
-              console.log('Context: ', item);
               return item.context;
             case 'Type':
-              console.log('Type: ', item);
               return item.type;
             default:
               return item[property];
@@ -670,7 +624,7 @@ export class ServerComponent {
         this.dataSource.sort = this.sort;
       },
       error: (error: any) => {
-        console.log('error: ', error);
+        console.error('error: ', error);
       },
     });
   }

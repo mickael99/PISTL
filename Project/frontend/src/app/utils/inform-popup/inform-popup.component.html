@@ -8,12 +8,17 @@
             isPasswordMasked ? maskPassword(passwordReseted) : passwordReseted
           }}
         </p>
-        <mat-slide-toggle
-          *ngIf="passwordReseted !== ''"
-          color="primary"
-          (change)="togglePasswordVisibility()"
-          >Toggle Visibility</mat-slide-toggle
-        >
+        <div class="btn--masked">
+          <button
+            mat-icon-button
+            matSuffix
+            (click)="togglePasswordVisibility()"
+          >
+            <mat-icon>{{
+              isPasswordMasked ? "visibility" : "visibility_off"
+            }}</mat-icon>
+          </button>
+        </div>
       </div>
     </ng-container>
 

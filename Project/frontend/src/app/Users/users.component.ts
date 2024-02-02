@@ -96,6 +96,9 @@ export class UsersComponent {
   // Bool used to display the information popup
   showInformPopup: boolean = false;
 
+  // Bool that allows or not to display the information below the form
+  showInform: boolean = false;
+
   // Bool that allows or not to display the error popup
   showPopupError: boolean = false;
 
@@ -137,7 +140,7 @@ export class UsersComponent {
         this.dataSource.sort = this.sort;
       },
       (error) => {
-        this.showErrorPopup(error.error);
+        console.error(error.error);
       }
     );
   }
@@ -160,6 +163,8 @@ export class UsersComponent {
     };
 
     this.reinitaliseUserSelectedForm();
+
+    this.showInform = false;
   }
 
   /***************************************************************************************/
@@ -167,14 +172,15 @@ export class UsersComponent {
    * Function used to POST the user's information from the form.
    */
   newUserFormCreateUser() {
-    if (
-      this.formDataCreate.name == '' ||
-      this.formDataCreate.email == '' ||
-      this.formDataCreate.phone == ''
-    ) {
-      this.showErrorPopup('Please fill all the fields.');
-      return;
-    }
+    this.showInform = false;
+    // if (
+    //   this.formDataCreate.name == '' ||
+    //   this.formDataCreate.email == '' ||
+    //   this.formDataCreate.phone == ''
+    // ) {
+    //   this.showErrorPopup('Please fill all the fields.');
+    //   return;
+    // }
 
     this.formDataCreate.modifiedBy = localStorage.getItem('email');
 
@@ -210,7 +216,7 @@ export class UsersComponent {
           this.showFormCreateUser();
         },
         error: (error: any) => {
-          this.showErrorPopup(error.error.message);
+          console.error(error.error.message);
         },
       });
   }
@@ -294,6 +300,9 @@ export class UsersComponent {
 
     // Disable the 'Edit' button
     this.editEnabled = false;
+
+    // Close the unlok inform confirmation
+    this.showInform = false;
   }
 
   /***************************************************************************************/
@@ -324,6 +333,8 @@ export class UsersComponent {
     this.userSelectedCopy.phone = this.userSelected.phone;
     this.userSelectedCopy.DATEnabled = this.userSelected.DATEnabled;
     this.userSelectedCopy.locked = this.userSelected.locked;
+
+    this.showInform = false;
   }
 
   /***************************************************************************************/
@@ -331,14 +342,16 @@ export class UsersComponent {
    * Function used to edit the Sys Admin's information.
    */
   editUser() {
-    if (
-      this.userSelected.phone == this.userSelectedCopy.phone &&
-      this.userSelected.DATEnabled == this.userSelectedCopy.DATEnabled &&
-      this.userSelected.locked == this.userSelectedCopy.locked
-    ) {
-      this.showErrorPopup('Please do some changes before Save.');
-      return;
-    }
+    // if (
+    //   this.userSelected.phone == this.userSelectedCopy.phone &&
+    //   this.userSelected.DATEnabled == this.userSelectedCopy.DATEnabled &&
+    //   this.userSelected.locked == this.userSelectedCopy.locked
+    // ) {
+    //   this.showErrorPopup('Please do some changes before Save.');
+    //   return;
+    // }
+
+    this.showInform = false;
 
     let JWTToken = localStorage.getItem('token');
 
@@ -375,7 +388,7 @@ export class UsersComponent {
           this.dataSource.sort = this.sort;
         },
         error: (error: any) => {
-          this.showErrorPopup(error.error.message);
+          console.error(error.error.message);
         },
       });
   }
@@ -439,7 +452,7 @@ export class UsersComponent {
           this.reinitaliseUserSelectedForm();
         },
         error: (error: any) => {
-          this.showErrorPopup(error.error.message);
+          console.error(error.error.message);
         },
       });
   }
@@ -517,7 +530,7 @@ export class UsersComponent {
           this.show_inform_popup(this.confirmationMessage);
         },
         error: (error: any) => {
-          this.showErrorPopup(error.error.message);
+          console.error(error.error.message);
         },
       });
   }
@@ -588,10 +601,10 @@ export class UsersComponent {
           this.update_user_selected();
           this.confirmationMessage =
             'User [' + this.userSelected.email + '] is now unlocked.';
-          this.show_inform_popup(this.confirmationMessage);
+          this.showInform = true;
         },
         error: (error: any) => {
-          this.showErrorPopup(error.error.message);
+          console.error(error.error.message);
         },
       });
   }

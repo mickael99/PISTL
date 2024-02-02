@@ -218,12 +218,14 @@ export class ReportsComponent {
     this.selected_domain = '';
     this.checkAllUsers = false;
     this.checkAllDomains = false;
-    this.logins.forEach((user: any) => {
-      user.checked = false;
-    });
-    this.domains.forEach((domain: any) => {
-      domain.checked = false;
-    });
+    this.logins &&
+      this.logins.forEach((user: any) => {
+        user.checked = false;
+      });
+    this.domains &&
+      this.domains.forEach((domain: any) => {
+        domain.checked = false;
+      });
     this.selectedStartDate = undefined;
     this.selectedEndDate = undefined;
   }
@@ -375,7 +377,6 @@ export class ReportsComponent {
           let usersChecked = this.logins.filter(
             (user: any) => user.checked === true
           );
-          console.log('usersChecked', usersChecked);
           let domainsChecked = this.domains.filter(
             (domain: any) => domain.checked === true
           );

@@ -42,8 +42,8 @@
   margin-bottom: 2rem;
 }
 
-mat-slide-toggle {
-  margin-bottom: 1rem;
+.btn--masked {
+  margin-bottom: 1.5rem;
 }
 
 /**********************************************************************/

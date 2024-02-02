@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, EventEmitter, Output, Renderer2 } from '@angular/core';
+import * as e from 'cors';
 
 /***************************************************************************************/
 /***************************************************************************************/
@@ -74,8 +75,10 @@ export class LoginComponent {
             error.error.message === 'User blocked, invalid attempts cout = 3.'
           ) {
             this.showErrorMessage = 'User blocked, 3 invalid attempts made!';
-          } else {
+          } else if (error.error.message === 'User blocked, DAT not enabled.') {
             this.showErrorMessage = 'User blocked, DAT not enabled.';
+          } else {
+            this.showErrorMessage = error.message;
           }
         }
       );

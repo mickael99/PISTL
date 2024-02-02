@@ -143,19 +143,14 @@ export class DatabaseComponent {
         this.dataSource.sortingDataAccessor = (item, property) => {
           switch (property) {
             case 'databaseId':
-              console.log('databaseId: ', item.databaseId);
               return item.databaseId;
             case 'name': // Add case for Name column
-              console.log('name: ', item.name);
               return item.name;
             case 'serverId':
-              console.log('serverId: ', item.serverId);
               return item.serverId;
             case 'userName':
-              console.log('userName: ', item.userName);
               return item.userName;
             case 'context':
-              console.log('context: ', item.context);
               return item.context;
             default:
               return item[property];
@@ -177,7 +172,6 @@ export class DatabaseComponent {
         this.dataSource.sortingDataAccessor = (item, property) => {
           switch (property) {
             case 'databaseId':
-              console.log('databaseId: ', item.databaseId);
               return item.databaseId;
             default:
               return item[property];
@@ -189,10 +183,6 @@ export class DatabaseComponent {
         console.error(error.error);
       }
     );
-
-    console.log('server: ', this.server);
-    console.log('database: ', this.database);
-    console.log('dataSource: ', this.dataSource);
   }
 
   /***************************************************************************************/
@@ -206,8 +196,6 @@ export class DatabaseComponent {
       this.formDataCreate.ServerId = this.formDataCreate.Server.serverId;
     }
 
-    console.log('formDataCreate: ', this.formDataCreate);
-
     // Check if the user has filled all the fields
     // if (
     // this.formDataCreate.Name == '' ||
@@ -215,7 +203,6 @@ export class DatabaseComponent {
     // this.formDataCreate.Password == '' ||
     // this.formDataCreate.ServerId == 0
     // ) {
-    // console.log('Please fill all the fields.');
     // this.showErrorPopup('Please fill all the fields.');
     // return;
     // }
@@ -237,8 +224,6 @@ export class DatabaseComponent {
       this.formDataCreate.ServerId.toString()
     );
 
-    console.log('requestBody: ', this.formDataCreate);
-
     // Call the POST request
     this.http
       .post('http://localhost:5050/api/database', this.formDataCreate)
@@ -246,25 +231,19 @@ export class DatabaseComponent {
         next: (data: any) => {
           this.showFormCreate = false;
           this.database = data.databases;
-          console.log('database: ', this.database);
           this.dataSource = new MatTableDataSource(this.database);
           this.dataSource.paginator = this.paginator;
           this.dataSource.sortingDataAccessor = (item, property) => {
             switch (property) {
               case 'databaseId':
-                console.log('databaseId: ', item.databaseId);
                 return item.databaseId;
               case 'name': // Add case for Name column
-                console.log('name: ', item.name);
                 return item.name;
               case 'serverId':
-                console.log('serverId: ', item.serverId);
                 return item.serverId;
               case 'userName':
-                console.log('userName: ', item.userName);
                 return item.userName;
               case 'context':
-                console.log('context: ', item.context);
                 return item.context;
               default:
                 return item[property];
@@ -285,7 +264,6 @@ export class DatabaseComponent {
    */
   onDeleteConfirm() {
     this.showDeleteConfirmation = false;
-    console.log('onDeleteConfirm: ', this.showDeleteConfirmation);
 
     let JWTToken = localStorage.getItem('token');
 
@@ -295,8 +273,6 @@ export class DatabaseComponent {
         'Content-Type': 'application/json',
       }),
     };
-
-    console.log('Delete database:', this.databaseSelected.DatabaseId);
 
     this.http
       .delete(
@@ -311,19 +287,14 @@ export class DatabaseComponent {
           this.dataSource.sortingDataAccessor = (item, property) => {
             switch (property) {
               case 'databaseId':
-                console.log('databaseId: ', item.databaseId);
                 return item.databaseId;
               case 'name': // Add case for Name column
-                console.log('name: ', item.name);
                 return item.name;
               case 'serverId':
-                console.log('serverId: ', item.serverId);
                 return item.serverId;
               case 'userName':
-                console.log('userName: ', item.userName);
                 return item.userName;
               case 'context':
-                console.log('context: ', item.context);
                 return item.context;
               default:
                 return item[property];
@@ -343,7 +314,6 @@ export class DatabaseComponent {
    */
   onCopyConfirm() {
     this.showCopyConfirmation = false;
-    console.log('onCopyConfirm: ', this.showCopyConfirmation);
 
     let JWTToken = localStorage.getItem('token');
 
@@ -353,8 +323,6 @@ export class DatabaseComponent {
         'Content-Type': 'application/json',
       }),
     };
-
-    console.log('Copy database:', this.databaseSelected.DatabaseId);
 
     // Check if the last two characters of this.selected_parameter[0] match the pattern "_"+ (number)
     const regex = /_\d$/;
@@ -377,8 +345,6 @@ export class DatabaseComponent {
       Context: this.databaseSelected.Context,
     };
 
-    console.log('requestBody: ', requestBody);
-
     this.http
       .post('http://localhost:5050/api/database', requestBody)
       .subscribe({
@@ -390,19 +356,14 @@ export class DatabaseComponent {
           this.dataSource.sortingDataAccessor = (item, property) => {
             switch (property) {
               case 'databaseId':
-                console.log('databaseId: ', item.databaseId);
                 return item.databaseId;
               case 'name': // Add case for Name column
-                console.log('name: ', item.name);
                 return item.name;
               case 'serverId':
-                console.log('serverId: ', item.serverId);
                 return item.serverId;
               case 'userName':
-                console.log('userName: ', item.userName);
                 return item.userName;
               case 'context':
-                console.log('context: ', item.context);
                 return item.context;
               default:
                 return item[property];
@@ -431,8 +392,6 @@ export class DatabaseComponent {
     // Store the found server in databaseSelected.Server
     this.databaseSelected.Server = serverToUpdate;
 
-    console.log('Edit database:', this.databaseSelected.Server);
-
     //check if the user has changed something
     // if (
     //   this.databaseSelected.Name == this.databaseSelectedCopy.Name &&
@@ -441,23 +400,18 @@ export class DatabaseComponent {
     //   this.databaseSelected.Context == this.databaseSelectedCopy.Context &&
     //   this.databaseSelected.Password == this.databaseSelectedCopy.Password
     // ) {
-    //   console.log('No changes detected');
     //   this.showErrorPopup('Please do some changes before Save.');
-    //   console.log('showerrorpopup:' + this.showPopup);
     //   return;
     // }
 
     var passwordToModified;
 
     if (this.databaseSelected.PasswordModified == '') {
-      console.log('keep same');
       passwordToModified = this.databaseSelected.Password;
     } else {
-      console.log('change');
       passwordToModified = this.databaseSelected.PasswordModified;
     }
 
-    console.log('this.databaseSelected: ', this.databaseSelected);
     let JWTToken = localStorage.getItem('token');
 
     const options = {
@@ -466,8 +420,6 @@ export class DatabaseComponent {
         'Content-Type': 'application/json',
       }),
     };
-
-    console.log('ready to post');
 
     // Create the request body
     const requestBody = {
@@ -481,8 +433,6 @@ export class DatabaseComponent {
       Context: this.databaseSelected.Context,
     };
 
-    console.log('requestBody: ', requestBody);
-
     // Call the PUT request
     this.http
       .put(
@@ -492,26 +442,20 @@ export class DatabaseComponent {
       .subscribe({
         next: (data: any) => {
           this.database = data.databases;
-          console.log('database: ', this.database);
           this.dataSource = new MatTableDataSource(this.database);
           this.editEnabled = false;
           this.dataSource.paginator = this.paginator;
           this.dataSource.sortingDataAccessor = (item, property) => {
             switch (property) {
               case 'databaseId':
-                console.log('databaseId: ', item.databaseId);
                 return item.databaseId;
               case 'name': // Add case for Name column
-                console.log('name: ', item.name);
                 return item.name;
               case 'serverId':
-                console.log('serverId: ', item.serverId);
                 return item.serverId;
               case 'userName':
-                console.log('userName: ', item.userName);
                 return item.userName;
               case 'context':
-                console.log('context: ', item.context);
                 return item.context;
               default:
                 return item[property];
@@ -660,12 +604,10 @@ export class DatabaseComponent {
    */
   openDeleteConfirmation() {
     this.showDeleteConfirmation = true;
-    console.log('showDeleteConfirmation: ', this.showDeleteConfirmation);
     this.confirmationMessage =
       'Are you sure you want to delete this server: ' +
       this.databaseSelected.Name +
       '?';
-    console.log('confirmationMessage: ', this.confirmationMessage);
     this.changeDetectorRef.detectChanges();
   }
 
@@ -675,12 +617,10 @@ export class DatabaseComponent {
    */
   openCopyConfirmation() {
     this.showCopyConfirmation = true;
-    console.log('showCopyConfirmation: ', this.showDeleteConfirmation);
     this.confirmationMessage =
       'Are you sure you want to copy this server: ' +
       this.databaseSelected.Name +
       '?';
-    console.log('confirmationMessage: ', this.confirmationMessage);
     this.changeDetectorRef.detectChanges();
   }
 
