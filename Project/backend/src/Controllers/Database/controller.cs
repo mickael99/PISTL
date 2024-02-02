@@ -149,8 +149,6 @@ public class DatabaseController : ControllerBase
         {
             return BadRequest(ModelState);
         }
-        string passwordHash = _databaseRepository.EncryptPassword(dbUpdated.Password);
-
 
         if (!_databaseRepository.DatabaseExists(dbUpdated.DatabaseId))
         {
@@ -162,9 +160,11 @@ public class DatabaseController : ControllerBase
             return BadRequest("---------->Provided database is null");
         }
 
-        if(_databaseRepository.DatabaseExists(dbUpdated.Name)){
+        if (_databaseRepository.DatabaseExists(dbUpdated.Name))
+        {
             var db = _databaseRepository.GetDatabase(dbUpdated.Name);
-            if(db.DatabaseId != dbUpdated.DatabaseId){
+            if (db.DatabaseId != dbUpdated.DatabaseId)
+            {
                 return BadRequest("This name of database already exists");
             }
         }
@@ -188,18 +188,18 @@ public class DatabaseController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-       
+
         // Update the server properties
         dbToUpdate.DatabaseId = dbUpdated.DatabaseId;
         dbToUpdate.Name = dbUpdated.Name;
         dbToUpdate.UserName = dbUpdated.UserName;
-        dbToUpdate.Password = passwordHash;
+        dbToUpdate.Password = dbUpdated.Password;
         dbToUpdate.ServerId = dbUpdated.ServerId;
         dbToUpdate.Server = server;
         dbToUpdate.ModifiedBy = dbUpdated.ModifiedBy;
         dbToUpdate.ModifiedDate = DateTime.Now;
         dbToUpdate.Context = dbUpdated.Context;
-        
+
 
 
         if (!ModelState.IsValid)

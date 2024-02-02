@@ -3,7 +3,7 @@
   <button
     mat-raised-button
     color="primary"
-    class="btn"
+    class="btn color-button--default"
     (click)="showFormCreateServer()"
   >
     New
@@ -13,7 +13,7 @@
     color="primary"
     (click)="editEnable()"
     [disabled]="!isClicked"
-    class="btn"
+    class="btn color-button--default"
   >
     Edit
   </button>
@@ -22,7 +22,7 @@
     color="primary"
     (click)="openDeleteConfirmation()"
     [disabled]="!isClicked"
-    class="btn"
+    class="btn color-button--default"
   >
     Delete
   </button>
@@ -30,7 +30,6 @@
   <div class="listes">
     <div class="table">
       <mat-card-content>
-        <hr />
         <table
           matSort
           mat-table
@@ -122,7 +121,9 @@
                       : server.context == '6'
                       ? '#f5f334'
                       : '',
-                  color: '#FFFFFF'
+                  color: server.context == '6' ? '#000' : '#FFFFFF',
+                  padding: '0.75rem',
+                  fontWeight: '700',
                 }"
               >
                 {{
@@ -200,34 +201,75 @@
 
           <mat-form-field class="example-full-width">
             <mat-label>Context</mat-label>
-            <mat-select [(ngModel)]="formDataCreate.Context" name="Context">
+            <mat-select
+              required
+              [(ngModel)]="formDataCreate.Context"
+              name="Context"
+            >
               <mat-option value="1">
-                <span style="background-color: #f5a82a; color: #ffffff"
+                <span
+                  style="
+                    background-color: #f5a82a;
+                    color: #ffffff;
+                    padding: 0.75rem;
+                    font-weight: 700;
+                  "
                   >Dev</span
                 >
               </mat-option>
               <mat-option value="2">
-                <span style="background-color: #c125f2; color: #ffffff"
+                <span
+                  style="
+                    background-color: #c125f2;
+                    color: #ffffff;
+                    padding: 0.75rem;
+                    font-weight: 700;
+                  "
                   >Preprod</span
                 >
               </mat-option>
               <mat-option value="3">
-                <span style="background-color: #4557a2; color: #ffffff"
+                <span
+                  style="
+                    background-color: #4557a2;
+                    color: #ffffff;
+                    padding: 0.75rem;
+                    font-weight: 700;
+                  "
                   >Prod</span
                 >
               </mat-option>
               <mat-option value="4">
-                <span style="background-color: #50c63e; color: #ffffff"
+                <span
+                  style="
+                    background-color: #50c63e;
+                    color: #ffffff;
+                    padding: 0.75rem;
+                    font-weight: 700;
+                  "
                   >Test</span
                 >
               </mat-option>
               <mat-option value="5">
-                <span style="background-color: #956248; color: #ffffff"
+                <span
+                  style="
+                    background-color: #956248;
+                    color: #ffffff;
+                    padding: 0.75rem;
+                    font-weight: 700;
+                  "
                   >ProdCopy</span
                 >
               </mat-option>
               <mat-option value="6">
-                <span style="background-color: #f5f334; color: #ffffff"
+                <span
+                  style="
+                    background-color: #f5f334;
+                    color: #ffffff;
+                    color: #000;
+                    padding: 0.75rem;
+                    font-weight: 700;
+                  "
                   >Staging</span
                 >
               </mat-option>
@@ -236,24 +278,23 @@
 
           <mat-form-field class="example-full-width">
             <mat-label>Type</mat-label>
-            <mat-select [(ngModel)]="formDataCreate.Type" name="Type">
+            <mat-select required [(ngModel)]="formDataCreate.Type" name="Type">
               <mat-option *ngFor="let t of types" [value]="t">
                 {{ t }}
               </mat-option>
             </mat-select>
           </mat-form-field>
-          <div class="button-container" style="margin-bottom: 10%">
+          <div class="buttons--container">
             <button
               mat-raised-button
-              class="color-button margin--right"
+              class="color-button--save margin--right"
               (click)="newServerFormCreateServer()"
             >
               Save
             </button>
             <button
               mat-raised-button
-              color="primary"
-              class="btn"
+              class="btn color-button--default"
               (click)="showFormCreateServer()"
             >
               Cancel
@@ -275,7 +316,6 @@
             <input
               matInput
               placeholder="Name"
-              required
               [(ngModel)]="serverSelected.Name"
               name="Name"
               [disabled]="!editEnabled"
@@ -287,7 +327,6 @@
             <input
               matInput
               placeholder="Address"
-              required
               [(ngModel)]="serverSelected.Address"
               name="Address"
               [disabled]="!editEnabled"
@@ -302,33 +341,87 @@
               [disabled]="!editEnabled"
               value="serverSelected.Context"
             >
-              <mat-option value="1">
-                <span style="background-color: #f5a82a; color: #ffffff"
+              <mat-option
+                [value]="serverSelected && serverSelected.Context"
+                *ngIf="serverSelected && serverSelected.Context === 1"
+              >
+                <span
+                  style="
+                    background-color: #f5a82a;
+                    color: #ffffff;
+                    padding: 0.75rem;
+                    font-weight: 700;
+                  "
                   >Dev</span
                 >
               </mat-option>
-              <mat-option value="2">
-                <span style="background-color: #c125f2; color: #ffffff"
+              <mat-option
+                [value]="serverSelected && serverSelected.Context"
+                *ngIf="serverSelected && serverSelected.Context === 2"
+              >
+                <span
+                  style="
+                    background-color: #c125f2;
+                    color: #ffffff;
+                    padding: 0.75rem;
+                    font-weight: 700;
+                  "
                   >Preprod</span
                 >
               </mat-option>
-              <mat-option value="3">
-                <span style="background-color: #4557a2; color: #ffffff"
+              <mat-option
+                [value]="serverSelected && serverSelected.Context"
+                *ngIf="serverSelected && serverSelected.Context === 3"
+              >
+                <span
+                  style="
+                    background-color: #4557a2;
+                    color: #ffffff;
+                    padding: 0.75rem;
+                    font-weight: 700;
+                  "
                   >Prod</span
                 >
               </mat-option>
-              <mat-option value="4">
-                <span style="background-color: #50c63e; color: #ffffff"
+              <mat-option
+                [value]="serverSelected && serverSelected.Context"
+                *ngIf="serverSelected && serverSelected.Context === 4"
+              >
+                <span
+                  style="
+                    background-color: #50c63e;
+                    color: #ffffff;
+                    padding: 0.75rem;
+                    font-weight: 700;
+                  "
                   >Test</span
                 >
               </mat-option>
-              <mat-option value="5">
-                <span style="background-color: #956248; color: #ffffff"
+              <mat-option
+                [value]="serverSelected && serverSelected.Context"
+                *ngIf="serverSelected && serverSelected.Context === 5"
+              >
+                <span
+                  style="
+                    background-color: #956248;
+                    color: #ffffff;
+                    padding: 0.75rem;
+                    font-weight: 700;
+                  "
                   >ProdCopy</span
                 >
               </mat-option>
-              <mat-option value="6">
-                <span style="background-color: #f5f334; color: #ffffff"
+              <mat-option
+                [value]="serverSelected && serverSelected.Context"
+                *ngIf="serverSelected && serverSelected.Context === 6"
+              >
+                <span
+                  style="
+                    background-color: #f5f334;
+                    color: #000;
+                    padding: 0.75rem;
+                    font-weight: 700;
+                  "
                   >Staging</span
                 >
               </mat-option>
@@ -347,19 +440,21 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
-          <div class="button-container" style="margin-bottom: 10%">
+          <div class="buttons--container" style="margin-bottom: 10%">
             <button
               mat-raised-button
               (click)="editServer()"
-              [ngClass]="{ 'color-button': editEnabled, 'margin--right': true }"
+              [ngClass]="{
+                'color-button--save ': editEnabled,
+                'margin--right': true
+              }"
               [disabled]="!editEnabled"
             >
               Save
             </button>
             <button
               mat-raised-button
-              color="primary"
-              class="btn"
+              class="btn color-button--default"
               (click)="reinitaliseServerSelectedForm()"
             >
               Cancel
@@ -378,12 +473,11 @@
 
       <!-- Delete confirmation -->
       <app-confirm-popup
-      *ngIf="showDeleteConfirmation"
-      [confirmationMessage]="confirmationMessage"
-      (confirm)="onDeleteConfirm()"
-      (close)="onDeleteClose()"
+        *ngIf="showDeleteConfirmation"
+        [confirmationMessage]="confirmationMessage"
+        (confirm)="onDeleteConfirm()"
+        (close)="onDeleteClose()"
       ></app-confirm-popup>
-
-
     </div>
+  </div>
 </div>

@@ -31,18 +31,30 @@
 
 .listes {
   display: flex;
+  margin-top: 1rem;
 }
 
+.buttons--container {
+  display: flex;
+  justify-content: center;
+  grid-column: span 2;
+}
 /**********************************************************************/
 /************************** CREATE NEW FORM ***************************/
 /**********************************************************************/
 
 .formCreate {
-  margin-left: 25rem;
+  margin-left: 10rem;
 }
 
-.mat-mdc-raised-button.color-button {
-  background-color: #37b24d;
+.mat-mdc-raised-button.color-button--save {
+  background-color: #5cb85c;
+  color: #fff;
+  font-size: 1.2rem;
+}
+
+.mat-mdc-raised-button.color-button--default {
+  background-color: #3d59a7;
   color: #fff;
   font-size: 1.2rem;
 }
@@ -53,8 +65,8 @@
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
   width: 110%;
-  background-color: #6878a5;
-  padding: 5rem;
+  background-color: #fff;
+  padding: 2.5rem;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
 }
 
@@ -64,7 +76,7 @@
 
 .hovered {
   cursor: pointer;
-  font-weight: 900;
+  font-weight: 700;
   background-color: #ddd;
 }
 

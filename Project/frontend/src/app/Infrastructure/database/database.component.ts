@@ -100,9 +100,6 @@ export class DatabaseComponent {
   // Confirmation message to display
   confirmationMessage: string = '';
 
-  // Bool used to display the information popup
-  showInformPopup: boolean = false;
-
   // Bool that allows or not to display the error popup
   showPopupError: boolean = false;
 
@@ -120,6 +117,9 @@ export class DatabaseComponent {
 
   // Sort used for the table
   @ViewChild(MatSort, { static: true }) sortServerId: MatSort;
+
+  // Bool used to display the password
+  showPassword: boolean = false;
 
   constructor(
     private renderer: Renderer2,
@@ -161,20 +161,18 @@ export class DatabaseComponent {
               return item[property];
           }
         };
-
         this.dataSource.sort = this.sort;
         // this.dataSource.sortName = this.sortName;
         this.dataSource.sortServerId = this.sortServerId;
       },
       (error) => {
-        this.showErrorPopup(error.error);
+        console.error(error.error);
       }
     );
 
     this.http.get('http://localhost:5050/api/server', options).subscribe(
       (data: any) => {
         this.server = data;
-        this.dataSource = new MatTableDataSource(this.database); //
         this.dataSource.paginator = this.paginator;
         this.dataSource.sortingDataAccessor = (item, property) => {
           switch (property) {
@@ -188,7 +186,7 @@ export class DatabaseComponent {
         this.dataSource.sort = this.sort;
       },
       (error) => {
-        this.showErrorPopup(error.error);
+        console.error(error.error);
       }
     );
 
@@ -202,7 +200,7 @@ export class DatabaseComponent {
    * Function used to POST the database's information from the form.
    */
   newDatabaseFormDatabase() {
-    console.log('creating new server');
+    this.showPassword = false;
 
     if (this.formDataCreate.Server) {
       this.formDataCreate.ServerId = this.formDataCreate.Server.serverId;
@@ -211,16 +209,16 @@ export class DatabaseComponent {
     console.log('formDataCreate: ', this.formDataCreate);
 
     // Check if the user has filled all the fields
-    if (
-      this.formDataCreate.Name == '' ||
-      this.formDataCreate.UserName == '' ||
-      this.formDataCreate.Password == '' ||
-      this.formDataCreate.ServerId == 0
-    ) {
-      console.log('Please fill all the fields.');
-      this.showErrorPopup('Please fill all the fields.');
-      return;
-    }
+    // if (
+    // this.formDataCreate.Name == '' ||
+    // this.formDataCreate.UserName == '' ||
+    // this.formDataCreate.Password == '' ||
+    // this.formDataCreate.ServerId == 0
+    // ) {
+    // console.log('Please fill all the fields.');
+    // this.showErrorPopup('Please fill all the fields.');
+    // return;
+    // }
 
     // Create the request body
     this.formDataCreate.CreatedBy = localStorage.getItem('email');
@@ -275,7 +273,8 @@ export class DatabaseComponent {
           this.dataSource.sort = this.sort;
         },
         error: (error: any) => {
-          this.showErrorPopup(error.error.message);
+          console.error(error.error.message);
+          // this.showErrorPopup(error.error.message);
         },
       });
   }
@@ -333,7 +332,7 @@ export class DatabaseComponent {
           this.dataSource.sort = this.sort;
         },
         error: (error: any) => {
-          this.showErrorPopup(error.error.message);
+          console.error(error.error.message);
         },
       });
   }
@@ -412,7 +411,7 @@ export class DatabaseComponent {
           this.dataSource.sort = this.sort;
         },
         error: (error: any) => {
-          this.showErrorPopup(error.error.message);
+          console.error(error.error.message);
         },
       });
   }
@@ -422,7 +421,7 @@ export class DatabaseComponent {
    * Function used to edit the database's information.
    */
   editDatabase() {
-    console.log('Edit database:', this.databaseSelected.DatabaseId);
+    this.showPassword = false;
 
     // Find the server with the same name as ServerName
     const serverToUpdate = this.server.find(
@@ -435,17 +434,18 @@ export class DatabaseComponent {
     console.log('Edit database:', this.databaseSelected.Server);
 
     //check if the user has changed something
-    if (
-      this.databaseSelected.Name == this.databaseSelectedCopy.Name &&
-      this.databaseSelected.UserName == this.databaseSelectedCopy.UserName &&
-      this.databaseSelected.ServerId == this.databaseSelectedCopy.ServerId &&
-      this.databaseSelected.Context == this.databaseSelectedCopy.Context
-    ) {
-      console.log('No changes detected');
-      this.showErrorPopup('Please do some changes before Save.');
-      console.log('showerrorpopup:' + this.showPopup);
-      return;
-    }
+    // if (
+    //   this.databaseSelected.Name == this.databaseSelectedCopy.Name &&
+    //   this.databaseSelected.UserName == this.databaseSelectedCopy.UserName &&
+    //   this.databaseSelected.ServerId == this.databaseSelectedCopy.ServerId &&
+    //   this.databaseSelected.Context == this.databaseSelectedCopy.Context &&
+    //   this.databaseSelected.Password == this.databaseSelectedCopy.Password
+    // ) {
+    //   console.log('No changes detected');
+    //   this.showErrorPopup('Please do some changes before Save.');
+    //   console.log('showerrorpopup:' + this.showPopup);
+    //   return;
+    // }
 
     var passwordToModified;
 
@@ -457,6 +457,7 @@ export class DatabaseComponent {
       passwordToModified = this.databaseSelected.PasswordModified;
     }
 
+    console.log('this.databaseSelected: ', this.databaseSelected);
     let JWTToken = localStorage.getItem('token');
 
     const options = {
@@ -519,7 +520,7 @@ export class DatabaseComponent {
           this.dataSource.sort = this.sort;
         },
         error: (error: any) => {
-          this.showErrorPopup(error.error.message);
+          console.error(error.error.message);
         },
       });
   }
@@ -529,7 +530,8 @@ export class DatabaseComponent {
    * Function used to display the database's information in the form.
    */
   showFormCreateDatabase() {
-    // console.log('AV this.formDataCreate: ', this.formDataCreate);
+    this.showFormCreate = !this.showFormCreate;
+    this.showPassword = false;
 
     // Reinitialize the form if reclicked
     this.formDataCreate = {
@@ -544,22 +546,7 @@ export class DatabaseComponent {
       Context: null,
     };
 
-    this.showFormCreate = true;
-
-    this.formDataCreate = {
-      DatabaseId: 0,
-      Name: '',
-      UserName: '',
-      Password: '',
-      Server: null,
-      ServerId: 0,
-      CreatedBy: '',
-      ModifiedBy: '',
-      Context: null,
-    };
-    // console.log('AP this.formDataCreate: ', this.formDataCreate);
-
-    // this.reinitaliseDatabaseSelectedForm();
+    this.reinitaliseDatabaseSelectedForm();
   }
 
   /***************************************************************************************/
@@ -600,6 +587,8 @@ export class DatabaseComponent {
    * Function used to reinitalise the selected database.
    */
   reinitaliseDatabaseSelectedForm() {
+    this.showPassword = false;
+
     // Disable access user form
     this.databaseSelected = {
       DatabaseId: 0,
@@ -762,4 +751,15 @@ export class DatabaseComponent {
       }
     }
   }
+
+  /***************************************************************************************/
+  /**
+   * Function used to display the password.
+   */
+  togglePassword() {
+    this.showPassword = !this.showPassword;
+  }
 }
+/***************************************************************************************/
+/***************************************************************************************/
+/***************************************************************************************/

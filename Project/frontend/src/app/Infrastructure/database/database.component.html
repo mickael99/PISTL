@@ -2,20 +2,16 @@
   <h1 class="title">Database</h1>
   <button
     mat-raised-button
-    name = "new"
-    color="primary"
-    class="btn"
+    class="btn color-button--default"
     (click)="showFormCreateDatabase()"
   >
     New
   </button>
-  <p>{{ formDataCreate.UserName }}</p>
   <button
     mat-raised-button
-    color="primary"
     (click)="editEnable()"
     [disabled]="!isClicked"
-    class="btn"
+    class="btn color-button--default"
   >
     Edit
   </button>
@@ -24,16 +20,15 @@
     color="primary"
     (click)="openDeleteConfirmation()"
     [disabled]="!isClicked"
-    class="btn"
+    class="btn color-button--default"
   >
     Delete
   </button>
   <button
     mat-raised-button
-    color="primary"
     (click)="openCopyConfirmation()"
     [disabled]="!isClicked"
-    class="btn"
+    class="btn color-button--default"
   >
     Copy
   </button>
@@ -41,7 +36,6 @@
   <div class="listes">
     <div class="table">
       <mat-card-content>
-        <br />
         <table matSort mat-table [dataSource]="dataSource" #tableElement>
           <ng-container matColumnDef="databaseId">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
@@ -127,7 +121,9 @@
                       : database.context == '6'
                       ? '#f5f334'
                       : '',
-                  color: '#FFFFFF'
+                  color: database.context == '6' ? '#000' : '#FFFFFF',
+                  padding: '0.75rem',
+                  fontWeight: '700',
                 }"
               >
                 {{
@@ -179,6 +175,7 @@
       </mat-card-content>
     </div>
 
+    <!-- Create Database -->
     <ng-container *ngIf="showFormCreate">
       <div class="formCreate">
         <form class="form--databases">
@@ -198,9 +195,99 @@
             <input
               matInput
               placeholder="UserName"
+              required
               [(ngModel)]="formDataCreate.UserName"
               name="userName"
             />
+          </mat-form-field>
+
+          <mat-form-field class="example-full-width">
+            <mat-label>Server ID</mat-label>
+            <mat-select
+              required
+              [(ngModel)]="formDataCreate.Server"
+              name="Server"
+            >
+              <mat-option *ngFor="let s of server" [value]="s">
+                {{ s.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field class="example-full-width">
+            <mat-label>Context</mat-label>
+            <mat-select
+              required
+              [(ngModel)]="formDataCreate.Context"
+              name="Context"
+            >
+              <mat-option value="1">
+                <span
+                  style="
+                    background-color: #f5a82a;
+                    color: #ffffff;
+                    padding: 0.75rem;
+                    font-weight: 700;
+                  "
+                  >Dev</span
+                >
+              </mat-option>
+              <mat-option value="2">
+                <span
+                  style="
+                    background-color: #c125f2;
+                    color: #ffffff;
+                    padding: 0.75rem;
+                    font-weight: 700;
+                  "
+                  >Preprod</span
+                >
+              </mat-option>
+              <mat-option value="3">
+                <span
+                  style="
+                    background-color: #4557a2;
+                    color: #ffffff;
+                    padding: 0.75rem;
+                    font-weight: 700;
+                  "
+                  >Prod</span
+                >
+              </mat-option>
+              <mat-option value="4">
+                <span
+                  style="
+                    background-color: #50c63e;
+                    color: #ffffff;
+                    padding: 0.75rem;
+                    font-weight: 700;
+                  "
+                  >Test</span
+                >
+              </mat-option>
+              <mat-option value="5">
+                <span
+                  style="
+                    background-color: #956248;
+                    color: #ffffff;
+                    padding: 0.75rem;
+                    font-weight: 700;
+                  "
+                  >ProdCopy</span
+                >
+              </mat-option>
+              <mat-option value="6">
+                <span
+                  style="
+                    background-color: #f5f334;
+                    color: #000;
+                    padding: 0.75rem;
+                    font-weight: 700;
+                  "
+                  >Staging</span
+                >
+              </mat-option>
+            </mat-select>
           </mat-form-field>
 
           <mat-form-field class="example-full-width">
@@ -211,68 +298,28 @@
               required
               [(ngModel)]="formDataCreate.Password"
               name="password"
-              type="password"
+              [type]="showPassword ? 'text' : 'password'"
             />
+            <button mat-icon-button matSuffix (click)="togglePassword()">
+              <mat-icon>{{
+                showPassword ? "visibility" : "visibility_off"
+              }}</mat-icon>
+            </button>
           </mat-form-field>
 
-          <mat-form-field class="example-full-width">
-            <mat-label>Server ID</mat-label>
-            <mat-select [(ngModel)]="formDataCreate.Server" name="Server">
-              <mat-option *ngFor="let s of server" [value]="s">
-                {{ s.name }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-
-          <mat-form-field class="example-full-width">
-            <mat-label>Context</mat-label>
-            <mat-select [(ngModel)]="formDataCreate.Context" name="Context">
-              <mat-option value="1">
-                <span style="background-color: #f5a82a; color: #ffffff"
-                  >Dev</span
-                >
-              </mat-option>
-              <mat-option value="2">
-                <span style="background-color: #c125f2; color: #ffffff"
-                  >Preprod</span
-                >
-              </mat-option>
-              <mat-option value="3">
-                <span style="background-color: #4557a2; color: #ffffff"
-                  >Prod</span
-                >
-              </mat-option>
-              <mat-option value="4">
-                <span style="background-color: #50c63e; color: #ffffff"
-                  >Test</span
-                >
-              </mat-option>
-              <mat-option value="5">
-                <span style="background-color: #956248; color: #ffffff"
-                  >ProdCopy</span
-                >
-              </mat-option>
-              <mat-option value="6">
-                <span style="background-color: #f5f334; color: #ffffff"
-                  >Staging</span
-                >
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
           <br />
-          <div class="button-container" style="margin-bottom: 10%">
+          <div class="buttons--container">
             <button
-            name="save"
-            mat-raised-button
-            class="color-button margin--right"
-            (click)="newDatabaseFormDatabase()"
+              mat-raised-button
+              class="color-button--save margin--right"
+              (click)="newDatabaseFormDatabase()"
             >
               Save
             </button>
             <button
               mat-raised-button
               color="primary"
-              class="btn"
+              class="btn color-button--default"
               (click)="showFormCreateDatabase()"
             >
               Cancel
@@ -294,7 +341,6 @@
             <input
               matInput
               placeholder="Name"
-              required
               [(ngModel)]="databaseSelected.Name"
               name="Name"
               [disabled]="!editEnabled"
@@ -306,7 +352,6 @@
             <input
               matInput
               placeholder="UserName"
-              required
               [(ngModel)]="databaseSelected.UserName"
               name="UserName"
               [disabled]="!editEnabled"
@@ -327,39 +372,93 @@
           </mat-form-field>
 
           <mat-form-field class="example-full-width">
-            <mat-label>Context</mat-label>
+            <mat-label>Context </mat-label>
             <mat-select
-              [(ngModel)]="databaseSelected.Context"
               name="Context"
+              [(ngModel)]="databaseSelected && databaseSelected.Context"
               [disabled]="!editEnabled"
             >
-              <mat-option value="1">
-                <span style="background-color: #f5a82a; color: #ffffff"
+              <mat-option
+                [value]="databaseSelected && databaseSelected.Context"
+                *ngIf="databaseSelected && databaseSelected.Context === 1"
+              >
+                <span
+                  style="
+                    background-color: #f5a82a;
+                    color: #ffffff;
+                    padding: 0.75rem;
+                    font-weight: 700;
+                  "
                   >Dev</span
                 >
               </mat-option>
-              <mat-option value="2">
-                <span style="background-color: #c125f2; color: #ffffff"
+              <mat-option
+                [value]="databaseSelected && databaseSelected.Context"
+                *ngIf="databaseSelected && databaseSelected.Context === 2"
+              >
+                <span
+                  style="
+                    background-color: #c125f2;
+                    color: #ffffff;
+                    padding: 0.75rem;
+                    font-weight: 700;
+                  "
                   >Preprod</span
                 >
               </mat-option>
-              <mat-option value="3">
-                <span style="background-color: #4557a2; color: #ffffff"
+              <mat-option
+                [value]="databaseSelected && databaseSelected.Context"
+                *ngIf="databaseSelected && databaseSelected.Context === 3"
+              >
+                <span
+                  style="
+                    background-color: #4557a2;
+                    color: #ffffff;
+                    padding: 0.75rem;
+                    font-weight: 700;
+                  "
                   >Prod</span
                 >
               </mat-option>
-              <mat-option value="4">
-                <span style="background-color: #50c63e; color: #ffffff"
+              <mat-option
+                [value]="databaseSelected && databaseSelected.Context"
+                *ngIf="databaseSelected && databaseSelected.Context === 4"
+              >
+                <span
+                  style="
+                    background-color: #50c63e;
+                    color: #ffffff;
+                    padding: 0.75rem;
+                    font-weight: 700;
+                  "
                   >Test</span
                 >
               </mat-option>
-              <mat-option value="5">
-                <span style="background-color: #956248; color: #ffffff"
+              <mat-option
+                [value]="databaseSelected && databaseSelected.Context"
+                *ngIf="databaseSelected && databaseSelected.Context === 5"
+              >
+                <span
+                  style="
+                    background-color: #956248;
+                    color: #ffffff;
+                    padding: 0.75rem;
+                    font-weight: 700;
+                  "
                   >ProdCopy</span
                 >
               </mat-option>
-              <mat-option value="6">
-                <span style="background-color: #f5f334; color: #ffffff"
+              <mat-option
+                [value]="databaseSelected && databaseSelected.Context"
+                *ngIf="databaseSelected && databaseSelected.Context === 6"
+              >
+                <span
+                  style="
+                    background-color: #f5f334;
+                    color: #000;
+                    padding: 0.75rem;
+                    font-weight: 700;
+                  "
                   >Staging</span
                 >
               </mat-option>
@@ -367,30 +466,42 @@
           </mat-form-field>
 
           <mat-form-field class="example-full-width">
-            <mat-label>Password</mat-label>
+            <mat-label>Password </mat-label>
             <input
               matInput
               placeholder="Password"
-              required
-              [(ngModel)]="databaseSelected.PasswordModified"
+              [(ngModel)]="databaseSelected && databaseSelected.Password"
               name="Password"
               [disabled]="!editEnabled"
+              [type]="showPassword ? 'text' : 'password'"
             />
+            <button
+              mat-icon-button
+              matSuffix
+              [disabled]="!editEnabled"
+              (click)="togglePassword()"
+            >
+              <mat-icon>{{
+                showPassword ? "visibility" : "visibility_off"
+              }}</mat-icon>
+            </button>
           </mat-form-field>
           <br />
-          <div class="button-container" style="margin-bottom: 10%">
+          <div class="buttons--container" style="margin-bottom: 10%">
             <button
               mat-raised-button
               (click)="editDatabase()"
-              [ngClass]="{ 'color-button': editEnabled, 'margin--right': true }"
+              [ngClass]="{
+                'color-button--save ': editEnabled,
+                'margin--right': true
+              }"
               [disabled]="!editEnabled"
             >
               Save
             </button>
             <button
               mat-raised-button
-              color="primary"
-              class="btn"
+              class="btn color-button--default"
               (click)="reinitaliseDatabaseSelectedForm()"
             >
               Cancel
@@ -407,16 +518,6 @@
         [errorMessage]="popupMessage"
         (close)="closeErrorPopup()"
       ></app-error-popup>
-    </div>
-
-    <!-- Inform pop-up -->
-    <div>
-      <app-inform-popup
-        *ngIf="showInformPopup"
-        [informationMessage]="popupMessage"
-        [passwordReseted]="passwordReseted"
-        (close)="close_inform_popup()"
-      ></app-inform-popup>
     </div>
 
     <!-- Delete confirmation -->

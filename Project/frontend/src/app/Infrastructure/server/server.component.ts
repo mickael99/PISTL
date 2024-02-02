@@ -167,7 +167,7 @@ export class ServerComponent {
         this.dataSource.sort = this.sort;
       },
       (error) => {
-        this.showErrorPopup(error.error.message);
+        console.log('error: ', error);
       }
     );
 
@@ -187,7 +187,7 @@ export class ServerComponent {
         this.dataSource.sort = this.sort;
       },
       (error) => {
-        this.showErrorPopup(error.error);
+        console.log('error: ', error);
       }
     );
 
@@ -240,7 +240,6 @@ export class ServerComponent {
    * Function used to POST the user's information from the form.
    */
   newServerFormCreateServer() {
-
     this.formDataCreate.CreatedBy = localStorage.getItem('email');
 
     let JWTToken = localStorage.getItem('token');
@@ -299,7 +298,7 @@ export class ServerComponent {
           this.reinitaliseServerCreatedForm();
         },
         error: (error: any) => {
-          this.showErrorPopup(error.error.message);
+          console.log('error: ', error);
         },
       });
   }
@@ -308,7 +307,7 @@ export class ServerComponent {
   /**
    * Retrieves the details of a server and updates the serverSelected object with the retrieved data.
    * Also performs additional actions such as reinitializing the server creation form and activating certain buttons.
-   * 
+   *
    * @param server - The server object containing the server details.
    */
   getServer(server: any) {
@@ -339,7 +338,7 @@ export class ServerComponent {
    * Function used to activate the hover.
    */
   onMouseEnter(serverHovered: number) {
-    if(this.isClicked == false) {
+    if (this.isClicked == false) {
       this.isHovered = true;
     }
     this.serverHovered = serverHovered;
@@ -350,7 +349,7 @@ export class ServerComponent {
    * Function used to deactivate the hover.
    */
   onMouseLeave() {
-    if(this.isClicked == false) {
+    if (this.isClicked == false) {
       this.isHovered = false;
     }
     this.serverHovered = 0;
@@ -422,16 +421,16 @@ export class ServerComponent {
    * Function used to edit the Sys Admin's information.
    */
   editServer() {
-    if (
-      this.serverSelected.Name == this.serverSelectedCopy.Name &&
-      this.serverSelected.ServerId == this.serverSelectedCopy.ServerId &&
-      this.serverSelected.Address == this.serverSelectedCopy.Address &&
-      this.serverSelected.Context == this.serverSelectedCopy.Context &&
-      this.serverSelected.Type == this.serverSelectedCopy.Type
-    ) {
-      this.showErrorPopup('Please do some changes before Save.');
-      return;
-    }
+    // if (
+    //   this.serverSelected.Name == this.serverSelectedCopy.Name &&
+    //   this.serverSelected.ServerId == this.serverSelectedCopy.ServerId &&
+    //   this.serverSelected.Address == this.serverSelectedCopy.Address &&
+    //   this.serverSelected.Context == this.serverSelectedCopy.Context &&
+    //   this.serverSelected.Type == this.serverSelectedCopy.Type
+    // ) {
+    //   this.showErrorPopup('Please do some changes before Save.');
+    //   return;
+    // }
 
     let JWTToken = localStorage.getItem('token');
 
@@ -487,7 +486,7 @@ export class ServerComponent {
           this.dataSource.sort = this.sort;
         },
         error: (error: any) => {
-          this.showErrorPopup(error.error.message);
+          console.log('error: ', error);
         },
       });
   }
@@ -533,7 +532,7 @@ export class ServerComponent {
         this.showErrorPopup('Cannot delete server with associated databases.');
         return;
       }
-    }    
+    }
 
     let JWTToken = localStorage.getItem('token');
 
@@ -580,7 +579,7 @@ export class ServerComponent {
           this.dataSource.sort = this.sort;
         },
         error: (error: any) => {
-          this.showErrorPopup(error.error.message);
+          console.log('error: ', error);
         },
       });
   }
@@ -671,7 +670,7 @@ export class ServerComponent {
         this.dataSource.sort = this.sort;
       },
       error: (error: any) => {
-        this.showErrorPopup(error.error.message);
+        console.log('error: ', error);
       },
     });
   }
