@@ -5,7 +5,7 @@ metadata:
 spec:
   containers:
   - name: backend-container
-    image: walty13/backend-image:backend-image
+    image: walty13/backend
     imagePullPolicy: Always
     ports:
     - containerPort: 5050
@@ -15,9 +15,6 @@ spec:
 
 
   - name: frontend-container
-    image: walty13/frontend-image:frontend-image
+    image: walty13/frontend:frontend
     ports:
     - containerPort: 4200
-
-#docker tag local-image:tagname new-repo:tagname
-#docker push new-repo:tagname

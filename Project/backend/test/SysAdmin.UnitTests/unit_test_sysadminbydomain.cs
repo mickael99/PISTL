@@ -40,16 +40,19 @@ public class TestSysAdmin
     [Test]
     public void TestGetSysAdmin()
     {
+        // Arrange
         var controller = new SysAdminByDomainController();
-        var response = controller.GetSysAdmin() as OkObjectResult;
-        Assert.AreNotEqual(response, null); // Add missing reference to Assert class
 
-        var json = JsonConvert.SerializeObject(response.Value);
-        var values = JsonConvert.DeserializeObject<SysAdminResponse>(json);
-        Assert.AreNotEqual(values, null); // Add missing reference to Assert class
+        // Act
+        var response = controller.GetSysAdmin() as OkObjectResult;
 
         Assert.Multiple(() =>
         {
+            Assert.AreNotEqual(response, null); // Add missing reference to Assert class
+
+            var json = JsonConvert.SerializeObject(response.Value);
+            var values = JsonConvert.DeserializeObject<SysAdminResponse>(json);
+            Assert.AreNotEqual(values, null); // Add missing reference to Assert class
             Assert.AreNotEqual(values.domains, null);
             Assert.IsInstanceOf<List<DomainDTO>>(values.domains, "Wrong type");
             Assert.AreNotEqual(values.users, null);
@@ -93,13 +96,10 @@ public class TestSysAdmin
 
             var json = JsonConvert.SerializeObject(response.Value);
             Assert.AreNotEqual(json, null);
-
             Assert.IsInstanceOf<LoginDomainUserDTO>(response.Value, "Wrong type");
             var values = JsonConvert.DeserializeObject<LoginDomainUser>(json);
-
             // Assert that the object is not null
             Assert.AreNotEqual(values, null);
-
             // Assert that the types are valid
             Assert.That(values.ModifiedBy, Is.TypeOf(typeof(string)));
             Assert.That(values.UserId, Is.TypeOf(typeof(string)));
@@ -109,7 +109,6 @@ public class TestSysAdmin
             Assert.That(values.DomainId, Is.TypeOf(typeof(int)));
             Assert.That(values.SysAdmin, Is.EqualTo(true));
             Assert.That(values.Comment, Is.TypeOf(typeof(string)));
-
             // Assert that the dates are valid
             Assert.That(values.SysAdminEndDate, Is.TypeOf(typeof(DateTime)));
             Assert.That(values.SysAdminStartDate, Is.TypeOf(typeof(DateTime)));

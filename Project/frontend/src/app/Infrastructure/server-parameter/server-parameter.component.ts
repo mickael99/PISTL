@@ -10,8 +10,8 @@ import { MatTableDataSource } from '@angular/material/table';
   styleUrls: ['./server-parameter.component.css']
 })
 export class ServerParameterComponent {
-  servers: {[server_id: number]: any} = {};
-  server_parameters: any[] = [];
+  servers: any[];
+  server_parameters: any[];
 
   data_server_table: any[] = [];
   selected_server: any;
@@ -65,18 +65,21 @@ export class ServerParameterComponent {
     this.getServerParameterByServer(227);
   }
 
-  getServerParameterByServer(server_id: number) {
-    this.servers = {};
+  getServerParameterByServer(server_id: any) {
+    this.servers = [];
     this.server_parameters = [];
 
     this.http.get('http://localhost:5050/api/serverparameter/' + server_id).subscribe(
       (data: any) => {
-
+        console.log(data);
         for(const server of data.servers) {
-          this.servers[server.serverId] = server;
+          this.servers.push(server);
+          if(server.serverId === server_id) {
+            this.selected_server = server;
+          }
         }
-        
-        this.selected_server = this.servers[server_id];
+        if(this.selected_server == null && this.servers.length > 0)
+          this.selected_server = this.servers[0];
 
         for(const parameter of data.server_parameters) {
           this.server_parameters.push(parameter);

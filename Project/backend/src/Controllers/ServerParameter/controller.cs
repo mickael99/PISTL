@@ -16,20 +16,7 @@ namespace Project.Controllers
             try
             {
                 var context = new DatContext();
-                var servers = context.Servers
-                    .Where(server => context.ServerParameters.Select(serverParameter => serverParameter.ServerId).Count() > 0)
-                    .Select(server => new ServerDTO
-                    {
-                        ServerId = server.ServerId,
-                        Address = server.Address,
-                        Name = server.Name
-                    })
-                    .ToList();
-
-                if (servers.Count == 0)
-                {
-                    return NotFound("No servers found.");
-                }
+                var servers = context.Servers.ToList();
 
                 var server_parameters = context.ServerParameters
                     .Where(serverParameter => serverParameter.ServerId == server_id)
