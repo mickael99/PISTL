@@ -84,6 +84,8 @@ public class ServerController : Controller
             return BadRequest(ModelState);
         }
 
+        Console.WriteLine("Server Name: " + serverCreate.Name);
+
         try
         {
             if (context.Servers.FirstOrDefault(s => s.Name == serverCreate.Name || s.Address == serverCreate.Address) == null)
@@ -108,6 +110,7 @@ public class ServerController : Controller
             }
 
             context.SaveChanges();
+
 
             var servers = _serverRepository.GetServers();
 
@@ -138,7 +141,9 @@ public class ServerController : Controller
         if (!_serverRepository.ServerExists(id))
             return NotFound();
 
+
         var serverToDelete = _serverRepository.GetServer(id);
+
 
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
@@ -147,9 +152,6 @@ public class ServerController : Controller
         {
             ModelState.AddModelError("", "Something went wrong deleting database");
         }
-
-        // Send message to front-end
-        var message = "Server deleted successfully";
 
         var servers = _serverRepository.GetServers();
 
@@ -189,6 +191,8 @@ public class ServerController : Controller
                 return BadRequest(new { message = "This address of server already exists" });
             }
         }
+
+        Console.WriteLine("Server to update: " + serverToUpdate.Name);
 
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
