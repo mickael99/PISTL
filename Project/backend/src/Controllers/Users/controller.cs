@@ -235,10 +235,14 @@ public class UsersPageController : ControllerBase // TODO change name
             var userFound = users.FirstOrDefault(u => u.Email == model.Email);
             if (userFound != null)
             {
-              var loginDomainUserFound = loginDomainUser.FirstOrDefault(u => u.LoginId == userFound.LoginId);
-              if (loginDomainUserFound != null)
+              var loginDomainUsersFound = loginDomainUser.Where(u => u.LoginId == userFound.LoginId).ToList();
+
+              if (loginDomainUsersFound != null)
               {
-                context.LoginDomainUsers.Remove(loginDomainUserFound);
+                foreach (var loginDomainUserFound in loginDomainUsersFound)
+                {
+                  context.LoginDomainUsers.Remove(loginDomainUserFound);
+                }
                 context.SaveChanges();
               }
               context.Logins.Remove(userFound);

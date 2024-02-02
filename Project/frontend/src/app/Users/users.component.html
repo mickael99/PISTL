@@ -406,6 +406,16 @@
         ></app-error-popup>
       </div>
 
+      <!-- Inform pop-up -->
+      <div>
+        <app-inform-popup
+          *ngIf="showInformPopup"
+          [informationMessage]="popupMessage"
+          [passwordReseted]="passwordReseted"
+          (close)="close_inform_popup()"
+        ></app-inform-popup>
+      </div>
+
       <!-- Delete confirmation -->
       <app-confirm-popup
         *ngIf="showDeleteConfirmation"

@@ -106,6 +106,9 @@ export class DatabaseComponent {
   // Error message to display in the popup
   popupMessage: string = '';
 
+  // Bool that allows or not to display the information below the form
+  showInform: boolean = false;
+
   // Paginator used for the table
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
@@ -192,6 +195,8 @@ export class DatabaseComponent {
   newDatabaseFormDatabase() {
     this.showPassword = false;
 
+    this.showInform = false;
+
     if (this.formDataCreate.Server) {
       this.formDataCreate.ServerId = this.formDataCreate.Server.serverId;
     }
@@ -253,7 +258,8 @@ export class DatabaseComponent {
         },
         error: (error: any) => {
           console.error(error.error.message);
-          // this.showErrorPopup(error.error.message);
+          this.popupMessage = error.error.message;
+          this.showInform = true;
         },
       });
   }
@@ -304,6 +310,8 @@ export class DatabaseComponent {
         },
         error: (error: any) => {
           console.error(error.error.message);
+          this.popupMessage = error.error.message;
+          this.showInform = true;
         },
       });
   }
@@ -373,6 +381,8 @@ export class DatabaseComponent {
         },
         error: (error: any) => {
           console.error(error.error.message);
+          this.popupMessage = error.error.message;
+          this.showInform = true;
         },
       });
   }
@@ -383,6 +393,8 @@ export class DatabaseComponent {
    */
   editDatabase() {
     this.showPassword = false;
+
+    this.showInform = false;
 
     // Find the server with the same name as ServerName
     const serverToUpdate = this.server.find(
@@ -465,6 +477,8 @@ export class DatabaseComponent {
         },
         error: (error: any) => {
           console.error(error.error.message);
+          this.popupMessage = error.error.message;
+          this.showInform = true;
         },
       });
   }

@@ -325,6 +325,15 @@
               Cancel
             </button>
           </div>
+
+          <!-- Inform message -->
+          <div class="error--info">
+            <ng-container *ngIf="showInform">
+              <div class="alert alert-danger" role="alert">
+                {{ popupMessage }}
+              </div>
+            </ng-container>
+          </div>
         </form>
       </div>
     </ng-container>
@@ -506,6 +515,15 @@
             >
               Cancel
             </button>
+          </div>
+
+          <!-- Inform message -->
+          <div class="error--info">
+            <ng-container *ngIf="showInform">
+              <div class="alert alert-danger" role="alert">
+                {{ popupMessage }}
+              </div>
+            </ng-container>
           </div>
         </form>
       </div>
