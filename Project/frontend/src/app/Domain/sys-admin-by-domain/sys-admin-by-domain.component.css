@@ -71,8 +71,8 @@ button {
 }
 
 .mat-mdc-raised-button.color-button--submit {
-  background-color: #fff;
-  color: #000;
+  background-color: #5cb85c;
+  color: #fff;
   font-size: 1.2rem;
 }
 

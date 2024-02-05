@@ -1,5 +1,11 @@
 ### How to create a Docker SQL image
 
+## Utilité de ce dossier
+Le dossier /docker contient les scripts et le Dockerfile utile à l'installation d'une base de donnée locale sur un Docker container.
+Cette installation est optionnelle et demande des modifications dans le code pour l'accés à la base de données locale depuis le container backend.
+
+## Génération de l'image et du container
+
 ```bash
 docker build -t sql_dat .
 
