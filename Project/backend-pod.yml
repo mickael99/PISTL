@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - name: backend-container
+        image: walty13/backend
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 5050
+        env:
+        - name: ConnectionStrings__AzureDatabase
+          value: "Server=tcp:datserver2.database.windows.net,1433;Initial Catalog=DAT;Persist Security Info=False;User ID=walter;Password=Daniel123;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+spec:
+  selector:
+    app: backend
+  ports:
+    - protocol: TCP
+      port: 5050
+      targetPort: 5050

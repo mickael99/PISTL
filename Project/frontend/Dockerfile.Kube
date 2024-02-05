@@ -1,0 +1,16 @@
+FROM node:alpine as build
+
+WORKDIR /usr/src/app
+RUN npm install -g @angular/cli
+
+COPY *.json /usr/src/app/
+RUN npm install
+
+COPY src /usr/src/app/src
+RUN ng build
+ 
+FROM nginx:alpine
+COPY --from=build /usr/src/app/dist/frontend /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+EXPOSE 4200

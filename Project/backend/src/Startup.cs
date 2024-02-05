@@ -32,15 +32,18 @@ public class Startup
         {
             options.AddPolicy("AllowSpecificOrigin", builder =>
             {
-                builder.WithOrigins("http://0.0.0.0:4200", "http://localhost:4200")
-                    .AllowAnyHeader()
-                    .AllowAnyMethod();
+                builder.AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .AllowAnyOrigin();
+                // builder.WithOrigins("http://0.0.0.0:4200", "http://localhost:4200", "http://*:4200", "http://*:3000")
+                //         .AllowAnyHeader()
+                //         .AllowAnyMethod();
             });
         });
 
         services.AddDbContext<DatContext>(options =>
         {
-            // options.UseSqlServer(Configuration?.GetConnectionString("DefaultConnection"));
+            // options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             options.UseSqlServer(Configuration.GetConnectionString("AzureDatabase"));
         });
 

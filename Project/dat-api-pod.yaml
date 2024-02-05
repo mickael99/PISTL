@@ -5,14 +5,16 @@ metadata:
 spec:
   containers:
   - name: backend-container
-    image: walty13/backend
+    image: walty13/backend:backend
     imagePullPolicy: Always
     ports:
     - containerPort: 5050
     env:
       - name: ConnectionStrings__AzureDatabase
-        value: "Server=tcp:datserver2.database.windows.net,1433;Initial Catalog=DAT;Persist Security Info=False;User ID=walter;Password=Daniel123;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
-
+        value: "Server=tcp:pistlserver.database.windows.net,1433;
+                Initial Catalog=dat;Persist Security Info=False;
+                User ID=walter;Password=Daniel123;MultipleActiveResultSets=False;
+                Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
 
   - name: frontend-container
     image: walty13/frontend:frontend
