@@ -1,24 +1,16 @@
-# Demo test
+# Projet DAT
+Le projet DAT (Data Administration Tool) est une application de gestion de domaines et d'infrastructure fournit à la société UpClear.
+Cette application est construit en 3-layers avec un frontend développé en Angular, une API Rest en C# et une base de données déployés sur un Azure SQL Server.
 
-#### Instructions front/client:
+## Pré-requis
+#### Environnement : Docker
+Il faut avoir une version stable et à jour de Docker pour déployer l'application.
 
-###### Prérequis: Node.js, Angular
+#### Backend : .NET
+L'API est développé avec le framework .NET et le package Entity Framework. Il est aussi recommandé d'ajouter le package NUnit
 
-```bash
-cd Project/frontend
-```
-
-```bash
-npm install
-```
-
-```bash
-ng build
-```
-
-```bash
-ng serve
-```
+#### Frontend : Node.js, Angular
+Pour démarrer l'application il faut avoir préalablement installé Node.js, Angular
 
 ###### Aller sur http://localhost:4200
 

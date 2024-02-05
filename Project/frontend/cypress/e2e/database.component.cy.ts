@@ -9,7 +9,7 @@ describe('template spec', () => {
     cy.get('input[name="motDePasse"]').type('STL')
 
     // Add your login button selector and click it
-    cy.get('input[type="submit"]').click()
+    cy.get('div.btn--center button[type="submit"]').click();
 
     // Go to the sysadmin page
     cy.get('a[href="/database"]').click({force: true})

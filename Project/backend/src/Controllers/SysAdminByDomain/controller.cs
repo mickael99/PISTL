@@ -214,14 +214,16 @@ namespace Project.Controllers
                 }
                 else
                 {
-                    user.SysAdmin = userDTO.SysAdmin;
-                    user.SysAdminStartDate = userDTO.SysAdminStartDate;
-                    user.SysAdminEndDate = userDTO.SysAdminEndDate;
-                    user.Comment = userDTO.Comment;
-                    user.ModifiedBy = userDTO.ModifiedBy;
-
-                    context.Entry(user).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-                    //Console.WriteLine("Modified user "+user.UserId+ ": "+userDTO.LoginId+" | "+user.DomainId+" | "+user.Environment+" | "+user.SysAdmin+" | "+user.SysAdminEndDate);
+                    if(userDTO.SysAdmin != user.SysAdmin || userDTO.SysAdminStartDate != user.SysAdminStartDate || userDTO.SysAdminEndDate != user.SysAdminEndDate || userDTO.Comment != user.Comment)
+                    {
+                        user.SysAdmin = userDTO.SysAdmin;
+                        user.SysAdminStartDate = userDTO.SysAdminStartDate;
+                        user.SysAdminEndDate = userDTO.SysAdminEndDate;
+                        user.Comment = userDTO.Comment;
+                        user.ModifiedBy = userDTO.ModifiedBy;
+                        context.Entry(user).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                        //Console.WriteLine("Modified user "+user.UserId+ ": "+userDTO.LoginId+" | "+user.DomainId+" | "+user.Environment+" | "+user.SysAdmin+" | "+user.SysAdminEndDate);  
+                    }
                 }
 
                 context.SaveChanges();
