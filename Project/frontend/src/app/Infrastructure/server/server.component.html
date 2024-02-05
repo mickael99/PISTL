@@ -166,7 +166,8 @@
           <tr mat-row *matRowDef="let user; columns: displayedColumns"></tr>
         </table>
 
-        <mat-paginator style="width:690px"
+        <mat-paginator
+          class="mat-paginator"
           [pageSizeOptions]="[5, 10]"
           showFirstLastButtons
           [length]="dataSource && dataSource.data.length"

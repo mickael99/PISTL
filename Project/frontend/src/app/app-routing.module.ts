@@ -13,8 +13,8 @@ import { ReportsComponent } from './Reports/reports.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'domain-administration', pathMatch: 'full' }, // default path
-  { path: 'account', component: AccountComponent },
   { path: 'domain-administration', component: DomainAdministrationComponent },
+  { path: 'account', component: AccountComponent },
   { path: 'sys-admin-by-domain', component: SysAdminByDomainComponent },
   { path: 'domain-by-sys-admin', component: DomainBySysAdminComponent },
   { path: 'server-parameter', component: ServerParameterComponent },

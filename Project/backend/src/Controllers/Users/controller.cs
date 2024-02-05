@@ -91,13 +91,14 @@ public class UsersPageController : ControllerBase // TODO change name
               }
             }
 
-            var bytes = Encoding.UTF8.GetBytes("test");
-            var encryptedBytes = SHA512.HashData(bytes);
+            string passwordSalt = Utils.GetSalt(24);
+            byte[] passwordHash = Utils.EncryptPassword("test", passwordSalt);
             var newLogin = new Project.Models.Login
             {
               Email = model.Email,
               Name = model.Name,
-              Password = encryptedBytes, // test
+              Password = passwordHash, // test
+              PasswordSalt = passwordSalt,
               PasswordModifiedDate = DateTime.Now,
               PasswordExpirationDate = DateTime.Now.AddDays(30),
               InvalidAttemptCount = 0,
