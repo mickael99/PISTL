@@ -26,14 +26,15 @@ Pour démarrer l'application il faut avoir préalablement installé Node.js, Ang
 ## Installation
 ### Azure Database
 Vous devez avoir un Azure SQL Server actif avec une base de donnée azure déployée. Il vous faut ensuite récupérer la Conection_String de la database et la copier à différents endroits du code.
- - dans le fichier Docker-compose situé à la racine du projet : remplacer la String associée à ConnectionStrings__AzureDatabase par la votre
- - dans le fichier appsetting.json situé dans le dossier backend/src/ : remplacer la String associée à ConnectionStrings__AzureDatabase par la votre
- - dans le fichier DatContext situé dans le dossier backend/src/Models/ : à la ligne 68, remplacer la String présente dans le builder.UseSQLServer() par la votre
+ - Dans le fichier Docker-compose situé à la racine du projet : remplacer la String associée à `ConnectionStrings__AzureDatabase` par la votre.
+ - Dans le fichier `appsetting.json` situé dans le dossier `PISTL/Project/backend/src/` : remplacer la String associée à `ConnectionStrings__AzureDatabase` par la votre.
+ - Dans le fichier DatContext situé dans le dossier `PISTL/Project/backend/src/Models/`  : à la ligne 68, remplacer la String présente dans le builder.UseSQLServer() par la votre.
    
 ### Build avec Docker
 Rendez-vous à la racine du projet. 
 Vous pouvez lancer la commande 
 ```bash
+cd PISTL/Project
 docker compose up
 ```
 Cette commande va générer les images docker ainsi que les container backend et frontend. Vous pouvez suivre les opérations sur le terminal.
@@ -48,8 +49,15 @@ Rendez-vous sur le port 4200 de votre server local ou avec l'URL :
 ---
 
 ## Lancer les Tests
-Allez dans le dossier backend/test et lancez la commande
+> Backend tests
 ```bash
+cd PISTL/Project/backend
 dotnet test
+```
+
+> End-to-end tests
+```bash
+cd PISTL/Project/frontend
+npm run cypress:open
 ```
 
