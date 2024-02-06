@@ -1,7 +1,7 @@
 # Projet DAT
-Ceci est un manuel d’utilisation et de maintenance pour l’application DAT (Domain Administration Tool) de la société UpClear.
-L’application permet de gérer les domaines et les infrastructures gérés par l’entreprise. 
+Le projet DAT (Domain Administration Tool) est une application qui permet de gérer les domaines et les infrastructures administrés par la société UpClear.
 Parmis ces fonctionnalités on retrouve notamment l’ajout et la suppression de domaines et d’utilisateurs, la gestion des droits d’administrateurs, la gestion des serveurs et des bases de données.
+Il s'agit d'une version développée pour l'entreprise et qui n'est pas encore déployé sur leur domaine.
 
 
 ![image](https://github.com/mickael99/PISTL/assets/57686550/bc04fba3-7c9c-4578-899c-b02e93b24808)
