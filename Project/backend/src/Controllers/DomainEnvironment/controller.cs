@@ -16,7 +16,6 @@ public class DomainEnvironmentController : ControllerBase
         try
         {
             var context = new DatContext();
-            Console.WriteLine("=> GET /api/domainEnvironment");
 
             var domainEnvironments = context.DomainEnvironments;
 
@@ -34,7 +33,6 @@ public class DomainEnvironmentController : ControllerBase
         try
         {
             var context = new DatContext();
-            Console.WriteLine("=> POST /api/domainEnvironment");
 
             foreach (EnvironmentModel model in models)
             {
@@ -67,7 +65,6 @@ public class DomainEnvironmentController : ControllerBase
     [HttpPut("{id}")]
     public IActionResult PutDomainEnvironment(int id, [FromBody] EnvironmentModel model)
     {
-        Console.WriteLine("===============> PUT /api/domainEnvironment");
         try
         {
             var context = new DatContext();
@@ -75,16 +72,6 @@ public class DomainEnvironmentController : ControllerBase
 
             if (existingEnvironmentDomain == null)
                 return NotFound($"DomainEnvironment with ID {id} not found.");
-
-            Console.WriteLine("model.DomainId: " + model.DomainId);
-            Console.WriteLine("model.Environment: " + model.Environment);
-            Console.WriteLine("model.BpwebServerId: " + model.BpwebServerId);
-            Console.WriteLine("model.BpdatabaseId: " + model.BpdatabaseId);
-            Console.WriteLine("model.EaidatabaseId: " + model.EaidatabaseId);
-            Console.WriteLine("model.SsrsserverId: " + model.SsrsserverId);
-            Console.WriteLine("model.TableauServerId: " + model.TableauServerId);
-            Console.WriteLine("model.EaiftpserverId: " + model.EaiftpserverId);
-            Console.WriteLine("model.IsBp5Enabled: " + model.IsBp5Enabled);
 
             existingEnvironmentDomain.BpwebServerId = model.BpwebServerId;
             existingEnvironmentDomain.BpdatabaseId = model.BpdatabaseId;
@@ -110,7 +97,6 @@ public class DomainEnvironmentController : ControllerBase
         try
         {
             var context = new DatContext();
-            Console.WriteLine("===============> DELETE /api/domainEnvironment");
 
             var domainEnvironmentToDelete = context.DomainEnvironments.FirstOrDefault(e => e.DomainEnvironmentId == id);
 

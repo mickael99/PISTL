@@ -45,7 +45,6 @@ public class DomainAdministrationController : ControllerBase
         try
         {
             var context = new DatContext();
-            Console.WriteLine("=> POST /api/domain");
 
             Domain domain = addDomain(model.Name, model.Logo ?? new byte[0], model.Edition ?? string.Empty, model.IsSsoEnabled ?? false,
                                         model.Comment ?? string.Empty, model.ParentCompany ?? string.Empty);
@@ -70,7 +69,6 @@ public class DomainAdministrationController : ControllerBase
     [HttpPut("{id}")]
     public IActionResult PutDomain(int id, [FromBody] DomainModel model)
     {
-        Console.WriteLine("===============> PUT /api/domain");
         try
         {
 
@@ -128,7 +126,6 @@ public class DomainAdministrationController : ControllerBase
             context.Domains.Remove(domainToDelete);
             context.SaveChanges();
 
-            Console.WriteLine("===============>");
 
             var remainingDomains = context.Domains.ToList();
             return Ok(remainingDomains);

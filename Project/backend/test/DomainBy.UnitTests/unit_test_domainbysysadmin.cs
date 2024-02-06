@@ -68,8 +68,7 @@ namespace backend.Tests
                     UserName = null
                 }) as OkObjectResult;
 
-            Console.WriteLine(response);
-            
+
             // Assert
             Assert.Multiple(() =>
             {

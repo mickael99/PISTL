@@ -61,7 +61,7 @@ public class UsersController : ControllerBase // TODO change name
             if (blocked && loginFound != null)
             {
 
-                Console.WriteLine("User blocked, invalid attempts cout = 3.");
+                // Console.WriteLine("User blocked, invalid attempts cout = 3.");
                 loginFound.TermsAccepted = true;
                 context.SaveChanges();
                 return BadRequest(new { message = "User blocked, invalid attempts cout = 3." });
@@ -69,7 +69,7 @@ public class UsersController : ControllerBase // TODO change name
 
             if (datNotEnabled && loginFound != null)
             {
-                Console.WriteLine("User blocked, DAT not enabled.");
+                // Console.WriteLine("User blocked, DAT not enabled.");
                 return BadRequest(new { message = "User blocked, DAT not enabled." });
             }
 

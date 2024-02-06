@@ -52,7 +52,6 @@ public class TestServerParameter
             Type = "TestType"
         };
         controller2.CreateServer(server);
-        Console.WriteLine(server.ServerId);
 
         // Act
         var response = controller.GetServerParametersByServer(1) as OkObjectResult;
